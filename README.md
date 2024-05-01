@@ -32,6 +32,10 @@ conda activate GOD2Bench
 # If your use a different CUDA version, please refer to the PyTorch and Pyg websites for the appropriate versions.
 
 pip install -r requirements.txt
+
+cd ./GOD2Bench
+
+python benchmark/mymain.py
 ```
 ## Statistic of Graph-level Class-Based OOD Detection Datasets
 
