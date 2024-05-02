@@ -104,11 +104,9 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model", type=str, default="GLocalKD",
-                        help="supported model: [lof, if, mlpae, scan, radar, "
-                             "anomalous, gcnae, dominant, done, adone, "
-                             "anomalydae, gaan, guide, conad]. "
-                             "Default: dominant")
+    parser.add_argument("--model", type=str, default="GLADC",
+                        help="supported model: [GLocalKD, GLADC, SIGNET, GOOD-D, GraphDE]."
+                             "Default: GLADC")
     parser.add_argument("--gpu", type=int, default=0,
                         help="GPU Index. Default: -1, using CPU.")
     parser.add_argument("--dataset", type=str, default='inj_cora',
