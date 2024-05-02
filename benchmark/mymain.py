@@ -60,6 +60,13 @@ def main(args):
         elif args.model == 'GLocalKD':
             print(args.model)
             model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader)
+        elif args.model == 'GLADC':
+            print(args.model)
+            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader)
+        elif args.model == 'SIGNET':
+            print(args.model)
+            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader)
+
         else:
             model.fit(dataset_train)
 
@@ -130,6 +137,27 @@ if __name__ == '__main__':
     parser.add_argument('-num_cluster', type=int, default=2)
     parser.add_argument('-alpha', type=float, default=0)
     parser.add_argument('-n_train', type=int, default=10)
+
+
+    '''
+    GLADC parameter
+    '''
+    parser.add_argument('--max-nodes', dest='max_nodes', type=int, default=0,
+                        help='Maximum number of nodes (ignore graghs with nodes exceeding the number.')
+    parser.add_argument('--dropout', dest='dropout', default=0.1, type=float, help='Dropout rate.')
+    parser.add_argument('--output-dim', dest='output_dim', default=128, type=int, help='Output dimension')
+    '''
+    SIGNET parameter
+    '''
+    # parser.add_argument('--log_interval', type=int, default=1)
+    parser.add_argument('--encoder_layers', type=int, default=5)
+    parser.add_argument('--pooling', type=str, default='add', choices=['add', 'max'])
+    parser.add_argument('--readout', type=str, default='concat', choices=['concat', 'add', 'last'])
+    parser.add_argument('--explainer_model', type=str, default='gin', choices=['mlp', 'gin'])
+    parser.add_argument('--explainer_layers', type=int, default=5)
+    parser.add_argument('--explainer_hidden_dim', type=int, default=8)
+    parser.add_argument('--explainer_readout', type=str, default='add', choices=['concat', 'add', 'last'])
+ 
     args = parser.parse_args()
 
     # global setting
