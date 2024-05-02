@@ -38,10 +38,15 @@ def main(args):
             print("-------")
             print(args.exp_type)
             dataset_train, dataset_test, dataloader, dataloader_test, meta = get_ood_dataset_spilt(args)
-            
+
+        args.max_nodes_num = meta['max_nodes_num']
         args.dataset_num_features = meta['num_feat']
         args.n_train =  meta['num_train']
-        args.max_nodes_num = meta['max_nodes_num']
+        args.n_edge_feat = meta['num_edge_feat']
+        
+        # args.dataset_num_features = meta['num_feat']
+        # args.n_train =  meta['num_train']
+        # args.max_nodes_num = meta['max_nodes_num']
 
         model = init_model(args)
         ###如果要自定义dataloader,就把dataset传进去，dataloader=None,否则按下面的来即可
