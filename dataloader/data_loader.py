@@ -143,15 +143,15 @@ def get_ood_dataset(args, train_per=0.9, need_str_enc=True):
 
     TU = not DS.startswith('ogbg-mol')
     path_now =  os.path.abspath(os.path.join(os.getcwd(), "."))
-    print(path_now)
+    # print(path_now)
     #path = osp.join(osp.dirname(osp.realpath(__file__)), '.', 'data', DS)
     #path_ood = osp.join(osp.dirname(osp.realpath(__file__)), '.', 'data', DS_ood)
     path = osp.join(path_now, '.', 'data', DS)
     path_ood = osp.join(path_now, '.', 'data', DS_ood)
-    print(path)
+    # print(path)
     #print(os.path.abspath(os.path.dirname(os.getcwd())))
     #print(os.path.abspath(os.path.join(os.getcwd(), ".")))
-    print(path_ood)
+    # print(path_ood)
     
     if TU:
         dataset = TUDataset(path, name=DS, transform=(Constant(1, cat=False)))
@@ -161,13 +161,15 @@ def get_ood_dataset(args, train_per=0.9, need_str_enc=True):
         dataset.data.x = dataset.data.x.type(torch.float32)
         dataset_ood = (PygGraphPropPredDataset(name=DS_ood, root=path_ood))
         dataset_ood.data.x = dataset_ood.data.x.type(torch.float32)
+    max_nodes_num_train = max([_.num_nodes for _ in dataset])
+    max_nodes_num_test = max([_.num_nodes for _ in dataset_ood])
+    max_nodes_num = max_nodes_num_train if max_nodes_num_train > max_nodes_num_test else max_nodes_num_test
 
     dataset_num_features = dataset.num_node_features
     dataset_num_features_ood = dataset_ood.num_node_features
     assert dataset_num_features == dataset_num_features_ood
 
     num_sample = len(dataset)
-    # max_nodes_num = max([_.num_nodes for _ in dataset])
     num_train = int(num_sample * train_per)
     indices = torch.randperm(num_sample)
     idx_train = torch.sort(indices[:num_train])[0]
@@ -176,11 +178,7 @@ def get_ood_dataset(args, train_per=0.9, need_str_enc=True):
     dataset_train = dataset[idx_train]
     dataset_test = dataset[idx_test]
     dataset_ood = dataset_ood[: len(dataset_test)]
-    
-    max_nodes_num_train = max([_.num_nodes for _ in dataset])
-    max_nodes_num_test = max([_.num_nodes for _ in dataset_ood])
-    max_nodes_num = max_nodes_num_train if max_nodes_num_train > max_nodes_num_test else max_nodes_num_test
-    
+
     data_list_train = []
     idx = 0
     for data in dataset_train:
@@ -209,7 +207,7 @@ def get_ood_dataset(args, train_per=0.9, need_str_enc=True):
     dataloader_test = DataLoader(data_list_test, batch_size=args.batch_size_test, shuffle=True)
     dataset_test = ConcatDataset([dataset_test, dataset_ood])
     meta = {'num_feat':dataset_num_features, 'num_train':len(dataset_train),
-            'num_test':len(dataset_test), 'num_ood':len(dataset_ood),'max_nodes_num':max_nodes_num}
+            'num_test':len(dataset_test), 'num_ood':len(dataset_ood),'max_nodes_num':max_nodes_num,'num_edge_feat':0}
     #训练集（ID）， 测试集（ID+OOD）， 训练集dataloader,测试集dataloader,数据信息
     return dataset_train, dataset_test, dataloader, dataloader_test, meta
 
@@ -223,11 +221,11 @@ def get_ood_dataset_spilt(args, train_per=0.9, need_str_enc=True):
 
     #TU = not DS.startswith('ogbg-mol')
     DrugooD = DS.startswith('DrugOOD')
-    print(DrugooD)
+    # print(DrugooD)
     path_now =  os.path.abspath(os.path.join(os.getcwd(), "."))
     # print(path_now)
     path = osp.join(path_now, '.', 'data', DS)
-    print(path)
+    # print(path)
     n_train_data, n_val_data, n_in_test_data, n_out_test_data = 500, 500, 500, 500
     if DrugooD:
         dataset = DrugOOD(path, mode='iid')
@@ -236,12 +234,8 @@ def get_ood_dataset_spilt(args, train_per=0.9, need_str_enc=True):
         dataset.data.x = dataset.data.x.type(torch.float32)
         dataset_ood = DrugOOD(path, mode='ood')
         print(len(dataset_ood))
-        dataset_ood.data.x = dataset_ood.data.x.type(torch.float32)
+        dataset_ood.data.x = dataset_ood.data.x.type(torch.float32)    
 
-    
-    #exit()
-    #path = osp.join(osp.dirname(osp.realpath(__file__)), '.', 'data', DS)
-    #path_ood = osp.join(osp.dirname(osp.realpath(__file__)), '.', 'data', DS_ood)
     else:
         from .register import register
         register.datasets ={"GOODHIV": GOODHIV(root=osp.join(r"/home/wangyili/shenxu/G-OOD-D-main/data/", 'hiv/'),
@@ -283,6 +277,11 @@ def get_ood_dataset_spilt(args, train_per=0.9, need_str_enc=True):
             dataset_ood = (PygGraphPropPredDataset(name=DS_ood, root=path_ood))
             dataset_ood.data.x = dataset_ood.data.x.type(torch.float32)
     '''
+
+    max_nodes_num_train = max([_.num_nodes for _ in dataset])
+    max_nodes_num_test = max([_.num_nodes for _ in dataset_ood])
+    max_nodes_num = max_nodes_num_train if max_nodes_num_train > max_nodes_num_test else max_nodes_num_test
+    
     dataset_num_features = dataset.num_node_features
     dataset_num_features_ood = dataset_ood.num_node_features
     assert dataset_num_features == dataset_num_features_ood
@@ -323,7 +322,7 @@ def get_ood_dataset_spilt(args, train_per=0.9, need_str_enc=True):
     dataloader_test = DataLoader(data_list_test, batch_size=args.batch_size_test, shuffle=False)
     dataset_test = ConcatDataset([dataset_test, dataset_ood])
     meta = {'num_feat':dataset_num_features, 'num_train':len(dataset_train),
-            'num_test':len(dataset_test), 'num_ood':len(dataset_ood),'max_nodes_num':max_nodes_num}
+            'num_test':len(dataset_test), 'num_ood':len(dataset_ood),'max_nodes_num':max_nodes_num,'num_edge_feat':0}
     
     #训练集（ID）， 测试集（ID+OOD）， 训练集dataloader,测试集dataloader,数据信息
     return dataset_train,dataset_test,dataloader, dataloader_test, meta
@@ -358,7 +357,7 @@ def get_ad_split_TU(args, fold=5):
 #TU 10个数据集
 def get_ad_dataset_TU(args, split, need_str_enc=True):
     path_now =  os.path.abspath(os.path.join(os.getcwd(), "."))
-    print(path_now)
+    # print(path_now)
     #path = osp.join(osp.dirname(osp.realpath(__file__)), '.', 'data', DS)
     #path_ood = osp.join(osp.dirname(osp.realpath(__file__)), '.', 'data', DS_ood)
     path = osp.join(path_now, '.', 'data', args.DS)
@@ -402,7 +401,7 @@ def get_ad_dataset_TU(args, split, need_str_enc=True):
     
     dataloader = DataLoader(data_train, batch_size=args.batch_size, shuffle=True)
     dataloader_test = DataLoader(data_test, batch_size=args.batch_size_test, shuffle=True)
-    meta = {'num_feat':dataset_num_features, 'num_train':len(data_train), 'max_nodes_num':max_nodes_num}
+    meta = {'num_feat':dataset_num_features, 'num_train':len(data_train), 'max_nodes_num':max_nodes_num,'num_edge_feat':0}
     #训练集（ID）， 测试集（ID+OOD）， 训练集dataloader,测试集dataloader,数据信息
     return dataset[train_index],dataset[test_index],dataloader, dataloader_test, meta
 
@@ -444,6 +443,6 @@ def get_ad_dataset_Tox21(args, need_str_enc=True):
 
     dataloader = DataLoader(data_train, batch_size=args.batch_size, shuffle=True)
     dataloader_test = DataLoader(data_test, batch_size=args.batch_size_test, shuffle=True)
-    meta = {'num_feat':dataset_num_features, 'num_train':len(data_train), 'max_nodes_num':max_nodes_num}
+    meta = {'num_feat':dataset_num_features, 'num_train':len(data_train), 'max_nodes_num':max_nodes_num,'num_edge_feat':0}
     #训练集（ID）， 测试集（ID+OOD）， 训练集dataloader,测试集dataloader,数据信息
     return data_train,data_test,dataloader, dataloader_test, meta
