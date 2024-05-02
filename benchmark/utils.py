@@ -39,3 +39,24 @@ def init_model(args):
 
         return GLocalKD(in_dim=args.dataset_num_features,
                         max_nodes_num=args.max_nodes_num)
+       
+    elif model_name == "GLADC":
+        return GLADC(lr=args.lr,
+                     num_epochs=args.num_epoch,
+                     dropout=args.dropout,
+                     batch_size=args.batch_size,
+                     hidden_dim=args.hidden_dim,
+                     output_dim = args.output_dim,
+                     num_gc_layers = args.num_layer,
+                     max_nodes_num=args.max_nodes_num,
+                     feature_dim=args.dataset_num_features)
+       
+    elif model_name == "SIGNET":
+        return SIGNET(num_epochs=args.num_epoch,
+                     gpu=args.gpu,
+                     lr=args.lr,
+                     input_dim=args.dataset_num_features,
+                     input_dim_edge=args.n_edge_feat,
+                     args=args)
+
+   
