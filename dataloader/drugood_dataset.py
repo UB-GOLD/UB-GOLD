@@ -4,7 +4,7 @@ import torch
 import torch.utils
 import torch.utils.data
 from torch_geometric.data import InMemoryDataset, Data
-# import mmcv
+import mmcv
 import rdkit
 from rdkit import Chem
 
