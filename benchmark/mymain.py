@@ -138,6 +138,24 @@ if __name__ == '__main__':
 
 
     '''
+    GLocalKD
+    '''
+    parser.add_argument('--max-nodes', dest='max_nodes', type=int, default=0,
+                        help='Maximum number of nodes (ignore graghs with nodes exceeding the number.')
+    parser.add_argument('--clip', dest='clip', default=0.1, type=float, help='Gradient clipping.')
+    # parser.add_argument('--num_epochs', dest='num_epochs', default=150, type=int, help='total epoch number')
+    parser.add_argument('--batch-size', dest='batch_size', default=300, type=int, help='Batch size.')
+    parser.add_argument('--hidden-dim', dest='hidden_dim', default=512, type=int, help='Hidden dimension')
+    parser.add_argument('--output-dim', dest='output_dim', default=256, type=int, help='Output dimension')
+    parser.add_argument('--num-gc-layers', dest='num_gc_layers', default=3, type=int,
+                        help='Number of graph convolution layers before each pooling')
+    parser.add_argument('--nobn', dest='bn', action='store_const', const=False, default=True,
+                        help='Whether batch normalization is used')
+    parser.add_argument('--dropout', dest='dropout', default=0.3, type=float, help='Dropout rate.')
+    parser.add_argument('--nobias', dest='bias', action='store_const', const=False, default=True,
+                        help='Whether to add bias. Default to True.')
+
+    '''
     GLADC parameter
     '''
     parser.add_argument('--max-nodes', dest='max_nodes', type=int, default=0,
