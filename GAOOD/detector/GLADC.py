@@ -183,6 +183,13 @@ class GLADC(DeepDetector):
         return len(files_and_dirs) == 0
 
     def decision_function(self, dataset, label=None, dataloader=None, args=None):
+        path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        path = os.path.join(path, 'model_save', self.model_name, self.DS)
+        if self.is_directory_empty(path):
+            pass
+        else:
+            self.NetGe = torch.load(os.path.join(path,'model_NetGe.pth'))
+            
         self.NetGe.eval()
         loss = []
         y = []
