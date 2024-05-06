@@ -22,22 +22,22 @@ def main(args):
     print(args)
     for _ in tqdm.tqdm(range(args.num_trial)):
         if args.exp_type == 'ad' and args.DS.startswith('Tox21'): 
-                dataset_train,dataset_test,dataloader, dataloader_test, meta = get_ad_dataset_Tox21(args)
+               data_train,data_val, data_test, dataloader,dataloader_val, dataloader_test, meta = get_ad_dataset_Tox21(args)
             # else:
             #     splits = get_ad_split_TU(args, fold=args.num_trial)
         elif args.exp_type == 'oodd':
             print("-------")
             print(args.exp_type)
-            dataset_train, dataset_test, dataloader, dataloader_test, meta = get_ood_dataset(args)
+            data_train,data_val, data_test, dataloader,dataloader_val, dataloader_test, meta = get_ood_dataset(args)
             
         elif args.exp_type == 'ad' and not args.DS.startswith('Tox21'):
             splits = get_ad_split_TU(args, fold=args.num_trial)
-            dataset_train, dataset_test, dataloader, dataloader_test, meta = get_ad_dataset_TU(args, splits[_])
+            data_train,data_val, data_test, dataloader,dataloader_val, dataloader_test, meta = get_ad_dataset_TU(args, splits[_])
             
         elif args.exp_type == 'ood':
             print("-------")
             print(args.exp_type)
-            dataset_train, dataset_test, dataloader, dataloader_test, meta = get_ood_dataset_spilt(args)
+            data_train,data_val, data_test, dataloader,dataloader_val, dataloader_test, meta = get_ood_dataset_spilt(args)
 
         args.max_nodes_num = meta['max_nodes_num']
         args.dataset_num_features = meta['num_feat']
@@ -53,19 +53,19 @@ def main(args):
         
         if args.model == 'GOOD-D':
             print(args.model)
-            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader)
+            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
         elif args.model == 'GraphDE':
             print(args.model)
-            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader)
+            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
         elif args.model == 'GLocalKD':
             print(args.model)
-            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader)
+            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
         elif args.model == 'GLADC':
             print(args.model)
-            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader)
+            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
         elif args.model == 'SIGNET':
             print(args.model)
-            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader)
+            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
 
         else:
             model.fit(dataset_train)
