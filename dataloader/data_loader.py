@@ -173,13 +173,16 @@ def get_ood_dataset(args, train_per=0.9, need_str_enc=True):
     num_train = int(num_sample * train_per)
     indices = torch.randperm(num_sample)
     idx_train = torch.sort(indices[:num_train])[0]
+    idx_val = torch.sort(indices[num_train:])[0]
     idx_test = torch.sort(indices[num_train:])[0]
 
     dataset_train = dataset[idx_train]
+    dataset_val = dataset[idx_val]
     dataset_test = dataset[idx_test]
     dataset_ood = dataset_ood[: len(dataset_test)]
 
     data_list_train = []
+    data_list_val = []
     idx = 0
     for data in dataset_train:
         data.y = 0
@@ -189,7 +192,17 @@ def get_ood_dataset(args, train_per=0.9, need_str_enc=True):
 
     if need_str_enc:
         data_list_train = init_structural_encoding(data_list_train, rw_dim=args.rw_dim, dg_dim=args.dg_dim)
-    dataloader = DataLoader(data_list_train, batch_size=args.batch_size, shuffle=True)
+    dataloader_train = DataLoader(data_list_train, batch_size=args.batch_size, shuffle=True)
+
+    for data in dataset_val:
+        data.y = 0
+        data['idx'] = idx
+        idx += 1
+        data_list_val.append(data)
+
+    if need_str_enc:
+        data_list_val = init_structural_encoding(data_list_val, rw_dim=args.rw_dim, dg_dim=args.dg_dim)
+    dataloader_val = DataLoader(data_list_val, batch_size=args.batch_size, shuffle=True)
 
     data_list_test = []
     for data in dataset_test:
@@ -209,7 +222,7 @@ def get_ood_dataset(args, train_per=0.9, need_str_enc=True):
     meta = {'num_feat':dataset_num_features, 'num_train':len(dataset_train),
             'num_test':len(dataset_test), 'num_ood':len(dataset_ood),'max_nodes_num':max_nodes_num,'num_edge_feat':0}
     #训练集（ID）， 测试集（ID+OOD）， 训练集dataloader,测试集dataloader,数据信息
-    return dataset_train, dataset_test, dataloader, dataloader_test, meta
+    return dataset_train, dataset_val, dataset_test, dataloader_train, dataloader_val, dataloader_test, meta
 
 #GOOD和DrugOOD， 一个数据集
 def get_ood_dataset_spilt(args, train_per=0.9, need_str_enc=True):
@@ -226,14 +239,14 @@ def get_ood_dataset_spilt(args, train_per=0.9, need_str_enc=True):
     # print(path_now)
     path = osp.join(path_now, '.', 'data', DS)
     # print(path)
-    n_train_data, n_val_data, n_in_test_data, n_out_test_data = 500, 500, 500, 500
+    n_train_data, n_in_test_data, n_out_test_data = 1000, 500, 500
     if DrugooD:
         dataset = DrugOOD(path, mode='iid')
-        print(len(dataset))
+        # print(len(dataset))
         max_nodes_num = max([_.num_nodes for _ in dataset])
         dataset.data.x = dataset.data.x.type(torch.float32)
         dataset_ood = DrugOOD(path, mode='ood')
-        print(len(dataset_ood))
+        # print(len(dataset_ood))
         dataset_ood.data.x = dataset_ood.data.x.type(torch.float32)    
 
     else:
@@ -286,11 +299,14 @@ def get_ood_dataset_spilt(args, train_per=0.9, need_str_enc=True):
     dataset_num_features_ood = dataset_ood.num_node_features
     assert dataset_num_features == dataset_num_features_ood
 
-    dataset_train = dataset[:n_train_data]
-    dataset_test = dataset[n_train_data:n_train_data+n_in_test_data]
+    dataset_id = dataset[:n_train_data]
+    dataset_train = dataset_id[:int(n_train_data*train_per)]
+    dataset_val = dataset_id[int(n_train_data*train_per):]
+    dataset_test = dataset[n_train_data:n_train_data + n_in_test_data]
     dataset_ood = dataset_ood[: len(dataset_test)]
     
     data_list_train = []
+    data_list_val = []
     idx = 0
     for data in dataset_train:
         data.y = 0
@@ -300,7 +316,17 @@ def get_ood_dataset_spilt(args, train_per=0.9, need_str_enc=True):
 
     if need_str_enc:
         data_list_train = init_structural_encoding(data_list_train, rw_dim=args.rw_dim, dg_dim=args.dg_dim)
-    dataloader = DataLoader(data_list_train, batch_size=args.batch_size, shuffle=True)
+    dataloader_train = DataLoader(data_list_train, batch_size=args.batch_size, shuffle=True)
+
+    for data in dataset_val:
+        data.y = 0
+        data['idx'] = idx
+        idx += 1
+        data_list_val.append(data)
+
+    if need_str_enc:
+        data_list_val = init_structural_encoding(data_list_val, rw_dim=args.rw_dim, dg_dim=args.dg_dim)
+    dataloader_val = DataLoader(data_list_val, batch_size=args.batch_size, shuffle=True)
 
     data_list_test = []
     for data in dataset_test:
@@ -325,7 +351,8 @@ def get_ood_dataset_spilt(args, train_per=0.9, need_str_enc=True):
             'num_test':len(dataset_test), 'num_ood':len(dataset_ood),'max_nodes_num':max_nodes_num,'num_edge_feat':0}
     
     #训练集（ID）， 测试集（ID+OOD）， 训练集dataloader,测试集dataloader,数据信息
-    return dataset_train,dataset_test,dataloader, dataloader_test, meta
+    return dataset_train, dataset_val, dataset_test, dataloader_train, dataloader_val, dataloader_test, meta
+
 
 
 def get_ad_split_TU(args, fold=5):
@@ -382,13 +409,22 @@ def get_ad_dataset_TU(args, split, need_str_enc=True):
         data_list = init_structural_encoding(data_list, rw_dim=args.rw_dim, dg_dim=args.dg_dim)
 
     (train_index, test_index) = split
+    num_train = int(len(train_index)*0.8)
+    train_index = train_index[:num_train]
+    val_index = train_index[num_train:]
     data_train_ = [data_list[i] for i in train_index]
     data_test = [data_list[i] for i in test_index]
-
+    data_val_ = [data_list[i] for i in val_index]
     data_train = []
+
     for data in data_train_:
         if data.y != 0:
             data_train.append(data)
+            
+    data_val = []
+    for data in data_val_:
+        if data.y != 0:
+            data_val.append(data)
 
     idx = 0
     for data in data_train:
@@ -396,14 +432,20 @@ def get_ad_dataset_TU(args, split, need_str_enc=True):
         data['idx'] = idx
         idx += 1
 
+    for data in data_val:
+        data.y = 0
+        data['idx'] = idx
+        idx += 1
+
     for data in data_test:
         data.y = 1 if data.y == 0 else 0
     
-    dataloader = DataLoader(data_train, batch_size=args.batch_size, shuffle=True)
+    dataloader_train = DataLoader(data_train, batch_size=args.batch_size, shuffle=True)
+    dataloader_val = DataLoader(data_val, batch_size=args.batch_size, shuffle=True)
     dataloader_test = DataLoader(data_test, batch_size=args.batch_size_test, shuffle=True)
     meta = {'num_feat':dataset_num_features, 'num_train':len(data_train), 'max_nodes_num':max_nodes_num,'num_edge_feat':0}
     #训练集（ID）， 测试集（ID+OOD）， 训练集dataloader,测试集dataloader,数据信息
-    return dataset[train_index],dataset[test_index],dataloader, dataloader_test, meta
+    return dataset[train_index],dataset[test_index],dataloader_train, dataloader_test, meta
 
 #4个真实数据集
 def get_ad_dataset_Tox21(args, need_str_enc=True):
@@ -423,6 +465,9 @@ def get_ad_dataset_Tox21(args, need_str_enc=True):
     max_nodes_num_test = max([_.num_nodes for _ in data_test])
     max_nodes_num = max_nodes_num_train if max_nodes_num_train > max_nodes_num_test else max_nodes_num_test
     
+    num_train = int(len(data_train_) * 0.8)
+    data_train_ = data_train_[:num_train]
+    data_val_ = data_train_[num_train:]
     data_train = []
     for data in data_train_:
         if data.y == 1:
@@ -433,16 +478,27 @@ def get_ad_dataset_Tox21(args, need_str_enc=True):
         data.y = 0
         data['idx'] = idx
         idx += 1
+    data_val = []
+    for data in data_val_:
+        if data.y == 1:
+            data_val.append(data)
+
+    idx = 0
+    for data in data_val:
+        data.y = 0
+        data['idx'] = idx
+        idx += 1
 
     for data in data_test:
         data.y = 1 if data.y == 1 else 0
 
-    if need_str_enc:
+        if need_str_enc:
         data_train = init_structural_encoding(data_train, rw_dim=args.rw_dim, dg_dim=args.dg_dim)
         data_test = init_structural_encoding(data_test, rw_dim=args.rw_dim, dg_dim=args.dg_dim)
-
-    dataloader = DataLoader(data_train, batch_size=args.batch_size, shuffle=True)
+        data_val  = init_structural_encoding(data_val, rw_dim=args.rw_dim, dg_dim=args.dg_dim)
+    dataloader_train = DataLoader(data_train, batch_size=args.batch_size, shuffle=True)
     dataloader_test = DataLoader(data_test, batch_size=args.batch_size_test, shuffle=True)
+    dataloader_val = DataLoader(data_val, batch_size=args.batch_size_test, shuffle=True)
     meta = {'num_feat':dataset_num_features, 'num_train':len(data_train), 'max_nodes_num':max_nodes_num,'num_edge_feat':0}
     #训练集（ID）， 测试集（ID+OOD）， 训练集dataloader,测试集dataloader,数据信息
-    return data_train,data_test,dataloader, dataloader_test, meta
+    return data_train,data_val, data_test, dataloader,dataloader_val, dataloader_test, meta
