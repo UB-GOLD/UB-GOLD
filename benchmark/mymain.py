@@ -6,7 +6,6 @@ import sys, os
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(base_dir)
 from GAOOD.metric import *
-from GAOOD.utils import load_data
 from utils import init_model
 from dataloader.data_loader import *
 import pandas as pd
