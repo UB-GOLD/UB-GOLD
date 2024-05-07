@@ -144,7 +144,7 @@ def get_ood_dataset(args, train_per=0.9, need_str_enc=True):
     TU = not DS.startswith('ogbg-mol')
     path_now =  os.path.abspath(os.path.join(os.getcwd(), "."))
     path = osp.join(path_now, '.', 'data', DS)
-    path_ood = osp.join(path_now, '.', 'data', DS_ood
+    path_ood = osp.join(path_now, '.', 'data', DS_ood)
     
     if TU:
         dataset = TUDataset(path, name=DS, transform=(Constant(1, cat=False)))
