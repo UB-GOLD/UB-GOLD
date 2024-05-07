@@ -428,7 +428,7 @@ def get_ad_dataset_TU(args, split, need_str_enc=True):
     # data_val_ = [data_list[i] for i in val_index]
     # data_train = []
 
-     (train_index, test_index) = split
+    (train_index, test_index) = split
     data_train_ = [data_list[i] for i in train_index]
     data_test = [data_list[i] for i in test_index]
 
