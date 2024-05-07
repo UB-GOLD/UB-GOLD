@@ -30,11 +30,22 @@ def save_results(results, file_id):
     print('save to file ID: {}'.format(file_id))
     return file_id
 
+def set_seed(seed=3407):
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed(seed)
+        torch.cuda.manual_seed_all(seed)
+        torch.backends.cudnn.deterministic = True
+
 def main(args):
     auc, ap, rec = [], [], []
     columns = ['name']
     model_result = {'name': args.model}
     results = pd.DataFrame(columns=columns)
+    set_seed()
     for _ in tqdm.tqdm(range(args.num_trial)):
 
         if args.exp_type == 'ad':
