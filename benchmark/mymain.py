@@ -6,8 +6,10 @@ import sys, os
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(base_dir)
 from GAOOD.metric import *
+from GAOOD.utils import load_data
 from utils import init_model
 from dataloader.data_loader import *
+import pandas as pd
 '''
 python benchmark/mymain.py -exp_type oodd -DS_pair BZR+COX2 -num_epoch 400 -num_cluster 2 -alpha 0
 oodd（两个数据集OOD），ood:是GOOD/Drugood，ad :异常检测（tox/TU）
@@ -17,36 +19,56 @@ Ds, 剩下两个，ood和ad
 超参
 
 '''
+def save_results(results, file_id):
+    if not os.path.exists('results/'):
+        os.mkdir('results/')
+    if file_id is None:
+        file_id = 0
+        while os.path.exists('results/{}.xlsx'.format(file_id)):
+            file_id += 1
+    results.transpose().to_excel('results/{}.xlsx'.format(file_id))
+    print('save to file ID: {}'.format(file_id))
+    return file_id
+
 def main(args):
     auc, ap, rec = [], [], []
-    print(args)
+    columns = ['name']
+    model_result = {'name': args.model}
+    results = pd.DataFrame(columns=columns)
     for _ in tqdm.tqdm(range(args.num_trial)):
-        if args.exp_type == 'ad' and args.DS.startswith('Tox21'): 
-               data_train,data_val, data_test, dataloader,dataloader_val, dataloader_test, meta = get_ad_dataset_Tox21(args)
-            # else:
-            #     splits = get_ad_split_TU(args, fold=args.num_trial)
-        elif args.exp_type == 'oodd':
-            print("-------")
-            print(args.exp_type)
-            data_train,data_val, data_test, dataloader,dataloader_val, dataloader_test, meta = get_ood_dataset(args)
-            
+
+        if args.exp_type == 'ad':
+            if args.DS.startswith('Tox21'):
+                dataset_train, dataset_val, dataset_test, dataloader, dataloader_val, dataloader_test, meta = get_ad_dataset_Tox21(
+                    args)
+                for metric in ['AUROC', 'AUPRC']:
+                    columns.append(args.DS + '-' + metric)
+            else:
+                splits = get_ad_split_TU(args, fold=args.num_trial)
+        if args.exp_type == 'oodd':
+            dataset_train, dataset_val, dataset_test, dataloader, dataloader_val, dataloader_test, meta = get_ood_dataset(
+                args)
+            for metric in ['AUROC', 'AUPRC']:
+                columns.append(args.DS_pair + '-' + metric)
         elif args.exp_type == 'ad' and not args.DS.startswith('Tox21'):
-            splits = get_ad_split_TU(args, fold=args.num_trial)
-            data_train,data_val, data_test, dataloader,dataloader_val, dataloader_test, meta = get_ad_dataset_TU(args, splits[_])
-            
+            dataset_train, dataset_val, dataset_test, dataloader, dataloader_val, dataloader_test, meta = get_ad_dataset_TU(
+                args, splits[_])
+            for metric in ['AUROC', 'AUPRC']:
+                columns.append(args.DS + '-' + metric)
         elif args.exp_type == 'ood':
             print("-------")
             print(args.exp_type)
-            data_train,data_val, data_test, dataloader,dataloader_val, dataloader_test, meta = get_ood_dataset_spilt(args)
+            dataset_train, dataset_val, dataset_test, dataloader, dataloader_val, dataloader_test, meta = get_ood_dataset_spilt(
+                args)
+            for metric in ['AUROC', 'AUPRC']:
+                columns.append(args.DS + '-' + metric)
+
+        
 
         args.max_nodes_num = meta['max_nodes_num']
         args.dataset_num_features = meta['num_feat']
         args.n_train =  meta['num_train']
         args.n_edge_feat = meta['num_edge_feat']
-        
-        # args.dataset_num_features = meta['num_feat']
-        # args.n_train =  meta['num_train']
-        # args.max_nodes_num = meta['max_nodes_num']
 
         model = init_model(args)
         ###如果要自定义dataloader,就把dataset传进去，dataloader=None,否则按下面的来即可
@@ -72,48 +94,31 @@ def main(args):
 
         score, y_all = model.predict(dataset=dataset_test, dataloader=dataloader_test, args=args, return_score=False)
 
+        auc.append(ood_auc(y_all, score))
+        ap.append(ood_aupr(y_all, score))
 
-        # print(score)
-        # print(y_all)
-
-        
-        auc.append(ood_auc(y_all,score))
-        print(auc)
-        #auc.append(eval_roc_auc(y, score))
-        #ap.append(eval_average_precision(y, score))
-        #rec.append(eval_recall_at_k(y, score, k))
-
-    auc = torch.tensor(auc)
-    #ap = torch.tensor(ap)
-    #rec = torch.tensor(rec)
-    print(auc)
-    '''
-    print(args.dataset + " " + model.__class__.__name__ + " " +
-          "AUC: {:.4f}±{:.4f} ({:.4f})\t"
-          "AP: {:.4f}±{:.4f} ({:.4f})\t"
-          "Recall: {:.4f}±{:.4f} ({:.4f})".format(torch.mean(auc),
-                                                  torch.std(auc),
-                                                  torch.max(auc),
-                                                  torch.mean(ap),
-                                                  torch.std(ap),
-                                                  torch.max(ap),
-                                                  torch.mean(rec),
-                                                  torch.std(rec),
-                                                  torch.max(rec)))
-    '''
+    auc_final = sum(auc) / len(auc)
+    ap_final = sum(ap) / len(ap)
+    if args.exp_type == 'oodd':
+        model_result[args.DS_pair + '-AUROC'] = auc_final
+        model_result[args.DS_pair + '-AUPRC'] = ap_final
+        file_id = args.DS_pair+args.model
+    else:
+        model_result[args.DS + '-AUROC'] = auc_final
+        model_result[args.DS + '-AUPRC'] = ap_final
+        file_id = args.DS+args.model
+    model_result = pd.DataFrame(model_result, index=[0])
+    results = pd.concat([results, model_result])
+    file_id = save_results(results, file_id)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model", type=str, default="GLADC",
+    parser.add_argument("--model", type=str, default="GOOD-D",
                         help="supported model: [GLocalKD, GLADC, SIGNET, GOOD-D, GraphDE]."
                              "Default: GLADC")
     parser.add_argument("--gpu", type=int, default=0,
                         help="GPU Index. Default: -1, using CPU.")
-    parser.add_argument("--dataset", type=str, default='inj_cora',
-                        help="supported dataset: [inj_cora, inj_amazon, "
-                             "inj_flickr, weibo, reddit, disney, books, "
-                             "enron]. Default: inj_cora")
-    
+
     parser.add_argument('-exp_type', type=str, default='ad', choices=['oodd', 'ad','ood'])
     parser.add_argument('-DS', help='Dataset', default='BZR') 
     #BZR, DHFR
@@ -137,46 +142,34 @@ if __name__ == '__main__':
     parser.add_argument('-n_train', type=int, default=10)
 
 
-    '''
-    GLocalKD
-    '''
-    parser.add_argument('--max-nodes', dest='max_nodes', type=int, default=0,
-                        help='Maximum number of nodes (ignore graghs with nodes exceeding the number.')
-    parser.add_argument('--clip', dest='clip', default=0.1, type=float, help='Gradient clipping.')
-    # parser.add_argument('--num_epochs', dest='num_epochs', default=150, type=int, help='total epoch number')
-    parser.add_argument('--batch-size', dest='batch_size', default=300, type=int, help='Batch size.')
-    parser.add_argument('--hidden-dim', dest='hidden_dim', default=512, type=int, help='Hidden dimension')
-    parser.add_argument('--output-dim', dest='output_dim', default=256, type=int, help='Output dimension')
-    parser.add_argument('--num-gc-layers', dest='num_gc_layers', default=3, type=int,
-                        help='Number of graph convolution layers before each pooling')
-    parser.add_argument('--nobn', dest='bn', action='store_const', const=False, default=True,
-                        help='Whether batch normalization is used')
-    parser.add_argument('--dropout', dest='dropout', default=0.3, type=float, help='Dropout rate.')
-    parser.add_argument('--nobias', dest='bias', action='store_const', const=False, default=True,
-                        help='Whether to add bias. Default to True.')
-
-    '''
-    GLADC parameter
-    '''
-    parser.add_argument('--max-nodes', dest='max_nodes', type=int, default=0,
-                        help='Maximum number of nodes (ignore graghs with nodes exceeding the number.')
-    parser.add_argument('--dropout', dest='dropout', default=0.1, type=float, help='Dropout rate.')
-    parser.add_argument('--output-dim', dest='output_dim', default=128, type=int, help='Output dimension')
-    '''
-    SIGNET parameter
-    '''
-    # parser.add_argument('--log_interval', type=int, default=1)
-    parser.add_argument('--encoder_layers', type=int, default=5)
-    parser.add_argument('--pooling', type=str, default='add', choices=['add', 'max'])
-    parser.add_argument('--readout', type=str, default='concat', choices=['concat', 'add', 'last'])
-    parser.add_argument('--explainer_model', type=str, default='gin', choices=['mlp', 'gin'])
-    parser.add_argument('--explainer_layers', type=int, default=5)
-    parser.add_argument('--explainer_hidden_dim', type=int, default=8)
-    parser.add_argument('--explainer_readout', type=str, default='add', choices=['concat', 'add', 'last'])
- 
+    
     args = parser.parse_args()
 
-    # global setting
-    num_trial = 5
+    # 根据模型参数添加模型特有的参数
+    if args.model == "GLADC":
+        parser.add_argument('--max-nodes', type=int, default=0, help='Maximum number of nodes.')
+        parser.add_argument('--dropout', type=float, default=0.1, help='Dropout rate.')
+        parser.add_argument('--output-dim', type=int, default=128, help='Output dimension.')
+    elif args.model == "GLocalKD":
+        parser.add_argument('--max-nodes', type=int, default=0, help='Maximum number of nodes.')
+        parser.add_argument('--clip', type=float, default=0.1, help='Gradient clipping.')
+        parser.add_argument('--batch-size', type=int, default=300, help='Batch size.')
+        parser.add_argument('--hidden-dim', type=int, default=512, help='Hidden dimension.')
+        parser.add_argument('--output-dim', type=int, default=256, help='Output dimension.')
+        parser.add_argument('--num-gc-layers', type=int, default=3, help='Number of graph convolution layers.')
+        parser.add_argument('--nobn', action='store_const', const=False, default=True, help='Whether batch normalization is used')
+        parser.add_argument('--dropout', type=float, default=0.3, help='Dropout rate.')
+        parser.add_argument('--nobias', action='store_const', const=False, default=True, help='Whether to add bias.')
+    elif args.model == "SIGNET":
+        parser.add_argument('--encoder_layers', type=int, default=5)
+        parser.add_argument('--pooling', type=str, default='add', choices=['add', 'max'])
+        parser.add_argument('--readout', type=str, default='concat', choices=['concat', 'add', 'last'])
+        parser.add_argument('--explainer_model', type=str, default='gin', choices=['mlp', 'gin'])
+        parser.add_argument('--explainer_layers', type=int, default=5)
+        parser.add_argument('--explainer_hidden_dim', type=int, default=8)
+        parser.add_argument('--explainer_readout', type=str, default='add', choices=['concat', 'add', 'last'])
+
+    # 解析新增加的参数
+    args = parser.parse_args()
 
     main(args)
