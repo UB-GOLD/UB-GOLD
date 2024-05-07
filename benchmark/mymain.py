@@ -150,6 +150,7 @@ if __name__ == '__main__':
     parser.add_argument('-num_cluster', type=int, default=2)
     parser.add_argument('-alpha', type=float, default=0)
     parser.add_argument('-n_train', type=int, default=10)
+    parser.add_argument('-dropout', type=float, default=0.3, help='Dropout rate.')
 
 
     
