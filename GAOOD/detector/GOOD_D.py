@@ -1,12 +1,13 @@
+
 import torch
 from torch_geometric.nn import GCN
 
 from .mybase import DeepDetector
 from ..nn import good_d
-# import faiss
+import faiss
 import numpy as np
-
-
+from GAOOD.metric import *
+import os
 def run_kmeans(x, args):
     results = {}
 
@@ -70,8 +71,9 @@ def run_kmeans(x, args):
 
 class GOOD_D(DeepDetector):
 
+
     def __init__(self,
-                 in_dim = None,
+                 in_dim=None,
                  hid_dim=64,
                  num_layers=2,
                  str_dim=64,
@@ -142,19 +144,27 @@ class GOOD_D(DeepDetector):
         for data in dataloader:
             with torch.no_grad():
                 data = data.to(device)
-                
+
                 b = model.get_b(data.x, data.x_s, data.edge_index, data.batch, data.num_graphs)
                 b_all[data.idx] = b.detach().cpu()
         cluster_result = run_kmeans(b_all.numpy(), args)
         return cluster_result
 
-    def fit(self, dataset, args=None, label=None, dataloader=None):
+    def fit(self, dataset, args=None, label=None, dataloader=None,dataloader_Val=None):
+        path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        if args.exp_type == 'oodd':
+          path = os.path.join(path, 'model_save', "GOOD_D", args.DS_pair)
+        else:
+          path = os.path.join(path, 'model_save', "GOOD_D", args.DS)
+        if not os.path.exists(path):
+          os.makedirs(path)
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.model = self.init_model(**self.kwargs)
         optimizer = torch.optim.Adam(self.model.parameters(), lr=args.lr)
         self.model.train()
         self.decision_score_ = None
         self.train_dataloader = dataloader
+        self.max_AUC = 0
         for epoch in range(1, args.num_epoch + 1):
             if args.is_adaptive:
                 if epoch == 1:
@@ -164,10 +174,10 @@ class GOOD_D(DeepDetector):
                     weight_sum = (weight_b + weight_g + weight_n) / 3
                     weight_b, weight_g, weight_n = weight_b / weight_sum, weight_g / weight_sum, weight_n / weight_sum
 
-            loss_all = 0
             if args.is_adaptive:
                 loss_b_all, loss_g_all, loss_n_all = [], [], []
             y_score_all = []
+            loss_all = 0
             for data in dataloader:
                 data = data.to(device)
                 optimizer.zero_grad()
@@ -181,32 +191,67 @@ class GOOD_D(DeepDetector):
                     loss_n_all = loss_n_all + loss_n.detach().cpu().tolist()
                 else:
                     loss = loss_b.mean() + loss_g.mean() + loss_n.mean()
-
+                loss_all += loss.item() * data.num_graphs
                 loss.backward()
                 optimizer.step()
                 if args.is_adaptive:
                     mean_b, std_b = np.mean(loss_b_all), np.std(loss_b_all)
                     mean_g, std_g = np.mean(loss_g_all), np.std(loss_g_all)
                     mean_n, std_n = np.mean(loss_n_all), np.std(loss_n_all)
-                #batch_size = data.batch_size
-                
+                # batch_size = data.batch_size
+              
                 if args.is_adaptive:
                     y_score = (y_score_b - mean_b) / std_b + (y_score_g - mean_g) / std_g + (y_score_n - mean_n) / std_n
                 else:
                     y_score = y_score_b + y_score_g + y_score_n
-                #print(y_score)
+                # print(y_score)
                 y_score_all = y_score_all + y_score.detach().cpu().tolist()
-                #self.decision_score_[node_idx[:batch_size]] = y_score
+            print('[TRAIN] Epoch:{:03d} | Loss:{:.4f}'.format(epoch, loss_all / args.n_train))
+            if (epoch) % 5 == 0 and epoch > 0:
+                self.model.eval()
 
-        #self._process_decision_score()
+                y_val = []
+                score_val = []
+                for data in dataloader_Val:
+                    
+                    data = data.to(device)
+                    emb, emb_list = self.model(data)
+                    cluster_result = self.get_cluster_result(self.train_dataloader, self.model, args)
+                    y_score_b, y_score_g, y_score_n = self.model.score_func(emb, emb_list, data, cluster_result)
+                    y_score = y_score_b + y_score_g + y_score_n
+                    
+                    y_true = data.y
+                    y_val = y_val + y_true.detach().cpu().tolist()
+                    score_val = score_val + y_score.detach().cpu().tolist()
+
+
+                val_auc = ood_auc(y_val,score_val)
+
+                if val_auc > self.max_AUC:
+                    self.max_AUC = val_auc
+                    torch.save(self.model, os.path.join(path, 'model_GOOD_D.pth'))
+
+                # self.decision_score_[node_idx[:batch_size]] = y_score
+
+        # self._process_decision_score()
         return self
-
+    def is_directory_empty(self,directory):
+        # 列出目录下的所有文件和文件夹
+        files_and_dirs = os.listdir(directory)
+        # 如果列表为空，则目录为空
+        return len(files_and_dirs) == 0
     def decision_function(self, dataset, label=None, dataloader=None, args=None):
-
+        path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        if args.exp_type == 'oodd':
+          path = os.path.join(path, 'model_save', "GOOD_D", args.DS_pair)
+        else:
+          path = os.path.join(path, 'model_save', "GOOD_D", args.DS)
         self.model.eval()
-        
+        if self.is_directory_empty(path):
+            print("Can't find the path")
+        else:
+            self.model = torch.load(os.path.join(path,'model_GOOD_D.pth'))
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        test_loss = 0
         y_score_all = []
         y_true_all = []
         for data in dataloader:
@@ -214,10 +259,9 @@ class GOOD_D(DeepDetector):
             emb, emb_list = self.model(data)
             cluster_result = self.get_cluster_result(self.train_dataloader, self.model, args)
             y_score_b, y_score_g, y_score_n = self.model.score_func(emb, emb_list, data, cluster_result)
-            
 
             y_score = y_score_b + y_score_g + y_score_n
-            #outlier_score[node_idx[:batch_size]] = y_score
+            # outlier_score[node_idx[:batch_size]] = y_score
             y_score_all = y_score_all + y_score.detach().cpu().tolist()
             y_true = data.y
             y_true_all = y_true_all + y_true.detach().cpu().tolist()
@@ -242,13 +286,13 @@ class GOOD_D(DeepDetector):
                 return_emb=False,
                 dataloader=None,
                 args=None):
-
+        
         output = ()
         if dataset is None:
             score = self.decision_score_
 
         else:
-            score,y_all = self.decision_function(dataset, label,dataloader,args)
-            output = (score,y_all)
+            score, y_all = self.decision_function(dataset, label, dataloader, args)
+            output = (score, y_all)
             return output
 
