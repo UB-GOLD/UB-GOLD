@@ -143,15 +143,8 @@ def get_ood_dataset(args, train_per=0.9, need_str_enc=True):
 
     TU = not DS.startswith('ogbg-mol')
     path_now =  os.path.abspath(os.path.join(os.getcwd(), "."))
-    # print(path_now)
-    #path = osp.join(osp.dirname(osp.realpath(__file__)), '.', 'data', DS)
-    #path_ood = osp.join(osp.dirname(osp.realpath(__file__)), '.', 'data', DS_ood)
     path = osp.join(path_now, '.', 'data', DS)
-    path_ood = osp.join(path_now, '.', 'data', DS_ood)
-    # print(path)
-    #print(os.path.abspath(os.path.dirname(os.getcwd())))
-    #print(os.path.abspath(os.path.join(os.getcwd(), ".")))
-    # print(path_ood)
+    path_ood = osp.join(path_now, '.', 'data', DS_ood
     
     if TU:
         dataset = TUDataset(path, name=DS, transform=(Constant(1, cat=False)))
