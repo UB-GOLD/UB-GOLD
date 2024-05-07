@@ -214,43 +214,6 @@ class DrugNet(torch.nn.Module):
         return inlier_loss + outlier_loss + kl_loss
 
 class GraphDE(nn.Module):
-    """
-    One-Class Graph Neural Networks for Anomaly Detection in
-    Attributed Networks
-
-    OCGNN is an anomaly detector that measures the
-    distance of anomaly to the centroid, in a similar fashion to the
-    support vector machine, but in the embedding space after feeding
-    towards several layers of GCN.
-
-    See :cite:`wang2021one` for details.
-
-    Parameters
-    ----------
-    in_dim : int
-        Input dimension of model.
-    hid_dim :  int, optional
-        Hidden dimension of model. Default: ``64``.
-    num_layers : int, optional
-        Total number of layers in model. Default: ``2``.
-    dropout : float, optional
-        Dropout rate. Default: ``0.``.
-    act : callable activation function or None, optional
-        Activation function if not None.
-        Default: ``torch.nn.functional.relu``.
-    backbone : torch.nn.Module
-        The backbone of the deep detector implemented in PyG.
-        Default: ``torch_geometric.nn.GCN``.
-    beta : float, optional
-        The weight between the reconstruction loss and radius.
-        Default: ``0.5``.
-    warmup : int, optional
-        The number of epochs for warm-up training. Default: ``2``.
-    eps : float, optional
-        The slack variable. Default: ``0.001``.
-    **kwargs
-        Other parameters for the backbone model.
-    """
 
     def __init__(self,
                  in_dim,
@@ -288,7 +251,6 @@ class GraphDE(nn.Module):
         self.graphde_v = graphde_v
         self.gnn_model = create_model(backbone, in_dim, hid_dim, num_layers, dropout,
                                       dropedge[0], bn)
-        print(neg_ratio)
         self.structure_model = CosineLSM(in_dim, hid_dim, dropout, neg_ratio[0], m=2)
         self.out_mlp = torch.nn.Sequential(
             Linear(hid_dim, 2 * hid_dim),
