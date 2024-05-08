@@ -5,7 +5,7 @@ import warnings
 import sys, os
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(base_dir)
-from GAOOD.metric import *
+from GAOOD.metric import ood_auc, ood_aupr
 from utils import init_model
 from dataloader.data_loader import *
 import pandas as pd
