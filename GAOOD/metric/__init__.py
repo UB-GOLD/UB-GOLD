@@ -3,7 +3,7 @@
 # from .metric import eval_precision_at_k
 # from .metric import eval_recall_at_k
 # from .metric import eval_roc_auc
-from .metric import ood_auc
+from .metric import ood_auc, ood_aupr
 # __all__ = ['eval_average_precision', 'eval_f1', 'eval_precision_at_k',
 #            'eval_recall_at_k', 'eval_roc_auc','ood_auc']
-__all__ = ['ood_auc']
+__all__ = ['ood_auc','ood_aupr']
