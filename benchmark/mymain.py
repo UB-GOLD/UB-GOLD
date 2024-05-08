@@ -199,7 +199,7 @@ if __name__ == '__main__':
     parser.add_argument('-num_layer', type=int, default=5)
     parser.add_argument('-hidden_dim', type=int, default=16)
     parser.add_argument('-num_trial', type=int, default=10)
-    parser.add_argument('-num_epoch', type=int, default=400)
+    parser.add_argument('-num_epoch', type=int, default=150)
     parser.add_argument('-eval_freq', type=int, default=10)
     parser.add_argument('-is_adaptive', type=int, default=1)
     parser.add_argument('-num_cluster', type=int, default=2)
