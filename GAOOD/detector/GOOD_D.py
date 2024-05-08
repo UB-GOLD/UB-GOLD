@@ -4,7 +4,7 @@ from torch_geometric.nn import GCN
 
 from .mybase import DeepDetector
 from ..nn import good_d
-import faiss
+# import faiss
 import numpy as np
 from GAOOD.metric import *
 import os
