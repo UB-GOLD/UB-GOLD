@@ -5,10 +5,11 @@ import warnings
 import sys, os
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(base_dir)
-from GAOOD.metric import *
+from GAOOD.metric import ood_auc, ood_aupr
 from utils import init_model
 from dataloader.data_loader import *
 import pandas as pd
+import statistics
 '''
 python benchmark/mymain.py -exp_type oodd -DS_pair BZR+COX2 -num_epoch 400 -num_cluster 2 -alpha 0
 oodd（两个数据集OOD），ood:是GOOD/Drugood，ad :异常检测（tox/TU）
@@ -23,11 +24,12 @@ def save_results(results, file_id):
         os.mkdir('results/')
     if file_id is None:
         file_id = 0
-        while os.path.exists('results/{}.xlsx'.format(file_id)):
+        while os.path.exists(f'results/{file_id}.xlsx'):
             file_id += 1
-    results.transpose().to_excel('results/{}.xlsx'.format(file_id))
-    print('save to file ID: {}'.format(file_id))
+    results.transpose().to_excel(f'results/{file_id}.xlsx')
+    print('Saved to file ID:', file_id)
     return file_id
+
 
 def set_seed(seed=3407):
     os.environ['PYTHONHASHSEED'] = str(seed)
@@ -106,21 +108,34 @@ def main(args):
 
         auc.append(ood_auc(y_all, score))
         ap.append(ood_aupr(y_all, score))
+        print("AUROC:", auc[-1])
+        print("AUPRC:", ap[-1])
 
+        # 计算平均值和方差
     auc_final = sum(auc) / len(auc)
     ap_final = sum(ap) / len(ap)
+    auc_variance = statistics.variance(auc)
+    ap_variance = statistics.variance(ap)
+
+    # 创建或更新结果DataFrame
+    model_result = {}
     if args.exp_type == 'oodd':
+        file_id = args.DS_pair + args.model
         model_result[args.DS_pair + '-AUROC'] = auc_final
         model_result[args.DS_pair + '-AUPRC'] = ap_final
-        file_id = args.DS_pair+args.model
+        model_result[args.DS_pair + '-AUROC_Var'] = auc_variance
+        model_result[args.DS_pair + '-AUPRC_Var'] = ap_variance
     else:
+        file_id = args.DS + args.model
         model_result[args.DS + '-AUROC'] = auc_final
         model_result[args.DS + '-AUPRC'] = ap_final
-        file_id = args.DS+args.model
-    model_result = pd.DataFrame(model_result, index=[0])
-    results = pd.concat([results, model_result])
-    file_id = save_results(results, file_id)
+        model_result[args.DS + '-AUROC_Var'] = auc_variance
+        model_result[args.DS + '-AUPRC_Var'] = ap_variance
 
+    model_result_df = pd.DataFrame([model_result])
+    results = pd.concat([results, model_result_df])
+    file_id = save_results(results, file_id)
+    
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", type=str, default="GOOD-D",
@@ -143,7 +158,7 @@ if __name__ == '__main__':
     parser.add_argument('-lr', type=float, default=0.0001)
     parser.add_argument('-num_layer', type=int, default=5)
     parser.add_argument('-hidden_dim', type=int, default=16)
-    parser.add_argument('-num_trial', type=int, default=5)
+    parser.add_argument('-num_trial', type=int, default=10)
     parser.add_argument('-num_epoch', type=int, default=400)
     parser.add_argument('-eval_freq', type=int, default=10)
     parser.add_argument('-is_adaptive', type=int, default=1)
@@ -151,8 +166,6 @@ if __name__ == '__main__':
     parser.add_argument('-alpha', type=float, default=0)
     parser.add_argument('-n_train', type=int, default=10)
     parser.add_argument('-dropout', type=float, default=0.3, help='Dropout rate.')
-
-
     
     args = parser.parse_args()
 
