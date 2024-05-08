@@ -207,7 +207,7 @@ class GOOD_D(DeepDetector):
                 # print(y_score)
                 y_score_all = y_score_all + y_score.detach().cpu().tolist()
             print('[TRAIN] Epoch:{:03d} | Loss:{:.4f}'.format(epoch, loss_all / args.n_train))
-            if (epoch) % 5 == 0 and epoch > 0:
+            if (epoch) % args.eval_freq == 0 and epoch > 0:
                 self.model.eval()
 
                 y_val = []
