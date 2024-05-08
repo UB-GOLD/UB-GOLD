@@ -150,7 +150,7 @@ class GOOD_D(DeepDetector):
         cluster_result = run_kmeans(b_all.numpy(), args)
         return cluster_result
 
-    def fit(self, dataset, args=None, label=None, dataloader=None,dataloader_Val=None):
+    def fit(self, dataset, args=None, label=None, dataloader=None,dataloader_val=None):
         path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         if args.exp_type == 'oodd':
           path = os.path.join(path, 'model_save', "GOOD_D", args.DS_pair)
@@ -212,7 +212,7 @@ class GOOD_D(DeepDetector):
 
                 y_val = []
                 score_val = []
-                for data in dataloader_Val:
+                for data in dataloader_val:
                     
                     data = data.to(device)
                     emb, emb_list = self.model(data)
