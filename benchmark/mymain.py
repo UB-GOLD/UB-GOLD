@@ -5,7 +5,7 @@ import warnings
 import sys, os
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(base_dir)
-from GAOOD.metric import ood_auc, ood_aupr
+from GAOOD.metric import *
 from utils import init_model
 from dataloader.data_loader import *
 import pandas as pd
@@ -19,16 +19,17 @@ Ds, 剩下两个，ood和ad
 超参
 
 '''
-def save_results(results, file_id):
+def save_results_csv(results, file_id):
     if not os.path.exists('results/'):
         os.mkdir('results/')
     if file_id is None:
         file_id = 0
-        while os.path.exists(f'results/{file_id}.xlsx'):
+        while os.path.exists(f'results/{file_id}.csv'):
             file_id += 1
-    results.transpose().to_excel(f'results/{file_id}.xlsx')
+    results.to_csv(f'results/{file_id}.csv', index=False)
     print('Saved to file ID:', file_id)
     return file_id
+
 
 
 def set_seed(seed=3407):
@@ -120,21 +121,23 @@ def main(args):
     # 创建或更新结果DataFrame
     model_result = {}
     if args.exp_type == 'oodd':
-        file_id = args.DS_pair + args.model
-        model_result[args.DS_pair + '-AUROC'] = auc_final
-        model_result[args.DS_pair + '-AUPRC'] = ap_final
-        model_result[args.DS_pair + '-AUROC_Var'] = auc_variance
-        model_result[args.DS_pair + '-AUPRC_Var'] = ap_variance
+        file_id = args.model
+        # file_id = args.DS_pair + args.model
+        model_result[args.DS_pair + '-AUROC'] = f"{auc_final * 100:.2f}%"
+        model_result[args.DS_pair + '-AUROC_Var'] = f"{auc_variance * 100:.2f}%"
+        model_result[args.DS_pair + '-AUPRC'] = f"{ap_final * 100:.2f}%"
+        model_result[args.DS_pair + '-AUPRC_Var'] = f"{ap_variance * 100:.2f}%"
     else:
-        file_id = args.DS + args.model
-        model_result[args.DS + '-AUROC'] = auc_final
-        model_result[args.DS + '-AUPRC'] = ap_final
-        model_result[args.DS + '-AUROC_Var'] = auc_variance
-        model_result[args.DS + '-AUPRC_Var'] = ap_variance
+        # file_id = args.DS + args.model
+        file_id = args.model
+        model_result[args.DS + '-AUROC'] = f"{auc_final * 100:.2f}%"
+        model_result[args.DS + '-AUROC_Var'] = f"{auc_variance * 100:.2f}%"
+        model_result[args.DS + '-AUPRC'] = f"{ap_final * 100:.2f}%"
+        model_result[args.DS + '-AUPRC_Var'] = f"{ap_variance * 100:.2f}%"
 
     model_result_df = pd.DataFrame([model_result])
     results = pd.concat([results, model_result_df])
-    file_id = save_results(results, file_id)
+    file_id = save_results_csv(results, file_id)
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -166,13 +169,14 @@ if __name__ == '__main__':
     parser.add_argument('-alpha', type=float, default=0)
     parser.add_argument('-n_train', type=int, default=10)
     parser.add_argument('-dropout', type=float, default=0.3, help='Dropout rate.')
+
+
     
     args = parser.parse_args()
 
     # 根据模型参数添加模型特有的参数
     if args.model == "GLADC":
         parser.add_argument('--max-nodes', type=int, default=0, help='Maximum number of nodes.')
-        parser.add_argument('--dropout', type=float, default=0.1, help='Dropout rate.')
         parser.add_argument('--output-dim', type=int, default=128, help='Output dimension.')
     elif args.model == "GLocalKD":
         parser.add_argument('--max-nodes', type=int, default=0, help='Maximum number of nodes.')
@@ -182,7 +186,6 @@ if __name__ == '__main__':
         parser.add_argument('--output-dim', type=int, default=256, help='Output dimension.')
         parser.add_argument('--num-gc-layers', type=int, default=3, help='Number of graph convolution layers.')
         parser.add_argument('--nobn', action='store_const', const=False, default=True, help='Whether batch normalization is used')
-        parser.add_argument('--dropout', type=float, default=0.3, help='Dropout rate.')
         parser.add_argument('--nobias', action='store_const', const=False, default=True, help='Whether to add bias.')
     elif args.model == "SIGNET":
         parser.add_argument('--encoder_layers', type=int, default=5)
