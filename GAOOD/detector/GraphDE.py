@@ -113,7 +113,7 @@ class GraphDE(DeepDetector):
                                graphde_v=self.graphde_v,
                                **kwargs).to(self.device)
 
-    def fit(self, dataset, args=None, label=None, dataloader=None,dataloader_Val = None):
+    def fit(self, dataset, args=None, label=None, dataloader=None,dataloader_val = None):
         path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         if args.exp_type == 'oodd':
           path = os.path.join(path, 'model_save', "GraphDE", args.DS_pair)
@@ -146,7 +146,7 @@ class GraphDE(DeepDetector):
 
                 y_val = []
                 score_val = []
-                for data in dataloader_Val:
+                for data in dataloader_val:
                     
                     data = data.to(device)
                     score_epoch = self.model.infer_e_gx(data.x,data.edge_index,data.batch)
