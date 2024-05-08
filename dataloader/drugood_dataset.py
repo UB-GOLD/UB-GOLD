@@ -189,7 +189,7 @@ class DrugOOD(InMemoryDataset):
     def process(self):
         if self.mode == 'iid':
             raw_dataset = mmcv.load(osp.join(self.raw_dir, self.raw_file_names[0]))['split']['train']
-            num = 1000
+            num = 2000
         elif self.mode == 'ood':
             raw_dataset = mmcv.load(osp.join(self.raw_dir, self.raw_file_names[0]))['split']['ood_test']
             num = 500
