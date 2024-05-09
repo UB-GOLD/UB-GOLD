@@ -120,7 +120,6 @@ class GOOD_D(DeepDetector):
         self.args = args
         self.build_save_path()
 
-
     def build_save_path(self):
         print(self.args)
         path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -141,7 +140,7 @@ class GOOD_D(DeepDetector):
                 os.remove(file_path)
             elif os.path.isdir(file_path):
                 self.delete_files_in_directory(file_path)
-                
+
     def process_graph(self, data):
         pass
 
@@ -176,13 +175,7 @@ class GOOD_D(DeepDetector):
         return cluster_result
 
     def fit(self, dataset, args=None, label=None, dataloader=None,dataloader_val=None):
-        path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        if args.exp_type == 'oodd':
-          path = os.path.join(path, 'model_save', "GOOD_D", args.DS_pair)
-        else:
-          path = os.path.join(path, 'model_save', "GOOD_D", args.DS)
-        if not os.path.exists(path):
-          os.makedirs(path)
+        
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.model = self.init_model(**self.kwargs)
         optimizer = torch.optim.Adam(self.model.parameters(), lr=args.lr)
@@ -254,28 +247,27 @@ class GOOD_D(DeepDetector):
 
                 if val_auc > self.max_AUC:
                     self.max_AUC = val_auc
-                    torch.save(self.model, os.path.join(path, 'model_GOOD_D.pth'))
+                    torch.save(self.model, os.path.join(self.path, 'model_GOOD_D.pth'))
 
                 # self.decision_score_[node_idx[:batch_size]] = y_score
 
         # self._process_decision_score()
         return self
+    
     def is_directory_empty(self,directory):
         # 列出目录下的所有文件和文件夹
         files_and_dirs = os.listdir(directory)
         # 如果列表为空，则目录为空
         return len(files_and_dirs) == 0
+    
     def decision_function(self, dataset, label=None, dataloader=None, args=None):
-        path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        if args.exp_type == 'oodd':
-          path = os.path.join(path, 'model_save', "GOOD_D", args.DS_pair)
-        else:
-          path = os.path.join(path, 'model_save', "GOOD_D", args.DS)
-        self.model.eval()
-        if self.is_directory_empty(path):
+        
+        if self.is_directory_empty(self.path):
             print("Can't find the path")
         else:
-            self.model = torch.load(os.path.join(path,'model_GOOD_D.pth'))
+            self.model = torch.load(os.path.join(self.path,'model_GOOD_D.pth'))
+        self.model.eval()
+        
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         y_score_all = []
         y_true_all = []
