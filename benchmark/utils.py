@@ -19,7 +19,8 @@ def init_model(args):
                      lr=args.lr,
                      epoch=args.num_epoch,
                      gpu=args.gpu,
-                     batch_size=args.batch_size)
+                     batch_size=args.batch_size,
+                     args=args)
     
     elif model_name == "GraphDE":
         
@@ -34,15 +35,10 @@ def init_model(args):
                      epoch=args.num_epoch,
                      gpu=args.gpu,
                      batch_size=args.batch_size,
-                     grand=False)
+                     grand=False,
+                     args=args)
 
-    elif model_name == "GLocalKD":
-
-        return GLocalKD(in_dim=args.dataset_num_features,
-                        max_nodes_num=args.max_nodes_num,
-                       num_epochs=args.num_epoch)
-       
-    elif model_name == "GLADC":
+   elif model_name == "GLADC":
         return GLADC(lr=args.lr,
                      num_epochs=args.num_epoch,
                      dropout=args.dropout,
@@ -51,8 +47,14 @@ def init_model(args):
                      output_dim = args.output_dim,
                      num_gc_layers = args.num_layer,
                      max_nodes_num=args.max_nodes_num,
-                     feature_dim=args.dataset_num_features)
-       
+                     feature_dim=args.dataset_num_features,
+                     DS = args.DS,
+                     DS_pair=args.DS_pair,
+                     exp_type = args.exp_type,
+                     model_name = args.model,
+                     bn = args.bn,
+                     args = args
+                    )
     elif model_name == "SIGNET":
         return SIGNET(num_epochs=args.num_epoch,
                      gpu=args.gpu,
@@ -60,5 +62,16 @@ def init_model(args):
                      input_dim=args.dataset_num_features,
                      input_dim_edge=args.n_edge_feat,
                      args=args)
+    elif model_name == "GLocalKD":
+        return GLocalKD(num_epochs=args.num_epoch,
+                        max_nodes_num=args.max_nodes_num,
+                        feature_dim=args.dataset_num_features,
+                        args =args)
+    elif model_name == "CVTGAD":
+        return CVTGAD(DS = args.DS,
+                     DS_pair=args.DS_pair,
+                     exp_type = args.exp_type,
+                     model_name = args.model,
+                     args =args)
 
    
