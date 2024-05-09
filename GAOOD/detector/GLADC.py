@@ -205,8 +205,9 @@ class GLADC(DeepDetector):
         # path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         # path = os.path.join(path, 'model_save', self.model_name, self.DS)
         if self.is_directory_empty(self.path):
-            pass
+            print("Can't find the path")
         else:
+            print("Loading Model Weight")
             self.NetGe = torch.load(os.path.join(self.path,'model_NetGe.pth'))
         self.NetGe.eval()
         loss = []
