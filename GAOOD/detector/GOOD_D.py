@@ -111,12 +111,36 @@ class GOOD_D(DeepDetector):
                                      verbose=verbose,
                                      save_emb=save_emb,
                                      compile_model=compile_model,
+                                     args = None,
                                      **kwargs)
 
         self.beta = beta
         self.warmup = warmup
         self.eps = eps
+        self.args = args
+        self.build_save_path()
 
+
+    def build_save_path(self):
+        path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        if self.args.exp_type == 'oodd':
+            path = os.path.join(path, 'model_save',self.args.model_name, self.args.exp_type, self.args.DS_pair)
+        elif self.args.DS.startswith('Tox21'):
+            path = os.path.join(path, 'model_save', self.args.model_name, self.args.exp_type+'Tox21', self.args.DS)
+        else:
+            path = os.path.join(path, 'model_save',self.args.model_name, self.args.exp_type, self.DS)
+        self.path = path
+        os.makedirs(path, exist_ok=True)
+        self.delete_files_in_directory(path)
+
+    def delete_files_in_directory(self, directory):
+        for filename in os.listdir(directory):
+            file_path = os.path.join(directory, filename)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+            elif os.path.isdir(file_path):
+                self.delete_files_in_directory(file_path)
+                
     def process_graph(self, data):
         pass
 
