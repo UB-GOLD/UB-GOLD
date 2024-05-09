@@ -128,8 +128,9 @@ class CVTGAD(DeepDetector):
 
     def decision_function(self, dataset, label=None, dataloader=None, args=None):
         if self.is_directory_empty(self.path):
-            pass
+            print("Can't find the path")
         else:
+            print("Loading Model Weight")
             self.model = torch.load(os.path.join(self.path, 'model_CVTGAD.pth'))
         self.model.eval()
         self.device = torch.device('cuda:' + str(self.args.gpu) if torch.cuda.is_available() else 'cpu')
