@@ -39,11 +39,13 @@ def save_results_csv(model_result, model_name):
 
     print(f'Saved results to {filename}')
     
-def process_model_results(auc, ap, args):
+def process_model_results(auc, ap, rec, args):
     auc_final = sum(auc) / len(auc)
     ap_final = sum(ap) / len(ap)
+    rec_final = sum(rec) / len(rec)
     auc_variance = statistics.variance(auc)
     ap_variance = statistics.variance(ap)
+    rec_variance = statistics.variance(rec)
 
     model_result = {}
     file_id = args.model  # 使用模型名称作为文件标识
@@ -60,6 +62,8 @@ def process_model_results(auc, ap, args):
     model_result['AUROC_Var'] = f"{auc_variance * 100:.2f}%"
     model_result['AUPRC'] = f"{ap_final * 100:.2f}%"
     model_result['AUPRC_Var'] = f"{ap_variance * 100:.2f}%"
+    model_result['FPR95'] = f"{rec_final * 100:.2f}%"
+    model_result['FPR95_Var'] = f"{rec_variance * 100:.2f}%"
 
     save_results_csv(model_result, file_id)
 
@@ -144,12 +148,14 @@ def main(args):
 
         score, y_all = model.predict(dataset=dataset_test, dataloader=dataloader_test, args=args, return_score=False)
 
+        rec.append(fpr95(y_all, score))
         auc.append(ood_auc(y_all, score))
         ap.append(ood_aupr(y_all, score))
         print("AUROC:", auc[-1])
         print("AUPRC:", ap[-1])
+        print("FPR95:", rec[-1])
         
-    process_model_results(auc, ap, args)
+    process_model_results(auc, ap, rec, args)
 
         # 计算平均值和方差
 #     auc_final = sum(auc) / len(auc)
