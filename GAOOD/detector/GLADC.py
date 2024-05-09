@@ -3,13 +3,13 @@
 import numpy as np
 from sklearn.metrics import auc, roc_curve
 import torch
-import time
 from torch.autograd import Variable
 import torch.nn.functional as F
 from .mybase import DeepDetector
 from ..nn import gladc
 import scipy.sparse as sp
-
+import os
+from GAOOD.metric import *
 class GLADC(DeepDetector):
     def __init__(self,
                  max_nodes=0,
@@ -18,15 +18,16 @@ class GLADC(DeepDetector):
                  hidden_dim=256,
                  output_dim=128,
                  num_gc_layers=2,
-                 nobn = True,
+                 bn = None,
                  dropout=0.1,
                  lr=0.0001,
-                 nobias=True,
-                 feature = 'default',
-                 seed = 2,
-                 device = 0,
                  feature_dim = 53,
                  max_nodes_num = 0,
+                 DS = 'BZR',
+                 DS_pair = None,
+                 exp_type = None,
+                 model_name = None,
+                 args = None,
                  **kwargs):
         super(GLADC, self).__init__(in_dim=None)
 
@@ -40,6 +41,34 @@ class GLADC(DeepDetector):
         self.lr = lr
         self.feature_dim = feature_dim
         self.max_nodes_num = max_nodes_num
+        self.DS = DS
+        self.DS_pair = DS_pair
+        self.exp_type = exp_type
+        self.model_name = model_name
+        self.bn = bn
+        self.args = args,
+        self.build_save_path()
+
+    def build_save_path(self):
+        path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        if self.exp_type == 'oodd':
+            path = os.path.join(path, 'model_save',self.model_name, self.exp_type, self.DS_pair)
+        elif self.DS.startswith('Tox21'):
+            path = os.path.join(path, 'model_save', self.model_name, self.exp_type+'Tox21', self.DS)
+        else:
+            path = os.path.join(path, 'model_save',self.model_name, self.exp_type, self.DS)
+        self.path = path
+        os.makedirs(path, exist_ok=True)
+        self.delete_files_in_directory(path)
+
+    def delete_files_in_directory(self, directory):
+        for filename in os.listdir(directory):
+            file_path = os.path.join(directory, filename)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+            elif os.path.isdir(file_path):
+                self.delete_files_in_directory(file_path)
+
 
     def process_graph(self, data):
         '''
@@ -55,10 +84,8 @@ class GLADC(DeepDetector):
             graph_labes.append(int(data.y[i]))
             graph_x_size = int(data.ptr[i + 1]) - int(data.ptr[i])
             graph_x = data.x[data.ptr[i]:data.ptr[i + 1]]
-            # print(graph_x.shape)
             graph_append = torch.zeros((self.max_nodes_num, graph_x.shape[1]), dtype=float)
             for graph_index in range(graph_x_size):
-                # print(i)
                 graph_append[graph_index, :] = graph_x[graph_index, :]
 
             node_indices = torch.tensor(range(data.ptr[i], data.ptr[i + 1]))
@@ -107,7 +134,10 @@ class GLADC(DeepDetector):
                                 **kwargs).to(self.device))
 
     def gen_ran_output(self, h0, adj, model, vice_model):
+
         for (adv_name, adv_param), (name, param) in zip(vice_model.named_parameters(), model.named_parameters()):
+            # print(name)
+            # print(param.data.std())
             if name.split('.')[0] == 'proj_head':
                 adv_param.data = param.data
             else:
@@ -117,34 +147,32 @@ class GLADC(DeepDetector):
         return x1_r, Feat_0
 
     def fit(self, dataset, args=None, label=None, dataloader=None,dataloader_val=None):
-        path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        path = os.path.join(path, 'model_save', self.model_name, self.DS)
+        # path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        # path = os.path.join(path, 'model_save', self.model_name, self.DS)
         self.device = torch.device('cuda:'+str(args.gpu) if torch.cuda.is_available() else 'cpu')
         self.NetGe, self.noise_NetG = self.init_model(**self.kwargs)
         optimizerG = torch.optim.Adam(self.NetGe.parameters(), lr=self.lr)
-        self.train_dataloader = dataloader
-        self.test_dataloader = dataloader_val
         max_AUC = 0
         for epoch in range(1, self.num_epochs + 1):
             total_lossG = 0.0
             self.NetGe.train()
-            for batch_idx, data in enumerate(self.train_dataloader):
+            for batch_idx, data in enumerate(dataloader):
                 adj_matrixs, adj_labels, graph_appends, _ = self.process_graph(data)
                 lossG = self.forward_model(adj_matrixs, adj_labels, graph_appends)
                 optimizerG.zero_grad()
                 lossG.backward()
                 optimizerG.step()
                 total_lossG += lossG
-            if (epoch) % 1 == 0 and epoch > 0:
+            if (epoch) % args.eval_freq == 0 and epoch > 0:
                 self.NetGe.eval()
                 loss = []
                 y = []
 
-                for batch_idx, data in enumerate(self.test_dataloader):
+                for batch_idx, data in enumerate(dataloader_val):
 
                     adj_matrixs, _, graph_appends, graph_label = self.process_graph(data)
-                    adj = Variable(adj_matrixs.float().float(), requires_grad=False).cuda()
-                    h0 = Variable(graph_appends.float(), requires_grad=False).cuda()
+                    adj = Variable(adj_matrixs.float().float(), requires_grad=False).to(self.device)
+                    h0 = Variable(graph_appends.float(), requires_grad=False).to(self.device)
 
                     x1_r, Feat_0 = self.NetGe.shared_encoder(h0, adj)
                     x_fake, s_fake, x2, Feat_1 = self.NetGe(x1_r, adj)
@@ -153,7 +181,7 @@ class GLADC(DeepDetector):
                     loss_ = loss_node + loss_graph
                     loss_ = np.array(loss_.cpu().detach())
                     loss.append(loss_)
-                    if int(graph_label) == 0:
+                    if int(graph_label) != 0:
                         y.append(1)
                     else:
                         y.append(0)
@@ -161,35 +189,25 @@ class GLADC(DeepDetector):
                 for loss_ in loss:
                     label_test.append(loss_)
                 label_test = np.array(label_test)
-                fpr_ab, tpr_ab, _ = roc_curve(y, label_test)
-                test_roc_ab = auc(fpr_ab, tpr_ab)
-                print('semi-supervised abnormal detection: auroc_ab: {}'.format(test_roc_ab))
-                if test_roc_ab > max_AUC:
-                    max_AUC = test_roc_ab
-                    torch.save(self.NetGe, os.path.join(path, 'model_NetGe.pth'))
-                    torch.save(self.noise_NetG, os.path.join(path, 'model_noise_NetG.pth'))
+                val_auc = ood_auc(y, label_test)
+                if val_auc > max_AUC:
+                    max_AUC = val_auc
+                    torch.save(self.NetGe, os.path.join(self.path, 'model_NetGe.pth'))
+                    torch.save(self.noise_NetG, os.path.join(self.path, 'model_noise_NetG.pth'))
         return True
-
-    def get_adj(self, edge_index, num_nodes):
-        adj = torch.zeros(num_nodes, num_nodes)
-        adj[edge_index[0], edge_index[1]] = 1
-        adj[edge_index[1], edge_index[0]] = 1
-        return adj
 
     def is_directory_empty(self,directory):
         # 列出目录下的所有文件和文件夹
         files_and_dirs = os.listdir(directory)
         # 如果列表为空，则目录为空
         return len(files_and_dirs) == 0
-
     def decision_function(self, dataset, label=None, dataloader=None, args=None):
-        path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        path = os.path.join(path, 'model_save', self.model_name, self.DS)
-        if self.is_directory_empty(path):
+        # path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        # path = os.path.join(path, 'model_save', self.model_name, self.DS)
+        if self.is_directory_empty(self.path):
             pass
         else:
-            self.NetGe = torch.load(os.path.join(path,'model_NetGe.pth'))
-            
+            self.NetGe = torch.load(os.path.join(self.path,'model_NetGe.pth'))
         self.NetGe.eval()
         loss = []
         y = []
@@ -197,7 +215,7 @@ class GLADC(DeepDetector):
 
         for batch_idx, data in enumerate(dataloader):
             adj_matrixs, _, graph_appends,graph_label = self.process_graph(data)
-            adj = Variable(adj_matrixs.float(), requires_grad=False).to(self.device)  # .cuda()
+            adj = Variable(adj_matrixs.float().float(), requires_grad=False).to(self.device)
             h0 = Variable(graph_appends.float(), requires_grad=False).to(self.device)
             x1_r, Feat_0 = self.NetGe.shared_encoder(h0, adj)
             x_fake, s_fake, x2, Feat_1 = self.NetGe(x1_r, adj)
@@ -210,15 +228,10 @@ class GLADC(DeepDetector):
                 y.append(1)
             else:
                 y.append(0)
-
         label_test = []
         for loss_ in loss:
             label_test.append(loss_)
         label_test = np.array(label_test)
-
-        fpr_ab, tpr_ab, _ = roc_curve(y, label_test)
-        test_roc_ab = auc(fpr_ab, tpr_ab)
-        print('semi-supervised abnormal detection: auroc_ab: {}'.format(test_roc_ab))
         return label_test,y
 
 
@@ -228,6 +241,8 @@ class GLADC(DeepDetector):
         adj_label = Variable(adj_labels.float(), requires_grad=False).to(self.device)  # .cuda()
 
         x1_r, Feat_0 = self.NetGe.shared_encoder(h0, adj)
+        # print(x1_r.shape)
+        # print(Feat_0.shape)
         x1_r_1, Feat_0_1 = self.gen_ran_output(h0, adj, self.NetGe.shared_encoder, self.noise_NetG)
         x_fake, s_fake, x2, Feat_1 = self.NetGe(x1_r, adj)
 
@@ -251,7 +266,65 @@ class GLADC(DeepDetector):
                 return_emb=False,
                 dataloader=None,
                 args=None):
-       
+        """Prediction for testing data using the fitted detector.
+        Return predicted labels by default.
+
+        Parameters
+        ----------
+        data : torch_geometric.data.Data, optional
+            The testing graph. If ``None``, the training data is used.
+            Default: ``None``.
+        label : torch.Tensor, optional
+            The optional outlier ground truth labels used for testing.
+            Default: ``None``.
+        return_pred : bool, optional
+            Whether to return the predicted binary labels. The labels
+            are determined by the outlier contamination on the raw
+            outlier scores. Default: ``True``.
+        return_score : bool, optional
+            Whether to return the raw outlier scores.
+            Default: ``False``.
+        return_prob : bool, optional
+            Whether to return the outlier probabilities.
+            Default: ``False``.
+        prob_method : str, optional
+            The method to convert the outlier scores to probabilities.
+            Two approaches are possible:
+
+            1. ``'linear'``: simply use min-max conversion to linearly
+            transform the outlier scores into the range of
+            [0,1]. The model must be fitted first.
+
+            2. ``'unify'``: use unifying scores,
+            see :cite:`kriegel2011interpreting`.
+
+            Default: ``'linear'``.
+        return_conf : boolean, optional
+            Whether to return the model's confidence in making the same
+            prediction under slightly different training sets.
+            See :cite:`perini2020quantifying`. Default: ``False``.
+        return_emb : bool, optional
+            Whether to return the learned node representations.
+            Default: ``False``.
+
+        Returns
+        -------
+        pred : torch.Tensor
+            The predicted binary outlier labels of shape :math:`N`.
+            0 stands for inliers and 1 for outliers.
+            Only available when ``return_label=True``.
+        score : torch.Tensor
+            The raw outlier scores of shape :math:`N`.
+            Only available when ``return_score=True``.
+        prob : torch.Tensor
+            The outlier probabilities of shape :math:`N`.
+            Only available when ``return_prob=True``.
+        conf : torch.Tensor
+            The prediction confidence of shape :math:`N`.
+            Only available when ``return_conf=True``.
+        """
+
+
         output = ()
         if dataset is None:
             score = self.decision_score_
