@@ -135,6 +135,9 @@ def main(args):
         elif args.model == 'SIGNET':
             print(args.model)
             model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
+        elif args.model == 'CVTGAD':
+            print(args.model)
+            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
 
         else:
             model.fit(dataset_train)
