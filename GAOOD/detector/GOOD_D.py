@@ -93,6 +93,7 @@ class GOOD_D(DeepDetector):
                  verbose=0,
                  save_emb=False,
                  compile_model=False,
+                 args = None,
                  **kwargs):
         super(GOOD_D, self).__init__(in_dim=in_dim,
                                      hid_dim=hid_dim,
@@ -111,7 +112,6 @@ class GOOD_D(DeepDetector):
                                      verbose=verbose,
                                      save_emb=save_emb,
                                      compile_model=compile_model,
-                                     args = None,
                                      **kwargs)
 
         self.beta = beta
@@ -122,13 +122,14 @@ class GOOD_D(DeepDetector):
 
 
     def build_save_path(self):
+        print(self.args)
         path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         if self.args.exp_type == 'oodd':
-            path = os.path.join(path, 'model_save',self.args.model_name, self.args.exp_type, self.args.DS_pair)
+            path = os.path.join(path, 'model_save',self.args.model, self.args.exp_type, self.args.DS_pair)
         elif self.args.DS.startswith('Tox21'):
-            path = os.path.join(path, 'model_save', self.args.model_name, self.args.exp_type+'Tox21', self.args.DS)
+            path = os.path.join(path, 'model_save', self.args.model, self.args.exp_type+'Tox21', self.args.DS)
         else:
-            path = os.path.join(path, 'model_save',self.args.model_name, self.args.exp_type, self.DS)
+            path = os.path.join(path, 'model_save',self.args.model, self.args.exp_type, self.args.DS)
         self.path = path
         os.makedirs(path, exist_ok=True)
         self.delete_files_in_directory(path)
