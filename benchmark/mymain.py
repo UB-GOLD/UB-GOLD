@@ -182,21 +182,28 @@ if __name__ == '__main__':
     parser.add_argument('-n_train', type=int, default=10)
     parser.add_argument('-dropout', type=float, default=0.3, help='Dropout rate.')
 
-        
+    
+    subparsers = parser.add_subparsers()
     '''
     CVTGAD parameter
     '''
-    parser.add_argument('-GNN_Encoder', type=str, default='GIN')  #### GNN_Encoder, GCN/GIN
-    parser.add_argument('-graph_level_pool', type=str, default='global_mean_pool')
+    CVTGAD_subparser = subparsers.add_parser('CVTGAD')
+    CVTGAD_subparser.set_defaults(model='CVTGAD')
+    CVTGAD_subparser.add_argument('-GNN_Encoder', type=str, default='GIN')  
+    CVTGAD_subparser.add_argument('-graph_level_pool', type=str, default='global_mean_pool')
+    
+  
     '''
     GLADC parameter
     '''
-    parser.add_argument('-max-nodes', dest='max_nodes', type=int, default=0,
+    GLADC_subparser = subparsers.add_parser('GLADC')
+    GLADC_subparser.set_defaults(model='GLADC')
+    GLADC_subparser.add_argument('-max-nodes', dest='max_nodes', type=int, default=0,
                         help='Maximum number of nodes (ignore graghs with nodes exceeding the number.')
-    parser.add_argument('-output_dim', dest='output_dim', default=128, type=int, help='Output dimension')
-    parser.add_argument('-nobn', dest='bn', action='store_const', const=False, default=True,
+    GLADC_subparser.add_argument('-output_dim', dest='output_dim', default=128, type=int, help='Output dimension')
+    GLADC_subparser.add_argument('-nobn', dest='bn', action='store_const', const=False, default=True,
                         help='Whether batch normalization is used')
-    parser.add_argument('-nobias', dest='bias', action='store_const', const=False, default=True,
+    GLADC_subparser.add_argument('-nobias', dest='bias', action='store_const', const=False, default=True,
                         help='Whether to add bias. Default to True.')
 
 
