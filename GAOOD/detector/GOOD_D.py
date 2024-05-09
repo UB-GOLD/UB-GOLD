@@ -265,6 +265,7 @@ class GOOD_D(DeepDetector):
         if self.is_directory_empty(self.path):
             print("Can't find the path")
         else:
+            print("Loading Model Weight")
             self.model = torch.load(os.path.join(self.path,'model_GOOD_D.pth'))
         self.model.eval()
         
