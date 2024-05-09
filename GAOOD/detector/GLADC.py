@@ -194,6 +194,7 @@ class GLADC(DeepDetector):
                     max_AUC = val_auc
                     torch.save(self.NetGe, os.path.join(self.path, 'model_NetGe.pth'))
                     torch.save(self.noise_NetG, os.path.join(self.path, 'model_noise_NetG.pth'))
+                print('[TRAIN] Epoch:{:03d} | val_auc:{:.4f}'.format(epoch, max_AUC))
         return True
 
     def is_directory_empty(self,directory):
