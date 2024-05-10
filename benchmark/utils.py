@@ -38,7 +38,7 @@ def init_model(args):
                      grand=False,
                      args=args)
 
-   elif model_name == "GLADC":
+    elif model_name == "GLADC":
         return GLADC(lr=args.lr,
                      num_epochs=args.num_epoch,
                      dropout=args.dropout,
