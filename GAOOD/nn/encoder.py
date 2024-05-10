@@ -13,7 +13,7 @@ from torch.nn import Linear, ReLU, ModuleList, Sequential
 from torch_geometric.nn import GCNConv, GATConv, GINConv, SAGPooling, TopKPooling, BatchNorm
 import torch.nn.functional as F
 from torch_geometric.utils import batched_negative_sampling, dropout_adj
-# from torch_scatter import scatter
+from torch_scatter import scatter
 
 def create_model(backbone, in_channels, hid_channels, num_unit, dropout=0.0, dropedge=0.0, batch_norm=False):
     if backbone == 'GCN':
