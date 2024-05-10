@@ -99,6 +99,10 @@ def main(args):
         args.lr = lr
         args.dropout = dropout
         auc, ap, rec = [], [], []
+        print("Current Parameter Combination:")
+        print("Hidden Dimension: ", args.hidden_dim)
+        print("Learning Rate: ", args.lr)
+        print("Dropout: ", args.dropout)
         for _ in tqdm.tqdm(range(args.num_trial)):
     
             if args.exp_type == 'ad':
