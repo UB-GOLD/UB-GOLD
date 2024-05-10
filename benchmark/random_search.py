@@ -184,7 +184,7 @@ if __name__ == '__main__':
     parser.add_argument('-lr', type=float, default=0.0001)
     parser.add_argument('-num_layer', type=int, default=5)
     parser.add_argument('-hidden_dim', type=int, default=16)
-    parser.add_argument('-num_trial', type=int, default=2)
+    parser.add_argument('-num_trial', type=int, default=5)
     parser.add_argument('-num_epoch', type=int, default=20)
     parser.add_argument('-eval_freq', type=int, default=2)
     parser.add_argument('-is_adaptive', type=int, default=1)
