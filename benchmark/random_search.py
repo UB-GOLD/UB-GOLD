@@ -10,6 +10,7 @@ from utils import init_model
 from dataloader.data_loader import *
 import pandas as pd
 import statistics
+import itertools
 '''
 python benchmark/mymain.py -exp_type oodd -DS_pair BZR+COX2 -num_epoch 400 -num_cluster 2 -alpha 0
 oodd（两个数据集OOD），ood:是GOOD/Drugood，ad :异常检测（tox/TU）
@@ -81,77 +82,87 @@ def set_seed(seed=3407):
         torch.backends.cudnn.deterministic = True
 
 def main(args):
-    auc, ap, rec = [], [], []
     model_result = {'name': args.model}
-    
-    set_seed()
     # import ipdb
     # ipdb.set_trace()
+    set_seed()
+    weight_decay = 0.01
+    hidden_dim=[16,64,128,256]
+    lr=[0.001, 0.0001, 0.00001]
+    dropout=[0.1, 0.3]
     
-    for _ in tqdm.tqdm(range(args.num_trial)):
+    param_combinations = itertools.product(hidden_dims, learning_rates, dropouts)
 
-        if args.exp_type == 'ad':
-            print("-------")
-            print(args.exp_type)
-            if args.DS.startswith('Tox21'):
-                dataset_train, dataset_val, dataset_test, dataloader, dataloader_val, dataloader_test, meta = get_ad_dataset_Tox21(args)
-            else:
-                splits = get_ad_split_TU(args, fold=args.num_trial)
-        if args.exp_type == 'oodd':
-            print("-------")
-            print(args.exp_type)
-            dataset_train, dataset_val, dataset_test, dataloader, dataloader_val, dataloader_test, meta = get_ood_dataset(args)
-        elif args.exp_type == 'ad' and not args.DS.startswith('Tox21'):
-            print("-------")
-            print(args.exp_type)
-            dataset_train, dataset_val, dataset_test, dataloader, dataloader_val, dataloader_test, meta = get_ad_dataset_TU(args, splits[_])
-        elif args.exp_type == 'ood':
-            print("-------")
-            print(args.exp_type)
-            dataset_train, dataset_val, dataset_test, dataloader, dataloader_val, dataloader_test, meta = get_ood_dataset_spilt(args)
+    # 运行参数搜索
+    for hidden_dim, lr, dropout in tqdm.tqdm(list(param_combinations)):
+        args.hidden_dim = hidden_dim
+        args.lr = lr
+        args.dropout = dropout
+        auc, ap, rec = [], [], []
+        for _ in tqdm.tqdm(range(args.num_trial)):
+    
+            if args.exp_type == 'ad':
+                print("-------")
+                print(args.exp_type)
+                if args.DS.startswith('Tox21'):
+                    dataset_train, dataset_val, dataset_test, dataloader, dataloader_val, dataloader_test, meta = get_ad_dataset_Tox21(args)
+                else:
+                    splits = get_ad_split_TU(args, fold=args.num_trial)
+            if args.exp_type == 'oodd':
+                print("-------")
+                print(args.exp_type)
+                dataset_train, dataset_val, dataset_test, dataloader, dataloader_val, dataloader_test, meta = get_ood_dataset(args)
+            elif args.exp_type == 'ad' and not args.DS.startswith('Tox21'):
+                print("-------")
+                print(args.exp_type)
+                dataset_train, dataset_val, dataset_test, dataloader, dataloader_val, dataloader_test, meta = get_ad_dataset_TU(args, splits[_])
+            elif args.exp_type == 'ood':
+                print("-------")
+                print(args.exp_type)
+                dataset_train, dataset_val, dataset_test, dataloader, dataloader_val, dataloader_test, meta = get_ood_dataset_spilt(args)
+                
+    
             
-
-        
-
-        args.max_nodes_num = meta['max_nodes_num']
-        args.dataset_num_features = meta['num_feat']
-        args.n_train =  meta['num_train']
-        args.n_edge_feat = meta['num_edge_feat']
-
-        model = init_model(args)
-        ###如果要自定义dataloader,就把dataset传进去，dataloader=None,否则按下面的来即可
-        
-        if args.model == 'GOOD-D':
-            print(args.model)
-            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
-        elif args.model == 'GraphDE':
-            print(args.model)
-            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
-        elif args.model == 'GLocalKD':
-            print(args.model)
-            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
-        elif args.model == 'GLADC':
-            print(args.model)
-            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
-        elif args.model == 'SIGNET':
-            print(args.model)
-            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
-        elif args.model == 'CVTGAD':
-            print(args.model)
-            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
-        else:
-            model.fit(dataset_train)
-
-        score, y_all = model.predict(dataset=dataset_test, dataloader=dataloader_test, args=args, return_score=False)
-        
-        rec.append(fpr95(y_all, score))
-        auc.append(ood_auc(y_all, score))
-        ap.append(ood_aupr(y_all, score))
-        print("AUROC:", auc[-1])
-        print("AUPRC:", ap[-1])
-        print("FPR95:", rec[-1])
-        
-    process_model_results(auc, ap, rec, args)
+    
+            args.max_nodes_num = meta['max_nodes_num']
+            args.dataset_num_features = meta['num_feat']
+            args.n_train =  meta['num_train']
+            args.n_edge_feat = meta['num_edge_feat']
+    
+            model = init_model(args)
+            ###如果要自定义dataloader,就把dataset传进去，dataloader=None,否则按下面的来即可
+            
+            if args.model == 'GOOD-D':
+                print(args.model)
+                model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
+            elif args.model == 'GraphDE':
+                print(args.model)
+                model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
+            elif args.model == 'GLocalKD':
+                print(args.model)
+                model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
+            elif args.model == 'GLADC':
+                print(args.model)
+                model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
+            elif args.model == 'SIGNET':
+                print(args.model)
+                model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
+            elif args.model == 'CVTGAD':
+                print(args.model)
+                model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
+            else:
+                model.fit(dataset_train)
+    
+            score, y_all = model.predict(dataset=dataset_test, dataloader=dataloader_test, args=args, return_score=False)
+            
+            rec.append(fpr95(y_all, score))
+            auc.append(ood_auc(y_all, score))
+            ap.append(ood_aupr(y_all, score))
+            print("AUROC:", auc[-1])
+            print("AUPRC:", ap[-1])
+            print("FPR95:", rec[-1])
+            
+        process_model_results(auc, ap, rec, args)
 
 
 if __name__ == '__main__':
