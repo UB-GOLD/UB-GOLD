@@ -145,6 +145,9 @@ class GraphDE(DeepDetector):
         self.model.train()
         self.decision_score_ = None
         self.max_AUC = 0
+
+        stop_counter = 0  # 初始化停止计数器
+        N = 5  # 设定阈值，比如连续5次AUC没有提升就停止
         for epoch in range(1, self.epoch + 1):
             all_loss, n_bw = 0, 0
             for data in dataloader:
@@ -172,11 +175,18 @@ class GraphDE(DeepDetector):
                     y_val = y_val + y_true.detach().cpu().tolist()
 
                 val_auc = ood_auc(y_val, score_val)
-
                 if val_auc > self.max_AUC:
                     self.max_AUC = val_auc
+                    stop_counter = 0  # 重置计数器
                     torch.save(self.model, os.path.join(self.path, 'GraphDE.pth'))
+                else:
+                    stop_counter += 1  # 增加计数器
                 print('Epoch:{:03d} | val_auc:{:.4f}'.format(epoch, self.max_AUC))
+                if stop_counter >= N:
+                    print(f'Early stopping triggered after {epoch} epochs due to no improvement in AUC for {N} consecutive evaluations.')
+                    break  # 达到早停条件，跳出循环
+                  
+
         return self
 
     def is_directory_empty(self, directory):
