@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-""" One-Class Graph Neural Networks for Anomaly Detection in Attributed
-Networks"""
-# Author: Xueying Ding <xding2@andrew.cmu.edu>
-# License: BSD 2 clause
 
 import torch
 from torch_geometric.nn import GCN
