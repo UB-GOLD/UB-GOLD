@@ -183,6 +183,10 @@ class GOOD_D(DeepDetector):
         self.decision_score_ = None
         self.train_dataloader = dataloader
         self.max_AUC = 0
+        
+        stop_counter = 0  # 初始化停止计数器
+        N = 10  # 设定阈值，比如连续5次AUC没有提升就停止
+
         for epoch in range(1, args.num_epoch + 1):
             if args.is_adaptive:
                 if epoch == 1:
@@ -247,9 +251,15 @@ class GOOD_D(DeepDetector):
 
                 if val_auc > self.max_AUC:
                     self.max_AUC = val_auc
+                    stop_counter = 0  # 重置计数器
                     torch.save(self.model, os.path.join(self.path, 'model_GOOD_D.pth'))
-
-                # self.decision_score_[node_idx[:batch_size]] = y_score
+                else:
+                    stop_counter += 1  # 增加计数器
+                
+                if stop_counter >= N:
+                    print(f'Early stopping triggered after {epoch} epochs due to no improvement in AUC for {N} consecutive evaluations.')
+                    break  # 达到早停条件，跳出循环
+                        # self.decision_score_[node_idx[:batch_size]] = y_score
 
         # self._process_decision_score()
         return self
