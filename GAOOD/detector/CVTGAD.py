@@ -64,7 +64,10 @@ class CVTGAD(DeepDetector):
         self.device = torch.device('cuda:' + str(args.gpu) if torch.cuda.is_available() else 'cpu')
         self.model = self.init_model(**self.kwargs)
         optimizer = torch.optim.Adam(self.model.parameters(), lr=args.lr)
-        max_AUC = 0
+        self.max_AUC = 0
+        stop_counter = 0  # 初始化停止计数器
+        N = 5  # 设定阈值，比如连续5次AUC没有提升就停止
+
         for epoch in range(1, args.num_epoch + 1):
             if args.is_adaptive:
                 if epoch == 1:
@@ -115,10 +118,18 @@ class CVTGAD(DeepDetector):
                     y_true_all = y_true_all + y_true.detach().cpu().tolist()
 
                 val_auc = ood_auc(y_true_all, y_score_all)
-                if val_auc > max_AUC:
-                    max_AUC = val_auc
+                
+                if val_auc > self.max_AUC:
+                    self.max_AUC = val_auc
+                    stop_counter = 0  # 重置计数器
                     torch.save(self.model, os.path.join(self.path, 'model_CVTGAD.pth'))
-                print('[TRAIN] Epoch:{:03d} | val_auc:{:.4f}'.format(epoch, max_AUC))
+                else:
+                    stop_counter += 1  # 增加计数器
+                print('[TRAIN] Epoch:{:03d} | val_auc:{:.4f}'.format(epoch, self.max_AUC))
+                if stop_counter >= N:
+                    print(f'Early stopping triggered after {epoch} epochs due to no improvement in AUC for {N} consecutive evaluations.')
+                    break  # 达到早停条件，跳出循环
+                
         return True
     def is_directory_empty(self,directory):
         # 列出目录下的所有文件和文件夹
