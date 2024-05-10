@@ -156,10 +156,10 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model", type=str, default="GOOD-D",
-                        help="supported model: [GLocalKD, GLADC, SIGNET, GOOD-D, GraphDE]."
+    parser.add_argument("-model", type=str, default="GOOD-D",
+                        help="supported model: [GLocalKD, GLADC, SIGNET, GOOD-D, GraphDE, CVTGAD]."
                              "Default: GLADC")
-    parser.add_argument("--gpu", type=int, default=0,
+    parser.add_argument("-gpu", type=int, default=0,
                         help="GPU Index. Default: -1, using CPU.")
 
     parser.add_argument('-exp_type', type=str, default='ad', choices=['oodd', 'ad','ood'])
@@ -184,6 +184,7 @@ if __name__ == '__main__':
 
     
     subparsers = parser.add_subparsers()
+    
     '''
     CVTGAD parameter
     '''
