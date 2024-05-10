@@ -88,6 +88,7 @@ class GraphDE(DeepDetector):
         self.graphde_v = graphde_v,
         self.args = args
         self.build_save_path()
+        
     def build_save_path(self):
         print(self.args)
         path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -136,7 +137,7 @@ class GraphDE(DeepDetector):
                                graphde_v=self.graphde_v,
                                **kwargs).to(self.device)
 
-    def fit(self, dataset, args=None, label=None, dataloader=None, dataloader_Val=None):
+    def fit(self, dataset, args=None, label=None, dataloader=None, dataloader_val=None):
 
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.model = self.init_model(**self.kwargs)
@@ -163,7 +164,7 @@ class GraphDE(DeepDetector):
 
                 y_val = []
                 score_val = []
-                for data in dataloader_Val:
+                for data in dataloader_val:
                     data = data.to(device)
                     score_epoch = self.model.infer_e_gx(data.x, data.edge_index, data.batch)
                     score_val = score_val + score_epoch.detach().cpu().tolist()
