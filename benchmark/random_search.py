@@ -87,9 +87,9 @@ def main(args):
     # ipdb.set_trace()
     set_seed()
     weight_decay = 0.01
-    hidden_dim=[16,64,128,256]
-    lr=[0.001, 0.0001, 0.00001]
-    dropout=[0.1, 0.3]
+    hidden_dims=[16,64,128,256]
+    learning_rates=[0.001, 0.0001, 0.00001]
+    dropouts=[0.1, 0.3]
     
     param_combinations = itertools.product(hidden_dims, learning_rates, dropouts)
 
@@ -190,7 +190,7 @@ if __name__ == '__main__':
     parser.add_argument('-hidden_dim', type=int, default=16)
     parser.add_argument('-num_trial', type=int, default=5)
     parser.add_argument('-num_epoch', type=int, default=20)
-    parser.add_argument('-eval_freq', type=int, default=2)
+    parser.add_argument('-eval_freq', type=int, default=5)
     parser.add_argument('-is_adaptive', type=int, default=1)
     parser.add_argument('-num_cluster', type=int, default=2)
     parser.add_argument('-alpha', type=float, default=0)
