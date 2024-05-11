@@ -84,12 +84,12 @@ def main(args):
     auc, ap, rec = [], [], []
     model_result = {'name': args.model}
     
-    set_seed()
+    # set_seed()
     # import ipdb
     # ipdb.set_trace()
-    
-    for _ in tqdm.tqdm(range(args.num_trial)):
-
+    seed = 3407
+    for i in tqdm.tqdm(range(args.num_trial)):
+        set_seed(seed+i)
         if args.exp_type == 'ad':
             print("-------")
             print(args.exp_type)
