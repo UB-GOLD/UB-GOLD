@@ -12,7 +12,7 @@ python benchmark/mymain.py -exp_type ad -DS DHFR             -batch_size  128 -b
 
 python benchmark/mymain.py -exp_type ad -DS ENZYMES           -batch_size  128 -batch_size_test 9999 -eval_freq 5 -num_epoch 1000 -lr 0.001 -hidden_dim 128 --model SIGNET
 
-python benchmark/mymain.py -exp_type ad -DS IMDB-BINARY       -batch_size  128 -batch_size_test 9999 -eval_freq 5 -num_epoch 10 -lr 0.0001 -hidden_dim 64 --model SIGNET
+python benchmark/mymain.py -exp_type ad -DS IMDB-BINARY       -batch_size  128 -batch_size_test 9999 -eval_freq 5 -num_epoch 1000 -lr 0.0001 -hidden_dim 64 --model SIGNET
 
 python benchmark/mymain.py -exp_type ad -DS NCI1              -batch_size  128 -batch_size_test 9999 -eval_freq 5 -num_epoch 1000 -lr 0.0001 -hidden_dim 128 --model SIGNET
 
@@ -46,7 +46,7 @@ python benchmark/mymain.py -exp_type oodd -DS_pair ogbg-molbbbp+ogbg-molbace    
 
 python benchmark/mymain.py -exp_type oodd -DS_pair ogbg-molfreesolv+ogbg-moltoxcast     -batch_size  128 -batch_size_test 9999 -eval_freq 5 -num_epoch 300 -lr 0.001 -hidden_dim 128 --model SIGNET
 
-python benchmark/mymain.py -e 300ype oodd -DS_pair ogbg-molclintox+ogbg-mollipo     -batch_size  128 -batch_size_test 9999 -eval_freq 5 -num_epoch 300 -lr 0.001 -hidden_dim 128 --model SIGNET
+python benchmark/mymain.py -exp_type oodd -DS_pair ogbg-molclintox+ogbg-mollipo     -batch_size  128 -batch_size_test 9999 -eval_freq 5 -num_epoch 300 -lr 0.001 -hidden_dim 128 --model SIGNET
 
 python benchmark/mymain.py -exp_type oodd -DS_pair ogbg-molesol+ogbg-molmuv    -batch_size  128 -batch_size_test 9999 -num_epoch 300 -eval_freq 5 -lr 0.001 -hidden_dim 128 --model SIGNET
 
