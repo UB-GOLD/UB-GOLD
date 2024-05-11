@@ -56,9 +56,10 @@ def init_model(args):
                      args = args
                     )
     elif model_name == "SIGNET":
-        return SIGNET(num_epochs=args.num_epoch,
-                     gpu=args.gpu,
-                     lr=args.lr,
+        return SIGNET(DS = args.DS,
+                     DS_pair=args.DS_pair,
+                     exp_type = args.exp_type,
+                     model_name = args.model,
                      input_dim=args.dataset_num_features,
                      input_dim_edge=args.n_edge_feat,
                      args=args)
