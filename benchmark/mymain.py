@@ -104,7 +104,7 @@ def main(args):
         elif args.exp_type == 'ad' and not args.DS.startswith('Tox21'):
             print("-------")
             print(args.exp_type)
-            dataset_train, dataset_val, dataset_test, dataloader, dataloader_val, dataloader_test, meta = get_ad_dataset_TU(args, splits[_])
+            dataset_train, dataset_val, dataset_test, dataloader, dataloader_val, dataloader_test, meta = get_ad_dataset_TU(args, splits[i])
         elif args.exp_type == 'ood':
             print("-------")
             print(args.exp_type)
