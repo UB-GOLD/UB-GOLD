@@ -3,7 +3,7 @@ python benchmark/mymain.py -exp_type ad -DS AIDS -batch_size 64 -num_epoch 400  
 
 python benchmark/mymain.py -exp_type ad -DS BZR -batch_size 64 -num_epoch 400  -alpha 0.8 -model GraphDE -num_layer 2 -hidden_dim 64
 
-python benchmark/mymain.py -exp_type ad -DS COLLAB -batch_size 64 -batch_size_test -num_epoch 100 -alpha 0.8 -model GraphDE -num_layer 2 -hidden_dim 64
+python benchmark/mymain.py -exp_type ad -DS COLLAB -batch_size 64 -batch_size_test 16 -num_epoch 100 -alpha 0.8 -model GraphDE -num_layer 2 -hidden_dim 64
 
 python benchmark/mymain.py  -exp_type ad -DS COX2 -batch_size 64 -num_epoch 150 -alpha 0.4 -model GraphDE -num_layer 2 -hidden_dim 64
 
