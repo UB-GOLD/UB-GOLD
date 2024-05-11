@@ -8,24 +8,47 @@ from torch_geometric.nn import GINConv, HypergraphConv, global_add_pool, global_
 from torch_geometric.utils import softmax
 from .mybase import DeepDetector
 from ..nn import signet
-
+import os
+from GAOOD.metric import *
 class SIGNET(DeepDetector):
     def __init__(self,
-                 num_epochs=100,
-                 gpu=0,
-                 lr=0.01,
+                 DS='BZR',
+                 DS_pair=None,
+                 exp_type=None,
+                 model_name=None,
                  input_dim=16,
                  input_dim_edge=16,
                  args=None,
                  **kwargs):
         super(SIGNET, self).__init__(in_dim=None)
-
-        self.num_epochs = num_epochs
-        self.lr = lr
-        self.gpu = gpu
+        self.DS = DS
+        self.DS_pair = DS_pair
+        self.exp_type = exp_type
+        self.model_name = model_name
         self.input_dim = input_dim
         self.input_dim_edge = input_dim_edge
         self.args = args
+        self.build_save_path()
+
+    def build_save_path(self):
+        path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        if self.exp_type == 'oodd':
+            path = os.path.join(path, 'model_save', self.model_name, self.exp_type, self.DS_pair)
+        elif self.DS.startswith('Tox21'):
+            path = os.path.join(path, 'model_save', self.model_name, self.exp_type + 'Tox21', self.DS)
+        else:
+            path = os.path.join(path, 'model_save', self.model_name, self.exp_type, self.DS)
+        self.path = path
+        os.makedirs(path, exist_ok=True)
+        self.delete_files_in_directory(path)
+
+    def delete_files_in_directory(self, directory):
+        for filename in os.listdir(directory):
+            file_path = os.path.join(directory, filename)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+            elif os.path.isdir(file_path):
+                self.delete_files_in_directory(file_path)
 
     def process_graph(self, data):
         pass
@@ -41,17 +64,16 @@ class SIGNET(DeepDetector):
                             device=self.device,
                             **kwargs).to(self.device)
 
-    def fit(self, dataset, args=None, label=None, dataloader=None):
-
-        self.device = torch.device('cuda:'+str(self.gpu) if torch.cuda.is_available() else 'cpu')
+    def fit(self, dataset, args=None, label=None, dataloader=None,dataloader_val=None):
+        max_AUC=0
+        self.device = torch.device('cuda:'+str(args.gpu) if torch.cuda.is_available() else 'cpu')
         self.model = self.init_model(**self.kwargs)
-        optimizer = torch.optim.Adam(self.model.parameters(), lr=self.lr)
-        self.train_dataloader = dataloader
-        for epoch in range(1, self.num_epochs + 1):
+        optimizer = torch.optim.Adam(self.model.parameters(), lr=args.lr)
+        for epoch in range(1, args.num_epoch + 1):
             self.model.train()
             loss_all = 0
             num_sample = 0
-            for data in self.train_dataloader:
+            for data in dataloader:
                 optimizer.zero_grad()
                 data = data.to(self.device)
                 loss = self.forward_model(dataset = data)
@@ -59,12 +81,39 @@ class SIGNET(DeepDetector):
                 num_sample += data.num_graphs
                 loss.backward()
                 optimizer.step()
-        return True
+            if (epoch) % args.eval_freq == 0 and epoch > 0:
+                self.model.eval()
+                # anomaly detection
+                all_ad_true = []
+                all_ad_score = []
+                for data in dataloader_val:
+                    all_ad_true.append(data.y.cpu())
+                    data = data.to(self.device)
+                    with torch.no_grad():
+                        y, y_hyper, _, _ = self.model(data)
+                        ano_score = self.model.loss_nce(y, y_hyper)
+                    all_ad_score.append(ano_score.cpu())
 
+                ad_true = torch.cat(all_ad_true)
+                ad_score = torch.cat(all_ad_score)
+                val_auc = ood_auc(ad_true, ad_score)
+                if val_auc > max_AUC:
+                    max_AUC = val_auc
+                    torch.save(self.model, os.path.join(self.path, 'model_SIGNET.pth'))
+        return True
+    def is_directory_empty(self,directory):
+        # 列出目录下的所有文件和文件夹
+        files_and_dirs = os.listdir(directory)
+        # 如果列表为空，则目录为空
+        return len(files_and_dirs) == 0
 
     def decision_function(self, dataset, label=None, dataloader=None, args=None):
+        if self.is_directory_empty(self.path):
+            pass
+        else:
+            self.model = torch.load(os.path.join(self.path, 'model_SIGNET.pth'))
         self.model.eval()
-        self.device = torch.device('cuda:' + str(self.gpu) if torch.cuda.is_available() else 'cpu')
+        self.device = torch.device('cuda:' + str(args.gpu) if torch.cuda.is_available() else 'cpu')
         all_ad_true = []
         all_ad_score = []
         for data in dataloader:
@@ -95,64 +144,6 @@ class SIGNET(DeepDetector):
                 return_emb=False,
                 dataloader=None,
                 args=None):
-        """Prediction for testing data using the fitted detector.
-        Return predicted labels by default.
-
-        Parameters
-        ----------
-        data : torch_geometric.data.Data, optional
-            The testing graph. If ``None``, the training data is used.
-            Default: ``None``.
-        label : torch.Tensor, optional
-            The optional outlier ground truth labels used for testing.
-            Default: ``None``.
-        return_pred : bool, optional
-            Whether to return the predicted binary labels. The labels
-            are determined by the outlier contamination on the raw
-            outlier scores. Default: ``True``.
-        return_score : bool, optional
-            Whether to return the raw outlier scores.
-            Default: ``False``.
-        return_prob : bool, optional
-            Whether to return the outlier probabilities.
-            Default: ``False``.
-        prob_method : str, optional
-            The method to convert the outlier scores to probabilities.
-            Two approaches are possible:
-
-            1. ``'linear'``: simply use min-max conversion to linearly
-            transform the outlier scores into the range of
-            [0,1]. The model must be fitted first.
-
-            2. ``'unify'``: use unifying scores,
-            see :cite:`kriegel2011interpreting`.
-
-            Default: ``'linear'``.
-        return_conf : boolean, optional
-            Whether to return the model's confidence in making the same
-            prediction under slightly different training sets.
-            See :cite:`perini2020quantifying`. Default: ``False``.
-        return_emb : bool, optional
-            Whether to return the learned node representations.
-            Default: ``False``.
-
-        Returns
-        -------
-        pred : torch.Tensor
-            The predicted binary outlier labels of shape :math:`N`.
-            0 stands for inliers and 1 for outliers.
-            Only available when ``return_label=True``.
-        score : torch.Tensor
-            The raw outlier scores of shape :math:`N`.
-            Only available when ``return_score=True``.
-        prob : torch.Tensor
-            The outlier probabilities of shape :math:`N`.
-            Only available when ``return_prob=True``.
-        conf : torch.Tensor
-            The prediction confidence of shape :math:`N`.
-            Only available when ``return_conf=True``.
-        """
-
 
         output = ()
         if dataset is None:
