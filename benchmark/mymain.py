@@ -208,6 +208,22 @@ if __name__ == '__main__':
                         help='Whether to add bias. Default to True.')
 
 
+    
+    '''
+    SIGNET parameter
+    '''
+    SIGNET_subparser = subparsers.add_parser('SIGNET')
+    SIGNET_subparser.set_defaults(model='SIGNET')
+    SIGNET_subparser.add_argument('--encoder_layers', type=int, default=5)
+    SIGNET_subparser.add_argument('--pooling', type=str, default='add', choices=['add', 'max'])
+    SIGNET_subparser.add_argument('--readout', type=str, default='concat', choices=['concat', 'add', 'last'])
+    SIGNET_subparser.add_argument('--explainer_model', type=str, default='gin', choices=['mlp', 'gin'])
+    SIGNET_subparser.add_argument('--explainer_layers', type=int, default=5)
+    SIGNET_subparser.add_argument('--explainer_hidden_dim', type=int, default=8)
+    SIGNET_subparser.add_argument('--explainer_readout', type=str, default='add', choices=['concat', 'add', 'last'])
+
+
+
 
     args = parser.parse_args()
 
