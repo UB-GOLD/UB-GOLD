@@ -105,7 +105,7 @@ class SIGNET(DeepDetector):
                     torch.save(self.model, os.path.join(self.path, 'model_SIGNET.pth'))
                 else:
                     stop_counter += 1  # 增加计数器
-                
+                print('[TRAIN] Epoch:{:03d} | val_auc:{:.4f}'.format(epoch, self.max_AUC))
                 if stop_counter >= N:
                     print(f'Early stopping triggered after {epoch} epochs due to no improvement in AUC for {N} consecutive evaluations.')
                     break  # 达到早停条件，跳出循环
