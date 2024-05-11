@@ -24,20 +24,20 @@ class SIGNET(DeepDetector):
         self.DS = DS
         self.DS_pair = DS_pair
         self.exp_type = exp_type
-        self.model_name = model_name
         self.input_dim = input_dim
         self.input_dim_edge = input_dim_edge
         self.args = args
         self.build_save_path()
 
     def build_save_path(self):
+        print(self.args)
         path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        if self.exp_type == 'oodd':
-            path = os.path.join(path, 'model_save', self.model_name, self.exp_type, self.DS_pair)
-        elif self.DS.startswith('Tox21'):
-            path = os.path.join(path, 'model_save', self.model_name, self.exp_type + 'Tox21', self.DS)
+        if self.args.exp_type == 'oodd':
+            path = os.path.join(path, 'model_save',self.args.model, self.args.exp_type, self.args.DS_pair)
+        elif self.args.DS.startswith('Tox21'):
+            path = os.path.join(path, 'model_save', self.args.model, self.args.exp_type+'Tox21', self.args.DS)
         else:
-            path = os.path.join(path, 'model_save', self.model_name, self.exp_type, self.DS)
+            path = os.path.join(path, 'model_save',self.args.model, self.args.exp_type, self.args.DS)
         self.path = path
         os.makedirs(path, exist_ok=True)
         self.delete_files_in_directory(path)
@@ -65,10 +65,12 @@ class SIGNET(DeepDetector):
                             **kwargs).to(self.device)
 
     def fit(self, dataset, args=None, label=None, dataloader=None,dataloader_val=None):
-        max_AUC=0
+        self.max_AUC = 0
         self.device = torch.device('cuda:'+str(args.gpu) if torch.cuda.is_available() else 'cpu')
         self.model = self.init_model(**self.kwargs)
         optimizer = torch.optim.Adam(self.model.parameters(), lr=args.lr)
+        stop_counter = 0  # 初始化停止计数器
+        N = 10  # 设定阈值，比如连续5次AUC没有提升就停止
         for epoch in range(1, args.num_epoch + 1):
             self.model.train()
             loss_all = 0
@@ -97,9 +99,17 @@ class SIGNET(DeepDetector):
                 ad_true = torch.cat(all_ad_true)
                 ad_score = torch.cat(all_ad_score)
                 val_auc = ood_auc(ad_true, ad_score)
-                if val_auc > max_AUC:
-                    max_AUC = val_auc
+                if val_auc > self.max_AUC:
+                    self.max_AUC = val_auc
+                    stop_counter = 0  # 重置计数器
                     torch.save(self.model, os.path.join(self.path, 'model_SIGNET.pth'))
+                else:
+                    stop_counter += 1  # 增加计数器
+                
+                if stop_counter >= N:
+                    print(f'Early stopping triggered after {epoch} epochs due to no improvement in AUC for {N} consecutive evaluations.')
+                    break  # 达到早停条件，跳出循环
+                
         return True
     def is_directory_empty(self,directory):
         # 列出目录下的所有文件和文件夹
