@@ -10,35 +10,36 @@ from .mybase import DeepDetector
 from ..nn import glocalkd
 import scipy.sparse as sp
 import torch.nn as nn
+import os
+from GAOOD.metric import *
 class GLocalKD(DeepDetector):
     def __init__(self,
-                 hidden_dim=512,
-                 output_dim=256,
-                 num_gc_layers=3,
-                 nobn = True,
-                 nobias = True,
-                 dropout=0.3,
-                 lr=0.0001,
-                 feature_dim = 53,
-                 max_nodes_num = 0,
-                 clip=0.1,
                  args=None,
-                 num_epochs=1,
-                 gpu=0,
                  **kwargs):
         super(GLocalKD, self).__init__(in_dim=None)
 
-        self.hidden_dim = hidden_dim
-        self.output_dim = output_dim
-        self.num_gc_layers = num_gc_layers
-        self.dropout = dropout
-        self.lr = lr
-        self.feature_dim = feature_dim
-        self.max_nodes_num = max_nodes_num
-        self.clip = clip
         self.args = args
-        self.num_epochs = num_epochs
-        self.gpu = gpu
+        self.build_save_path()
+
+    def build_save_path(self):
+        path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        if self.args.exp_type == 'oodd':
+            path = os.path.join(path, 'model_save',self.args.model_name, self.args.exp_type, self.args.DS_pair)
+        elif self.args.DS.startswith('Tox21'):
+            path = os.path.join(path, 'model_save', self.args.model_name, self.args.exp_type+'Tox21', self.args.DS)
+        else:
+            path = os.path.join(path, 'model_save',self.args.model_name, self.args.exp_type, self.args.DS)
+        self.path = path
+        os.makedirs(path, exist_ok=True)
+        self.delete_files_in_directory(path)
+
+    def delete_files_in_directory(self, directory):
+        for filename in os.listdir(directory):
+            file_path = os.path.join(directory, filename)
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+            elif os.path.isdir(file_path):
+                self.delete_files_in_directory(file_path)
 
     def process_graph(self, data):
         '''
@@ -92,54 +93,114 @@ class GLocalKD(DeepDetector):
         :param kwargs:
         :return: GcnEncoderGraph_teacher, GcnEncoderGraph_student
         '''
-        return (glocalkd.GcnEncoderGraph_teacher(input_dim=self.feature_dim,
-                            hidden_dim=self.hidden_dim,
-                            embedding_dim=self.output_dim,
+        return (glocalkd.GcnEncoderGraph_teacher(input_dim=self.args.dataset_num_features,
+                            hidden_dim=self.args.hidden_dim,
+                            embedding_dim=self.args.output_dim,
                             label_dim=2,
-                            num_layers=self.num_gc_layers,
+                            num_layers=self.args.num_layer,
+                            bn = self.args.bn,
                             args=self.args,
                             **kwargs).to(self.device)
-                , glocalkd.GcnEncoderGraph_student(input_dim=self.feature_dim,
-                            hidden_dim=self.hidden_dim,
-                            embedding_dim=self.output_dim,
+                , glocalkd.GcnEncoderGraph_student(input_dim=self.args.dataset_num_features,
+                            hidden_dim=self.args.hidden_dim,
+                            embedding_dim=self.args.output_dim,
                             label_dim=2,
-                            num_layers=self.num_gc_layers,
+                            num_layers=self.args.num_layer,
+                            bn = self.args.bn,
                             args=self.args,
                             **kwargs).to(self.device))
 
 
-    def fit(self, dataset, args=None, label=None, dataloader=None):
+    def fit(self, dataset, args=None, label=None, dataloader=None,dataloader_val=None):
+        self.max_nodes_num = args.max_nodes_num
 
-        self.device = torch.device('cuda:'+str(self.gpu) if torch.cuda.is_available() else 'cpu')
+        self.device = torch.device('cuda:'+str(args.gpu) if torch.cuda.is_available() else 'cpu')
         self.model_teacher, self.model_student = self.init_model(**self.kwargs)
-        optimizer = torch.optim.Adam(filter(lambda p : p.requires_grad, self.model_student.parameters()), lr=self.lr)
+        optimizer = torch.optim.Adam(filter(lambda p : p.requires_grad, self.model_student.parameters()), lr=args.lr)
         scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=50, gamma=0.5)
-        self.train_dataloader = dataloader
-        for epoch in range(1, self.num_epochs + 1):
+        self.max_AUC = 0
+        
+        stop_counter = 0  # 初始化停止计数器
+        N = 5  # 设定阈值，比如连续5次AUC没有提升就停止
+        for epoch in range(1, args.num_epoch + 1):
             total_time = 0
             total_loss = 0.0
             self.model_student.train()
-            for batch_idx, data in enumerate(self.train_dataloader):
+            for batch_idx, data in enumerate(dataloader):
                 begin_time = time.time()
                 self.model_student.zero_grad()
-                adj_matrixs, adj_labels, graph_appends, _ = self.process_graph(data)
-                loss = self.forward_model(adj_matrixs, adj_labels, graph_appends)
+                adj, _, h0, _ = self.process_graph(data)
+                loss = self.forward_model(adj, h0)
                 loss.backward(loss.clone().detach())
-                nn.utils.clip_grad_norm_(self.model_student.parameters(), self.clip)
+                nn.utils.clip_grad_norm_(self.model_student.parameters(), args.clip)
                 optimizer.step()
                 scheduler.step()
                 total_loss += loss
                 elapsed = time.time() - begin_time
                 total_time += elapsed
-        return True
+            if (epoch) % args.eval_freq == 0 and epoch > 0:
+                self.model_student.eval()
+                loss = []
+                y = []
+                emb = []
 
+                for batch_idx, data in enumerate(dataloader_val):
+                    adj_matrixs, _, graph_appends, graph_label = self.process_graph(data)
+                    adj = Variable(adj_matrixs.float(), requires_grad=False).to(self.device)  # .cuda()
+                    h0 = Variable(graph_appends.float(), requires_grad=False).to(self.device)
+                    # adj = Variable(data['adj'].float(), requires_grad=False).cuda()
+                    # h0 = Variable(data['feats'].float(), requires_grad=False).cuda()
+
+                    embed_node, embed = self.model_student(h0, adj)
+                    embed_teacher_node, embed_teacher = self.model_teacher(h0, adj)
+                    loss_node = torch.mean(F.mse_loss(embed_node, embed_teacher_node, reduction='none'), dim=2).mean(
+                        dim=1)
+                    loss_graph = F.mse_loss(embed, embed_teacher, reduction='none').mean(dim=1)
+                    loss_ = loss_graph + loss_node
+                    loss_ = np.array(loss_.cpu().detach())
+                    loss.append(loss_)
+                    if int(graph_label) != 0:
+                        y.append(1)
+                    else:
+                        y.append(0)
+                    emb.append(embed.cpu().detach().numpy())
+
+                label_test = []
+                for loss_ in loss:
+                    label_test.append(loss_)
+                label_test = np.array(label_test)
+                val_auc = ood_auc(y, label_test)
+                if val_auc > self.max_AUC:
+                    self.max_AUC = val_auc
+                    stop_counter = 0  # 重置计数器
+                    torch.save(self.model_teacher, os.path.join(self.path, 'model_teacher.pth'))
+                    torch.save(self.model_student, os.path.join(self.path, 'model_student.pth'))
+                else:
+                    stop_counter += 1  # 增加计数器
+                print('[TRAIN] Epoch:{:03d} | val_auc:{:.4f}'.format(epoch, self.max_AUC))
+                if stop_counter >= N:
+                    print(f'Early stopping triggered after {epoch} epochs due to no improvement in AUC for {N} consecutive evaluations.')
+                    break  # 达到早停条件，跳出循环
+                    
+        return True
+    def is_directory_empty(self,directory):
+        # 列出目录下的所有文件和文件夹
+        files_and_dirs = os.listdir(directory)
+        # 如果列表为空，则目录为空
+        return len(files_and_dirs) == 0
 
     def decision_function(self, dataset, label=None, dataloader=None, args=None):
+        if self.is_directory_empty(self.path):
+            pass
+        else:
+            self.model_teacher = torch.load(os.path.join(self.path,'model_teacher.pth'))
+            self.model_student = torch.load(os.path.join(self.path, 'model_student.pth'))
+
         self.model_student.eval()
         loss = []
         y = []
         emb = []
-        self.device = torch.device('cuda:' + str(self.gpu) if torch.cuda.is_available() else 'cpu')
+        self.device = torch.device('cuda:' + str(args.gpu) if torch.cuda.is_available() else 'cpu')
 
         for batch_idx, data in enumerate(dataloader):
             adj_matrixs, _, graph_appends,graph_label = self.process_graph(data)
@@ -164,15 +225,15 @@ class GLocalKD(DeepDetector):
             label_test.append(loss_)
         label_test = np.array(label_test)
 
-        fpr_ab, tpr_ab, _ = roc_curve(y, label_test)
-        test_roc_ab = auc(fpr_ab, tpr_ab)
-        print('semi-supervised abnormal detection: auroc_ab: {}'.format(test_roc_ab))
+        # fpr_ab, tpr_ab, _ = roc_curve(y, label_test)
+        # test_roc_ab = auc(fpr_ab, tpr_ab)
+        # print('semi-supervised abnormal detection: auroc_ab: {}'.format(test_roc_ab))
         return label_test,y
 
 
-    def forward_model(self, adj_matrixs, adj_labels, graph_appends, args=None):
-        adj = Variable(adj_matrixs.float(), requires_grad=False).to(self.device)  # .cuda()
-        h0 = Variable( graph_appends.float(), requires_grad=False).to(self.device)  # .cuda()
+    def forward_model(self, adj, h0):
+        adj = Variable(adj.float(), requires_grad=False).to(self.device)
+        h0 = Variable(h0.float(), requires_grad=False).to(self.device)
 
         embed_node, embed = self.model_student(h0, adj)
         embed_teacher_node, embed_teacher = self.model_teacher(h0, adj)
@@ -195,7 +256,7 @@ class GLocalKD(DeepDetector):
                 return_emb=False,
                 dataloader=None,
                 args=None):
-        
+
 
         output = ()
         if dataset is None:
