@@ -64,10 +64,7 @@ def init_model(args):
                      input_dim_edge=args.n_edge_feat,
                      args=args)
     elif model_name == "GLocalKD":
-        return GLocalKD(num_epochs=args.num_epoch,
-                        max_nodes_num=args.max_nodes_num,
-                        feature_dim=args.dataset_num_features,
-                        args =args)
+        return GLocalKD(args =args)
     elif model_name == "CVTGAD":
         return CVTGAD(DS = args.DS,
                      DS_pair=args.DS_pair,
