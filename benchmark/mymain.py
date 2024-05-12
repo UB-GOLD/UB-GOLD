@@ -222,6 +222,21 @@ if __name__ == '__main__':
     SIGNET_subparser.add_argument('--explainer_hidden_dim', type=int, default=8)
     SIGNET_subparser.add_argument('--explainer_readout', type=str, default='add', choices=['concat', 'add', 'last'])
 
+    '''
+    GLocalKD
+    '''
+    GLocalKD_subparser = subparsers.add_parser('GLocalKD')
+    GLocalKD_subparser.set_defaults(model='GLocalKD')
+    GLocalKD_subparser.add_argument('-max-nodes', dest='max_nodes', type=int, default=0,
+                        help='Maximum number of nodes (ignore graghs with nodes exceeding the number.')
+    GLocalKD_subparser.add_argument('-clip', dest='clip', default=0.1, type=float, help='Gradient clipping.')
+    GLocalKD_subparser.add_argument('-output_dim', dest='output_dim', default=256, type=int, help='Output dimension')
+    GLocalKD_subparser.add_argument('-nobn', dest='bn', action='store_const', const=False, default=True,
+                        help='Whether batch normalization is used')
+    GLocalKD_subparser.add_argument('-nobias', dest='bias', action='store_const', const=False, default=True,
+                        help='Whether to add bias. Default to True.')
+
+
 
 
 
