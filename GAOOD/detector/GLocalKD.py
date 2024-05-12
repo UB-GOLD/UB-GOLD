@@ -22,13 +22,14 @@ class GLocalKD(DeepDetector):
         self.build_save_path()
 
     def build_save_path(self):
+        print(self.args)
         path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         if self.args.exp_type == 'oodd':
-            path = os.path.join(path, 'model_save',self.args.model_name, self.args.exp_type, self.args.DS_pair)
+            path = os.path.join(path, 'model_save',self.args.model, self.args.exp_type, self.args.DS_pair)
         elif self.args.DS.startswith('Tox21'):
-            path = os.path.join(path, 'model_save', self.args.model_name, self.args.exp_type+'Tox21', self.args.DS)
+            path = os.path.join(path, 'model_save', self.args.model, self.args.exp_type+'Tox21', self.args.DS)
         else:
-            path = os.path.join(path, 'model_save',self.args.model_name, self.args.exp_type, self.args.DS)
+            path = os.path.join(path, 'model_save',self.args.model, self.args.exp_type, self.args.DS)
         self.path = path
         os.makedirs(path, exist_ok=True)
         self.delete_files_in_directory(path)
@@ -40,6 +41,7 @@ class GLocalKD(DeepDetector):
                 os.remove(file_path)
             elif os.path.isdir(file_path):
                 self.delete_files_in_directory(file_path)
+
 
     def process_graph(self, data):
         '''
