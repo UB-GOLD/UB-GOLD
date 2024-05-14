@@ -93,7 +93,7 @@ class OCGTL(DeepDetector):
 
     def fit(self, dataset, args=None, label=None, dataloader=None, dataloader_val=None):
         print("this is ocgtl")
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        self.device = torch.device('cuda:' + str(args.gpu) if torch.cuda.is_available() else 'cpu')
         self.model = self.init_model(**self.kwargs)
         optimizer = torch.optim.Adam(self.model.parameters(), lr=args.lr)
         self.model.train()
@@ -105,7 +105,6 @@ class OCGTL(DeepDetector):
         N = 10  # 设定阈值，比如连续5次AUC没有提升就停止
 
         for epoch in range(1, args.num_epoch + 1):
-            device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
             self.model = self.init_model(**self.kwargs)
             optimizer = torch.optim.Adam(self.model.parameters(), lr=args.lr)
             self.model.train()
@@ -118,7 +117,7 @@ class OCGTL(DeepDetector):
                 all_loss, n_bw = 0, 0
                 for data in dataloader:
                     n_bw += 1
-                    data = data.to(device)
+                    data = data.to(self.device)
                     loss_epoch = self.forward_model(data, dataloader, args,False)
                     loss_mean = loss_epoch.mean()
                     optimizer.zero_grad()
@@ -134,7 +133,7 @@ class OCGTL(DeepDetector):
                     y_val = []
                     score_val = []
                     for data in dataloader_val:
-                        data = data.to(device)
+                        data = data.to(self.device)
                         score_epoch = self.forward_model(data, dataloader, args,True)
                         score_val = score_val + score_epoch.detach().cpu().tolist()
                         y_true = data.y
@@ -144,7 +143,7 @@ class OCGTL(DeepDetector):
                     if val_auc > self.max_AUC:
                         self.max_AUC = val_auc
                         stop_counter = 0  # 重置计数器
-                        torch.save(self.model, os.path.join(self.path, 'GraphDE.pth'))
+                        torch.save(self.model, os.path.join(self.path, 'model_OCGTL.pth'))
                     else:
                         stop_counter += 1  # 增加计数器
                     print('Epoch:{:03d} | val_auc:{:.4f}'.format(epoch, self.max_AUC))
@@ -167,14 +166,13 @@ class OCGTL(DeepDetector):
             print("Can't find the path")
         else:
             print("Loading Model Weight")
-            self.model = torch.load(os.path.join(self.path, 'model_GOOD_D.pth'))
+            self.model = torch.load(os.path.join(self.path, 'model_OCGTL.pth'))
         self.model.eval()
 
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         y_score_all = []
         y_true_all = []
         for data in dataloader:
-            data = data.to(device)
+            data = data.to(self.device)
 
             y_score = self.forward_model(data, dataloader, args, True)
 
