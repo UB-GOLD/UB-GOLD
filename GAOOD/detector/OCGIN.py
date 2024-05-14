@@ -134,7 +134,7 @@ class OCGIN(DeepDetector):
                 if val_auc > self.max_AUC:
                     self.max_AUC = val_auc
                     stop_counter = 0  # 重置计数器
-                    torch.save(self.model, os.path.join(self.path, 'GraphDE.pth'))
+                    torch.save(self.model, os.path.join(self.path, 'model_OCGIN.pth'))
                 else:
                     stop_counter += 1  # 增加计数器
                 print('Epoch:{:03d} | val_auc:{:.4f}'.format(epoch, self.max_AUC))
@@ -156,14 +156,13 @@ class OCGIN(DeepDetector):
             print("Can't find the path")
         else:
             print("Loading Model Weight")
-            self.model = torch.load(os.path.join(self.path, 'model_GOOD_D.pth'))
+            self.model = torch.load(os.path.join(self.path, 'model_OCGIN.pth'))
         self.model.eval()
 
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         y_score_all = []
         y_true_all = []
         for data in dataloader:
-            data = data.to(device)
+            data = data.to(self.device)
 
             y_score = self.forward_model(data, dataloader, args, True)
 
