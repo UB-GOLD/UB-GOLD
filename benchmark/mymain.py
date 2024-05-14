@@ -248,6 +248,8 @@ if __name__ == '__main__':
     OCGTL_subparser.parser.add_argument('-norm_layer', default='None')
     OCGTL_subparser.parser.add_argument('-aggregation', default='add')
     OCGTL_subparser.parser.add_argument('-bias', default=False)
+    OCGTL_subparser.add_argument('-num_trans', default=6)
+
 
 
 
