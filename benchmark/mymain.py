@@ -140,8 +140,11 @@ def main(args):
             print(args.model)
             model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
         elif args.model == "OCGTL":
-             print(args.model)
-             model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_test)
+            print(args.model)
+            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_test)
+        elif args.model == "OCGIN":
+            print(args.model)
+            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_test)
         else:
             model.fit(dataset_train)
 
@@ -249,6 +252,15 @@ if __name__ == '__main__':
     OCGTL_subparser.add_argument('-aggregation', default='add')
     OCGTL_subparser.add_argument('-bias', default=False)
     OCGTL_subparser.add_argument('-num_trans', default=6)
+
+    '''
+    OCGIN
+    '''
+    OCGIN_subparser = subparsers.add_parser('OCGIN')
+    OCGIN_subparser.set_defaults(model='OCGIN')
+    OCGIN_subparser.add_argument('-norm_layer', default='gn')
+    OCGIN_subparser.add_argument('-aggregation', default='add')
+    OCGIN_subparser.add_argument('-bias', default=False)
 
 
 
