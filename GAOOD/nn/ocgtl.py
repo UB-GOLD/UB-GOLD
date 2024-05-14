@@ -18,7 +18,7 @@ class ocgtl(nn.Module):
         num_trans = args.num_trans
         dim_targets = args.hidden_dim
         num_layers = args.num_layer
-        self.device = args.device
+        self.device = args.gpu
         self.gins = []
         for _ in range(num_trans):
             self.gins.append(myGIN(dim_features,dim_targets,args))
