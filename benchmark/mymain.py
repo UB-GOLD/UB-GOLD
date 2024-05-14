@@ -139,6 +139,9 @@ def main(args):
         elif args.model == 'CVTGAD':
             print(args.model)
             model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
+        elif args.model == "OCGTL":
+             print(args.model)
+             model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_test)
         else:
             model.fit(dataset_train)
 
@@ -236,6 +239,13 @@ if __name__ == '__main__':
     GLocalKD_subparser.add_argument('-nobias', dest='bias', action='store_const', const=False, default=True,
                         help='Whether to add bias. Default to True.')
 
+
+    '''
+    OCGTL
+    '''
+    parser.add_argument('-norm_layer', default='None')
+    parser.add_argument('-aggregation', default='add')
+    parser.add_argument('-bias', default=False)
 
 
 
