@@ -105,52 +105,44 @@ class OCGTL(DeepDetector):
         N = 10  # 设定阈值，比如连续5次AUC没有提升就停止
 
         for epoch in range(1, args.num_epoch + 1):
-            self.model = self.init_model(**self.kwargs)
-            optimizer = torch.optim.Adam(self.model.parameters(), lr=args.lr)
-            self.model.train()
-            self.decision_score_ = None
-            self.max_AUC = 0
+            
+            all_loss, n_bw = 0, 0
+            for data in dataloader:
+                n_bw += 1
+                data = data.to(self.device)
+                loss_epoch = self.forward_model(data, dataloader, args,False)
+                loss_mean = loss_epoch.mean()
+                optimizer.zero_grad()
+                loss_mean.backward()
+                # get_gpu_memory_map() # evaluate gpu usage
+                optimizer.step()
+                all_loss+=loss_epoch.sum()
+            mean_loss = all_loss.item()/args.n_train
+            print('[TRAIN] Epoch:{:03d} | Loss:{:.4f}'.format(epoch, mean_loss))
+            if (epoch) % args.eval_freq == 0 and epoch > 0:
+                self.model.eval()
 
-            stop_counter = 0  # 初始化停止计数器
-            N = 5  # 设定阈值，比如连续5次AUC没有提升就停止
-            for epoch in range(1, self.epoch + 1):
-                all_loss, n_bw = 0, 0
-                for data in dataloader:
-                    n_bw += 1
+                y_val = []
+                score_val = []
+                for data in dataloader_val:
                     data = data.to(self.device)
-                    loss_epoch = self.forward_model(data, dataloader, args,False)
-                    loss_mean = loss_epoch.mean()
-                    optimizer.zero_grad()
-                    loss_mean.backward()
-                    # get_gpu_memory_map() # evaluate gpu usage
-                    optimizer.step()
-                    all_loss+=loss_epoch.sum()
-                mean_loss = all_loss.item()/args.n_train
-                print('[TRAIN] Epoch:{:03d} | Loss:{:.4f}'.format(epoch, mean_loss))
-                if (epoch) % args.eval_freq == 0 and epoch > 0:
-                    self.model.eval()
+                    score_epoch = self.forward_model(data, dataloader, args,True)
+                    score_val = score_val + score_epoch.detach().cpu().tolist()
+                    y_true = data.y
+                    y_val = y_val + y_true.detach().cpu().tolist()
 
-                    y_val = []
-                    score_val = []
-                    for data in dataloader_val:
-                        data = data.to(self.device)
-                        score_epoch = self.forward_model(data, dataloader, args,True)
-                        score_val = score_val + score_epoch.detach().cpu().tolist()
-                        y_true = data.y
-                        y_val = y_val + y_true.detach().cpu().tolist()
-
-                    val_auc = ood_auc(y_val, score_val)
-                    if val_auc > self.max_AUC:
-                        self.max_AUC = val_auc
-                        stop_counter = 0  # 重置计数器
-                        torch.save(self.model, os.path.join(self.path, 'model_OCGTL.pth'))
-                    else:
-                        stop_counter += 1  # 增加计数器
-                    print('Epoch:{:03d} | val_auc:{:.4f}'.format(epoch, self.max_AUC))
-                    if stop_counter >= N:
-                        print(
-                            f'Early stopping triggered after {epoch} epochs due to no improvement in AUC for {N} consecutive evaluations.')
-                        break  # 达到早停条件，跳出循环
+                val_auc = ood_auc(y_val, score_val)
+                if val_auc > self.max_AUC:
+                    self.max_AUC = val_auc
+                    stop_counter = 0  # 重置计数器
+                    torch.save(self.model, os.path.join(self.path, 'model_OCGTL.pth'))
+                else:
+                    stop_counter += 1  # 增加计数器
+                print('Epoch:{:03d} | val_auc:{:.4f}'.format(epoch, self.max_AUC))
+                if stop_counter >= N:
+                    print(
+                        f'Early stopping triggered after {epoch} epochs due to no improvement in AUC for {N} consecutive evaluations.')
+                    break  # 达到早停条件，跳出循环
         # self._process_decision_score()
         return self
 
