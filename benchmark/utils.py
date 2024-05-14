@@ -86,5 +86,18 @@ def init_model(args):
                      batch_size=args.batch_size,
                      grand=False,
                      args=args)
-
+    elif model_name == "OCGIN":
+        return OCGIN(in_dim=args.dataset_num_features,
+                     hid_dim=args.hidden_dim,
+                     num_layers=args.num_layer,
+                     str_dim=args.dg_dim + args.rw_dim,
+                     weight_decay=weight_decay,
+                     dropout=args.dropout,
+                     lr=args.lr,
+                     n_train_data=args.n_train,
+                     epoch=args.num_epoch,
+                     gpu=args.gpu,
+                     batch_size=args.batch_size,
+                     grand=False,
+                     args=args)
    
