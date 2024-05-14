@@ -243,9 +243,11 @@ if __name__ == '__main__':
     '''
     OCGTL
     '''
-    parser.add_argument('-norm_layer', default='None')
-    parser.add_argument('-aggregation', default='add')
-    parser.add_argument('-bias', default=False)
+    OCGTL_subparser = subparsers.add_parser('OCGTL')
+    OCGTL_subparser.set_defaults(model='OCGTL')
+    OCGTL_subparser.parser.add_argument('-norm_layer', default='None')
+    OCGTL_subparser.parser.add_argument('-aggregation', default='add')
+    OCGTL_subparser.parser.add_argument('-bias', default=False)
 
 
 
