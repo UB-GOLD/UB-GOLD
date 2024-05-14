@@ -412,12 +412,14 @@ class GraphNorm(nn.Module):
             num_nodes_list = torch.tensor(graph.__num_nodes_list__).long().to(node_emb.device)
         except:
             num_nodes_list = graph.ptr[1:]-graph.ptr[:-1]
+
+        graph_batch_size = graph.batch.max().item() + 1
         num_nodes_list = num_nodes_list.long().to(node_emb.device)
-        node_mean = scatter(node_emb, graph.batch, dim=0, dim_size=graph.__num_graphs__, reduce='mean')
+        node_mean = scatter(node_emb, graph.batch, dim=0, dim_size=graph_batch_size, reduce='mean')
         node_mean = node_mean.repeat_interleave(num_nodes_list, 0)
 
         sub = node_emb - node_mean*self.scale
-        node_std = scatter(sub.pow(2), graph.batch, dim=0, dim_size=graph.__num_graphs__, reduce='mean')
+        node_std = scatter(sub.pow(2), graph.batch, dim=0, dim_size=graph_batch_size, reduce='mean')
         node_std = torch.sqrt(node_std + 1e-8)
         node_std = node_std.repeat_interleave(num_nodes_list, 0)
         norm_node = self.weight * sub / node_std + self.bias
