@@ -14,6 +14,7 @@ from sklearn.model_selection import StratifiedKFold
 from .good_hiv import GOODHIV
 import random
 from .drugood_dataset import DrugOOD
+from .drugood_dataset import DrugOODDataset
 from torch.utils.data import ConcatDataset
 def read_graph_file(DS, path):
     if "training" in DS:
@@ -237,7 +238,6 @@ def get_ood_dataset_spilt(args, train_per=0.9, need_str_enc=True):
     else:
         DS, DS_ood = args.DS, args.DS_ood
 
-    #TU = not DS.startswith('ogbg-mol')
     DrugooD = DS.startswith('DrugOOD')
     # print(DrugooD)
     path_now =  os.path.abspath(os.path.join(os.getcwd(), "."))
@@ -246,55 +246,39 @@ def get_ood_dataset_spilt(args, train_per=0.9, need_str_enc=True):
     # print(path)
     n_train_data, n_in_test_data, n_out_test_data = 1000, 500, 500
     if DrugooD:
-        dataset = DrugOOD(path, mode='iid')
-        # print(len(dataset))
-        max_nodes_num = max([_.num_nodes for _ in dataset])
+        is_drug,DS_drug = DS.split("+")
+        #dataset = DrugOOD(path, mode='iid')
+        print(DS_drug)
+        dataset_all = DrugOODDataset(name = DS_drug, root = args.data_root)
+        dataset = dataset_all[dataset_all.train_index]
+        dataset_ood = dataset_all[dataset_all.test_index]
+        max_nodes_num = max([_.num_nodes for _ in dataset_all])
         dataset.data.x = dataset.data.x.type(torch.float32)
-        dataset_ood = DrugOOD(path, mode='ood')
+
         # print(len(dataset_ood))
         dataset_ood.data.x = dataset_ood.data.x.type(torch.float32)    
 
     else:
-        from .register import register
-        register.datasets ={"GOODHIV": GOODHIV(root=osp.join(r"/home/wangyili/shenxu/G-OOD-D-main/data/", 'hiv/'),
-                                                              domain="size",
-                                                              shift="covariate")}
-        
-        # datasets, meta_info = register.datasets["GOODHIV"].load(dataset_root=osp.join(r"/home/wangyili/shenxu/G-OOD-D-main/data/", 'hiv/'),
-        #                                                       domain="size",
-        #                                                       shift="covariate",
-        #                                                      )
-        #
-    #iid_dataset = dataset["train"]
-    #ood_dataset = DrugOOD(osp.join(dataset_dir, 'DrugOOD/'), mode='ood')
+        from GOOD import register
+      
+        dataset_name,domain,shift = DS.split("+")
+        # print(os.getcwd())
+        root = os.getcwd()+"/"+args.data_root
+        # print(root)
+        # print(dataset_name)
+        datasets, meta_info = register.datasets[dataset_name].load(dataset_root=args.data_root,
+                                                                              domain=domain,
+                                                                              shift=shift,
+                                                                              generate = False,
+                                                                              )
+       
 
-    
-    
         dataset = datasets["train"][:1000]
         dataset.data.x = dataset.data.x.type(torch.float32)
         dataset_ood = datasets["test"][:n_out_test_data]
         max_nodes_num = max([_.num_nodes for _ in dataset])
         
         dataset_ood.data.x = dataset_ood.data.x.type(torch.float32)
-    '''
-    if TU and DrugooD:
-        dataset = TUDataset(r"/home/wangyili/shenxu/G-OOD-D-main/data", name=DS, transform=(Constant(1, cat=False)))
-        dataset_ood = TUDataset(r"/home/wangyili/shenxu/G-OOD-D-main/data", name=DS_ood, transform=(Constant(1, cat=False)))
-    else:
-        if DS.startswith('DrugOOD'):
-            #print(path)
-            dataset = DrugOOD(path, mode='iid')
-            print(len(dataset))
-            dataset.data.x = dataset.data.x.type(torch.float32)
-            dataset_ood = DrugOOD(path, mode='ood')
-            print(len(dataset_ood))
-            dataset_ood.data.x = dataset_ood.data.x.type(torch.float32)
-        else:
-            dataset = PygGraphPropPredDataset(name=DS, root=path)
-            dataset.data.x = dataset.data.x.type(torch.float32)
-            dataset_ood = (PygGraphPropPredDataset(name=DS_ood, root=path_ood))
-            dataset_ood.data.x = dataset_ood.data.x.type(torch.float32)
-    '''
 
     max_nodes_num_train = max([_.num_nodes for _ in dataset])
     max_nodes_num_test = max([_.num_nodes for _ in dataset_ood])
@@ -327,16 +311,6 @@ def get_ood_dataset_spilt(args, train_per=0.9, need_str_enc=True):
         data_list_train = init_structural_encoding(data_list_train, rw_dim=args.rw_dim, dg_dim=args.dg_dim)
     dataloader_train = DataLoader(data_list_train, batch_size=args.batch_size, shuffle=True)
 
-    # for data in dataset_val:
-    #     data.y = 0
-    #     data['idx'] = idx
-    #     idx += 1
-    #     data_list_val.append(data)
-
-    # if need_str_enc:
-    #     data_list_val = init_structural_encoding(data_list_val, rw_dim=args.rw_dim, dg_dim=args.dg_dim)
-    # dataloader_val = DataLoader(data_list_val, batch_size=args.batch_size, shuffle=True)
-
     data_list_test = []
     for data in dataset_test:
         data.y = 0
@@ -363,6 +337,7 @@ def get_ood_dataset_spilt(args, train_per=0.9, need_str_enc=True):
     
     #训练集（ID）， 测试集（ID+OOD）， 训练集dataloader,测试集dataloader,数据信息
     return dataset_train, dataset_val, dataset_test, dataloader_train, dataloader_val, dataloader_test, meta
+
 
 
 
