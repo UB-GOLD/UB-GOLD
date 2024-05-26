@@ -45,19 +45,19 @@ python benchmark/per_ood.py -exp_type ad -DS PROTEINS    -num_epoch 50  -batch_s
 
 python benchmark/per_ood.py -exp_type ad -DS BZR     -num_epoch 50  -batch_size 300 -batch_size_test 1 -hidden_dim 32 -num_layer 3 -eval_freq 2   -per 0.1 -model GLocalKD GLocalKD -max-nodes 0
 
-python benchmark/per_ood.py -exp_type ad -DS COX2   -exp_type add    -num_epoch 50  -batch_size 300 -batch_size_test 1 -hidden_dim 32 -num_layer 3 -eval_freq 2   -per 0.1 -model GLocalKD GLocalKD -max-nodes 0
+python benchmark/per_ood.py -exp_type ad -DS COX2      -num_epoch 50  -batch_size 300 -batch_size_test 1 -hidden_dim 32 -num_layer 3 -eval_freq 2   -per 0.1 -model GLocalKD GLocalKD -max-nodes 0
 
 python benchmark/per_ood.py -exp_type ad -DS PROTEINS    -num_epoch 50  -batch_size 300 -batch_size_test 1 -hidden_dim 32 -num_layer 3 -eval_freq 2   -per 0.2 -model GLocalKD GLocalKD -max-nodes 0
 
 python benchmark/per_ood.py -exp_type ad -DS BZR     -num_epoch 50  -batch_size 300 -batch_size_test 1 -hidden_dim 32 -num_layer 3 -eval_freq 2   -per 0.2 -model GLocalKD GLocalKD -max-nodes 0
 
-python benchmark/per_ood.py -exp_type ad -DS COX2   -exp_type add    -num_epoch 50  -batch_size 300 -batch_size_test 1 -hidden_dim 32 -num_layer 3 -eval_freq 2   -per 0.2 -model GLocalKD GLocalKD -max-nodes 0
+python benchmark/per_ood.py -exp_type ad -DS COX2     -num_epoch 50  -batch_size 300 -batch_size_test 1 -hidden_dim 32 -num_layer 3 -eval_freq 2   -per 0.2 -model GLocalKD GLocalKD -max-nodes 0
 
 python benchmark/per_ood.py -exp_type ad -DS PROTEINS    -num_epoch 50  -batch_size 300 -batch_size_test 1 -hidden_dim 32 -num_layer 3 -eval_freq 2   -per 0.3 -model GLocalKD GLocalKD -max-nodes 0
 
 python benchmark/per_ood.py -exp_type ad -DS BZR     -num_epoch 50  -batch_size 300 -batch_size_test 1 -hidden_dim 32 -num_layer 3 -eval_freq 2   -per 0.3 -model GLocalKD GLocalKD -max-nodes 0
 
-python benchmark/per_ood.py -exp_type ad -DS COX2   -exp_type add    -num_epoch 50  -batch_size 300 -batch_size_test 1 -hidden_dim 32 -num_layer 3 -eval_freq 2   -per 0.3 -model GLocalKD GLocalKD -max-nodes 0
+python benchmark/per_ood.py -exp_type ad -DS COX2    -num_epoch 50  -batch_size 300 -batch_size_test 1 -hidden_dim 32 -num_layer 3 -eval_freq 2   -per 0.3 -model GLocalKD GLocalKD -max-nodes 0
 
 #GOOD-D
 python benchmark/per_ood.py -exp_type ad -DS PROTEINS    -batch_size_test 128 -num_epoch 400 -num_cluster 10 -alpha 0.2   -per 0.1 -model GOOD-D
