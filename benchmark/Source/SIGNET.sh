@@ -44,13 +44,13 @@ python benchmark/mymain.py -exp_type oodd -DS_pair PTC_MR+MUTAG     -batch_size 
 
 python benchmark/mymain.py -exp_type oodd -DS_pair ogbg-molbbbp+ogbg-molbace     -batch_size  128 -batch_size_test 9999 -eval_freq 5 -num_epoch 300 -lr 0.001 -hidden_dim 128 -model SIGNET SIGNET
 
-python benchmark/mymain.py -exp_type oodd -DS_pair ogbg-molfreesolv+ogbg-moltoxcast     -batch_size  128 -batch_size_test 9999 -eval_freq 5 -num_epoch 300 -lr 0.001 -hidden_dim 128 -model SIGNET SIGNET
+python benchmark/mymain.py -exp_type oodd -DS_pair ogbg-molfreesolv+ogbg-moltoxcast     -batch_size  128 -batch_size_test 9999 -eval_freq 5 -num_epoch 300 -lr 0.001 -hidden_dim 64 -model SIGNET SIGNET
 
-python benchmark/mymain.py -exp_type oodd -DS_pair ogbg-molclintox+ogbg-mollipo     -batch_size  128 -batch_size_test 9999 -eval_freq 5 -num_epoch 300 -lr 0.001 -hidden_dim 128 -model SIGNET SIGNET
+python benchmark/mymain.py -exp_type oodd -DS_pair ogbg-molclintox+ogbg-mollipo     -batch_size  128 -batch_size_test 9999 -eval_freq 5 -num_epoch 300 -lr 0.001 -hidden_dim 64 -model SIGNET SIGNET
 
-python benchmark/mymain.py -exp_type oodd -DS_pair ogbg-molesol+ogbg-molmuv    -batch_size  128 -batch_size_test 9999 -num_epoch 300 -eval_freq 5 -lr 0.001 -hidden_dim 128 -model SIGNET SIGNET
+python benchmark/mymain.py -exp_type oodd -DS_pair ogbg-molesol+ogbg-molmuv    -batch_size  128 -batch_size_test 9999 -num_epoch 300 -eval_freq 5 -lr 0.001 -hidden_dim 64 -model SIGNET SIGNET
 
-python benchmark/mymain.py -exp_type oodd -DS_pair ogbg-moltox21+ogbg-molsider    -batch_size  128 -batch_size_test 9999 -num_epoch 300 -eval_freq 5 -lr 0.001 -hidden_dim 128 -model SIGNET SIGNET
+python benchmark/mymain.py -exp_type oodd -DS_pair ogbg-moltox21+ogbg-molsider    -batch_size  128 -batch_size_test 9999 -num_epoch 300 -eval_freq 5 -lr 0.001 -hidden_dim 64 -model SIGNET SIGNET
 
 # drugood
 
