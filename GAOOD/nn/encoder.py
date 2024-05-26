@@ -290,7 +290,7 @@ class CosineLSM(torch.nn.Module):
             num_edges_pos = edge_index.size(1)
             num_edges_neg = int(self.neg_ratio * num_edges_pos)
             edge_index_neg = batched_negative_sampling(edge_index, batch, num_edges_neg)
-
+            edge_index_neg = edge_index_neg.long()
             x_query = F.embedding(edge_index_neg[0], x).view(-1, self.m, self.hid_channels)
             x_key = F.embedding(edge_index_neg[1], x).view(-1, self.m, self.hid_channels)
             e_pred_similarity = self.cosine(x_query, x_key, dim=2)
