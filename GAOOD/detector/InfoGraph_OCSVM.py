@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from .mybase import DeepDetector
-from ..nn import infograph
+from ..nn import Infograph
 def warn(*args, **kwargs):
     pass
 import warnings
