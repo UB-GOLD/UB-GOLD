@@ -100,7 +100,7 @@ class GraphCL_IF(DeepDetector):
         self.device = torch.device('cuda:' + str(args.gpu) if torch.cuda.is_available() else 'cpu')
         self.init_model(**self.kwargs)
         optimizer = Adam(self.encoder_model.parameters(), lr=args.lr)
-        max_AUC = 0
+        self.max_AUC = 0
         for epoch in range(1, args.num_epoch + 1):
             self.encoder_model.train()
             epoch_loss = 0
@@ -134,11 +134,11 @@ class GraphCL_IF(DeepDetector):
                     anomaly_scores = -self.detector.decision_function(g.cpu().detach().numpy())
                     y_score_all = y_score_all + list(anomaly_scores)
                 val_auc = ood_auc(ys, y_score_all)
-                if val_auc > max_AUC:
-                    print("保存模型： ",val_auc)
-                    max_AUC = val_auc
+                if val_auc > self.max_AUC:
+                    self.max_AUC = val_auc
                     torch.save(self.encoder_model, os.path.join(self.path, 'encoder_model.pth'))
                     joblib.dump(self.detector, os.path.join(self.path, 'isolation_forest_model.joblib'))
+                print('[TRAIN] Epoch:{:03d} | val_auc:{:.4f}'.format(epoch, self.max_AUC))
         return True
     def is_directory_empty(self,directory):
         # 列出目录下的所有文件和文件夹
@@ -150,7 +150,7 @@ class GraphCL_IF(DeepDetector):
         if self.is_directory_empty(self.path):
             pass
         else:
-            print("加载模型： ")
+            print("Loading Model Weight")
             self.encoder_model = torch.load(os.path.join(self.path, 'encoder_model.pth'))
             self.detector = joblib.load(os.path.join(self.path, 'isolation_forest_model.joblib'))
         self.encoder_model.eval()
