@@ -22,7 +22,9 @@ Before you begin, ensure that you have Anaconda or Miniconda installed on your s
 * scipy>=1.8.0
 * networkx>=2.6.3
 * rdkit>=2023.3.1
-
+* dgl>=2.1.0
+* pygcl>=0.1.2
+* 
 ```shell
 # Create and activate a new Conda environment named 'GOD2Bench'
 conda create -n GOD2Bench
