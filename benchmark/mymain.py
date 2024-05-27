@@ -145,6 +145,21 @@ def main(args):
         elif args.model == "OCGIN":
             print(args.model)
             model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
+        elif args.model == 'GraphCL_IF':
+            print(args.model)
+            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
+        elif args.model == 'GraphCL_OCSVM':
+            print(args.model)
+            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
+        elif args.model == 'InfoGraph_IF':
+            print(args.model)
+            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
+        elif args.model == 'InfoGraph_OCSVM':
+            print(args.model)
+            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
+        elif args.model == 'KernelGLAD':
+            print(args.model)
+            model.fit(dataset=dataset_train, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_val)
         else:
             model.fit(dataset_train)
 
@@ -213,8 +228,6 @@ if __name__ == '__main__':
                         help='Whether batch normalization is used')
     GLADC_subparser.add_argument('-nobias', dest='bias', action='store_const', const=False, default=True,
                         help='Whether to add bias. Default to True.')
-
-
     
     '''
     SIGNET parameter
@@ -243,7 +256,6 @@ if __name__ == '__main__':
     GLocalKD_subparser.add_argument('-nobias', dest='bias', action='store_const', const=False, default=True,
                         help='Whether to add bias. Default to True.')
 
-
     '''
     OCGTL
     '''
@@ -263,6 +275,65 @@ if __name__ == '__main__':
     OCGIN_subparser.add_argument('-aggregation', default='add')
     OCGIN_subparser.add_argument('-bias', default=False)
 
+    '''
+    GraphCL_IF
+    '''
+    GraphCL_IF_subparser = subparsers.add_parser('GraphCL_IF')
+    GraphCL_IF_subparser.set_defaults(model='GraphCL_IF')
+    GraphCL_IF_subparser.add_argument('-detector', default='IF')
+    GraphCL_IF_subparser.add_argument('-IF_n_trees', type=int, default=200)
+    GraphCL_IF_subparser.add_argument('-IF_sample_ratio', type=float, default=0.5)
+    GraphCL_IF_subparser.add_argument('-gamma', default='scale')
+    GraphCL_IF_subparser.add_argument('-nuOCSVM', type=float, default=0.1)
+
+    '''
+    GraphCL_OCSVM
+    '''
+    GraphCL_OCSVM_subparser = subparsers.add_parser('GraphCL_OCSVM')
+    GraphCL_OCSVM_subparser.set_defaults(model='GraphCL_OCSVM')
+    GraphCL_OCSVM_subparser.add_argument('-detector', default='OCSVM')
+    GraphCL_OCSVM_subparser.add_argument('-IF_n_trees', type=int, default=200)
+    GraphCL_OCSVM_subparser.add_argument('-IF_sample_ratio', type=float, default=0.5)
+    GraphCL_OCSVM_subparser.add_argument('-gamma', default='scale')
+    GraphCL_OCSVM_subparser.add_argument('-nuOCSVM', type=float, default=0.1)
+
+    '''
+    GraphCL_IF
+    '''
+    InfoGraph_IF_subparser = subparsers.add_parser('InfoGraph_IF')
+    InfoGraph_IF_subparser.set_defaults(model='InfoGraph_IF')
+    InfoGraph_IF_subparser.add_argument('-detector', default='IF')
+    InfoGraph_IF_subparser.add_argument('-IF_n_trees', type=int, default=200)
+    InfoGraph_IF_subparser.add_argument('-IF_sample_ratio', type=float, default=0.5)
+    InfoGraph_IF_subparser.add_argument('-gamma', default='scale')
+    InfoGraph_IF_subparser.add_argument('-nuOCSVM', type=float, default=0.1)
+
+    '''
+    GraphCL_OCSVM
+    '''
+    InfoGraph_OCSVM_subparser = subparsers.add_parser('InfoGraph_OCSVM')
+    InfoGraph_OCSVM_subparser.set_defaults(model='InfoGraph_OCSVM')
+    InfoGraph_OCSVM_subparser.add_argument('-detector', default='OCSVM')
+    InfoGraph_OCSVM_subparser.add_argument('-IF_n_trees', type=int, default=200)
+    InfoGraph_OCSVM_subparser.add_argument('-IF_sample_ratio', type=float, default=0.5)
+    InfoGraph_OCSVM_subparser.add_argument('-gamma', default='scale')
+    InfoGraph_OCSVM_subparser.add_argument('-nuOCSVM', type=float, default=0.1)
+
+    '''
+    KernelGLAD
+    '''
+    KernelGLAD_subparser = subparsers.add_parser('KernelGLAD')
+    KernelGLAD_subparser.set_defaults(model='KernelGLAD')
+    KernelGLAD_subparser.add_argument('-kernel', default='WL')
+    KernelGLAD_subparser.add_argument('-detector', default='OCSVM')
+    KernelGLAD_subparser.add_argument('-WL_iter', type=int, default=5)
+    KernelGLAD_subparser.add_argument('-PK_bin_width', type=int, default=1)
+    KernelGLAD_subparser.add_argument('-IF_n_trees', type=int, default=200)
+    KernelGLAD_subparser.add_argument('-IF_sample_ratio', type=float, default=0.5)
+    KernelGLAD_subparser.add_argument('-LOF_n_neighbors', type=int, default=20)
+    KernelGLAD_subparser.add_argument('-LOF_n_leaf', type=int, default=30)
+    KernelGLAD_subparser.add_argument('-detectorskernel', default='precomputed')
+    KernelGLAD_subparser.add_argument('-nuOCSVM', type=float, default=0.1)
 
 
 
