@@ -112,9 +112,62 @@ python benchmark/near_far_ood.py -exp_type ood -DS ENZYMES -DS_pair ENZYMES+PROT
 
 
 
-# python benchmark/near_far_ood.py -exp_type ood -DS AIDS -DS_pair AIDS+DHFR 
+# GCL-IF
+python benchmark/near_far_ood.py -exp_type ood -DS AIDS -DS_pair AIDS+DHFR   -near far -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_IF GraphCL_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
 
-# python benchmark/near_far_ood.py -exp_type ood -DS BZR -DS_pair BZR+COX2 
+python benchmark/near_far_ood.py -exp_type ood -DS BZR -DS_pair BZR+COX2    -near far -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_IF GraphCL_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
 
-# python benchmark/near_far_ood.py -exp_type ood -DS ENZYMES -DS_pair ENZYMES+PROTEINS
+python benchmark/near_far_ood.py -exp_type ood -DS ENZYMES -DS_pair ENZYMES+PROTEINS   -near far  -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_IF GraphCL_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+python benchmark/near_far_ood.py -exp_type ood -DS AIDS -DS_pair AIDS+DHFR    -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_IF GraphCL_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+python benchmark/near_far_ood.py -exp_type ood -DS BZR -DS_pair BZR+COX2      -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_IF GraphCL_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+python benchmark/near_far_ood.py -exp_type ood -DS ENZYMES -DS_pair ENZYMES+PROTEINS     -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_IF GraphCL_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+# GCL-OCSVM
+
+python benchmark/near_far_ood.py -exp_type ood -DS AIDS -DS_pair AIDS+DHFR    -near far -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_OCSVM GraphCL_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+python benchmark/near_far_ood.py -exp_type ood -DS BZR -DS_pair BZR+COX2    -near far -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_OCSVM GraphCL_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+python benchmark/near_far_ood.py -exp_type ood -DS ENZYMES -DS_pair ENZYMES+PROTEINS   -near far -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_OCSVM GraphCL_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+python benchmark/near_far_ood.py -exp_type ood -DS AIDS -DS_pair AIDS+DHFR    -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_OCSVM GraphCL_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+python benchmark/near_far_ood.py -exp_type ood -DS BZR -DS_pair BZR+COX2     -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_OCSVM GraphCL_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+python benchmark/near_far_ood.py -exp_type ood -DS ENZYMES -DS_pair ENZYMES+PROTEINS    -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_OCSVM GraphCL_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+
+# IFGraph-IF
+python benchmark/near_far_ood.py -exp_type ood -DS AIDS -DS_pair AIDS+DHFR   -near far -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_IF InfoGraph_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+python benchmark/near_far_ood.py -exp_type ood -DS BZR -DS_pair BZR+COX2    -near far -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_IF InfoGraph_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+python benchmark/near_far_ood.py -exp_type ood -DS ENZYMES -DS_pair ENZYMES+PROTEINS    -near far -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_IF InfoGraph_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+python benchmark/near_far_ood.py -exp_type ood -DS AIDS -DS_pair AIDS+DHFR    -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_IF InfoGraph_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+python benchmark/near_far_ood.py -exp_type ood -DS BZR -DS_pair BZR+COX2     -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_IF InfoGraph_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+python benchmark/near_far_ood.py -exp_type ood -DS ENZYMES -DS_pair ENZYMES+PROTEINS    -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_IF InfoGraph_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+
+# IFGraph-OCSVM
+
+python benchmark/near_far_ood.py -exp_type ood -DS AIDS -DS_pair AIDS+DHFR   -near far -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_OCSVM InfoGraph_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+python benchmark/near_far_ood.py -exp_type ood -DS BZR -DS_pair BZR+COX2    -near far -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_OCSVM InfoGraph_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+python benchmark/near_far_ood.py -exp_type ood -DS ENZYMES -DS_pair ENZYMES+PROTEINS   -near far -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_OCSVM InfoGraph_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+python benchmark/near_far_ood.py -exp_type ood -DS AIDS -DS_pair AIDS+DHFR    -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_OCSVM InfoGraph_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+python benchmark/near_far_ood.py -exp_type ood -DS BZR -DS_pair BZR+COX2      -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_OCSVM InfoGraph_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+python benchmark/near_far_ood.py -exp_type ood -DS ENZYMES -DS_pair ENZYMES+PROTEINS    -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_OCSVM InfoGraph_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+
+
 
