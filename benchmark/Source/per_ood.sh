@@ -158,5 +158,95 @@ python benchmark/per_ood.py -exp_type ad -DS BZR      -batch_size  128 -batch_si
 
 python benchmark/per_ood.py -exp_type ad -DS COX2       -batch_size  128 -batch_size_test 9999 -eval_freq 5 -num_epoch  300 -lr 0.001 -hidden_dim 64    -per 0.3 -model SIGNET SIGNET
 
+# GCL-IF
+
+python benchmark/per_ood.py -exp_type ad -DS PROTEINS  -per 0.1 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_IF GraphCL_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+python benchmark/per_ood.py -exp_type ad -DS BZR -per 0.1 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_IF GraphCL_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+python benchmark/per_ood.py -exp_type ad -DS COX2 -per 0.1 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_IF GraphCL_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+python benchmark/per_ood.py -exp_type ad -DS PROTEINS  -per 0.2 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_IF GraphCL_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+python benchmark/per_ood.py -exp_type ad -DS BZR -per 0.2 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_IF GraphCL_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+python benchmark/per_ood.py -exp_type ad -DS COX2 -per 0.2 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_IF GraphCL_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+python benchmark/per_ood.py -exp_type ad -DS PROTEINS  -per 0.3 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_IF GraphCL_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+python benchmark/per_ood.py -exp_type ad -DS BZR -per 0.3 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_IF GraphCL_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+python benchmark/per_ood.py -exp_type ad -DS COX2 -per 0.3 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_IF GraphCL_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+
+# GCL-OCSVM
+python benchmark/per_ood.py -exp_type ad -DS PROTEINS  -per 0.1 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_OCSVM GraphCL_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+
+python benchmark/per_ood.py -exp_type ad -DS BZR -per 0.1 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_OCSVM GraphCL_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+
+python benchmark/per_ood.py -exp_type ad -DS COX2 -per 0.1 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_OCSVM GraphCL_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+
+python benchmark/per_ood.py -exp_type ad -DS PROTEINS  -per 0.2 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_OCSVM GraphCL_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+
+python benchmark/per_ood.py -exp_type ad -DS BZR -per 0.2 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_OCSVM GraphCL_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+
+python benchmark/per_ood.py -exp_type ad -DS COX2 -per 0.2 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_OCSVM GraphCL_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+
+python benchmark/per_ood.py -exp_type ad -DS PROTEINS  -per 0.3 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_OCSVM GraphCL_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+
+python benchmark/per_ood.py -exp_type ad -DS BZR -per 0.3 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_OCSVM GraphCL_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+
+python benchmark/per_ood.py -exp_type ad -DS COX2 -per 0.3 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30  -model GraphCL_OCSVM GraphCL_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+
+# IFGraph-IF
+
+python benchmark/per_ood.py -exp_type ad -DS PROTEINS  -per 0.1 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_IF InfoGraph_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+python benchmark/per_ood.py -exp_type ad -DS BZR -per 0.1 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_IF InfoGraph_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+python benchmark/per_ood.py -exp_type ad -DS COX2 -per 0.1 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_IF InfoGraph_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+python benchmark/per_ood.py -exp_type ad -DS PROTEINS  -per 0.2 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_IF InfoGraph_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+python benchmark/per_ood.py -exp_type ad -DS BZR -per 0.2 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_IF InfoGraph_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+python benchmark/per_ood.py -exp_type ad -DS COX2 -per 0.2 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_IF InfoGraph_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+python benchmark/per_ood.py -exp_type ad -DS PROTEINS  -per 0.3 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_IF InfoGraph_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+python benchmark/per_ood.py -exp_type ad -DS BZR -per 0.3 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_IF InfoGraph_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+python benchmark/per_ood.py -exp_type ad -DS COX2 -per 0.3 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_IF InfoGraph_IF -detector IF -IF_n_trees 200  -IF_sample_ratio 0.5
+
+
+# IFGraph-OCSVM
+
+python benchmark/per_ood.py -exp_type ad -DS PROTEINS  -per 0.1  -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_OCSVM InfoGraph_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+python benchmark/per_ood.py -exp_type ad -DS BZR -per 0.1 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_OCSVM InfoGraph_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+python benchmark/per_ood.py -exp_type ad -DS COX2 -per 0.1 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_OCSVM InfoGraph_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+python benchmark/per_ood.py -exp_type ad -DS PROTEINS  -per 0.2 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_OCSVM InfoGraph_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+python benchmark/per_ood.py -exp_type ad -DS BZR -per 0.2 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_OCSVM InfoGraph_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+python benchmark/per_ood.py -exp_type ad -DS COX2 -per 0.2 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_OCSVM InfoGraph_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+python benchmark/per_ood.py -exp_type ad -DS PROTEINS  -per 0.3 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_OCSVM InfoGraph_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+python benchmark/per_ood.py -exp_type ad -DS BZR -per 0.3 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_OCSVM InfoGraph_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
+python benchmark/per_ood.py -exp_type ad -DS COX2 -per 0.3 -batch_size  128 -batch_size_test 9999 -eval_freq 2 -num_epoch 30 -num_layer 2  -model InfoGraph_OCSVM InfoGraph_OCSVM -detector OCSVM -gamma 'scale' -nuOCSVM 0.1
+
 
 
