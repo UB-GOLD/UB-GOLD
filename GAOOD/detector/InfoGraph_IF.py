@@ -27,7 +27,7 @@ from torch_geometric.data import DataLoader
 from torch_geometric.datasets import TUDataset
 from sklearn.svm import OneClassSVM
 import joblib
-class InfoGraph_IF(DeepDetector):
+class Infograph_IF(DeepDetector):
     def __init__(self,
                  DS='BZR',
                  DS_pair=None,
@@ -39,7 +39,7 @@ class InfoGraph_IF(DeepDetector):
                  nu=0.1,
                  IF_n_trees=200, IF_sample_ratio=0.5,
                  **kwargs):
-        super(InfoGraph_IF, self).__init__(in_dim=None)
+        super(Infograph_IF, self).__init__(in_dim=None)
         detectors = {
             'IF': IsolationForest(n_estimators=IF_n_trees, max_samples=IF_sample_ratio, contamination='auto'),
             'OCSVM': OneClassSVM(gamma=gamma, nu=nu)
@@ -81,12 +81,12 @@ class InfoGraph_IF(DeepDetector):
         :param kwargs:
         :return: CVTGAD
         '''
-        self.gconv = infograph.GConv(input_dim=self.args.dataset_num_features,
+        self.gconv = Infograph.GConv(input_dim=self.args.dataset_num_features,
                       hidden_dim=self.args.hidden_dim, activation=torch.nn.ReLU,
                     num_layers=self.args.num_layer).to(self.device)
-        self.fc1 = infograph.FC(hidden_dim=self.args.hidden_dim * self.args.num_layer)
-        self.fc2 = infograph.FC(hidden_dim=self.args.hidden_dim * self.args.num_layer)
-        self.encoder_model = infograph.Encoder(encoder=self.gconv, local_fc=self.fc1, global_fc=self.fc2).to(self.device)
+        self.fc1 = Infograph.FC(hidden_dim=self.args.hidden_dim * self.args.num_layer)
+        self.fc2 = Infograph.FC(hidden_dim=self.args.hidden_dim * self.args.num_layer)
+        self.encoder_model = Infograph.Encoder(encoder=self.gconv, local_fc=self.fc1, global_fc=self.fc2).to(self.device)
         self.contrast_model = SingleBranchContrast(loss=L.JSD(), mode='G2L').to(self.device)
 
 
@@ -132,8 +132,8 @@ class InfoGraph_IF(DeepDetector):
                 if val_auc > max_AUC:
                     print("保存模型： ", val_auc)
                     max_AUC = val_auc
-                    torch.save(self.encoder_model, os.path.join(self.path, 'infograph_encoder_model.pth'))
-                    joblib.dump(self.detector, os.path.join(self.path, 'infograph_{}_model.joblib'.format(self.detector_name)))
+                    torch.save(self.encoder_model, os.path.join(self.path, 'Infograph_encoder_model.pth'))
+                    joblib.dump(self.detector, os.path.join(self.path, 'Infograph_{}_model.joblib'.format(self.detector_name)))
 
 
         return True
@@ -148,8 +148,8 @@ class InfoGraph_IF(DeepDetector):
             pass
         else:
             print("加载模型： ")
-            self.encoder_model = torch.load(os.path.join(self.path, 'infograph_encoder_model.pth'))
-            self.detector = joblib.load(os.path.join(self.path, 'infograph_{}_model.joblib'.format(self.detector_name)))
+            self.encoder_model = torch.load(os.path.join(self.path, 'Infograph_encoder_model.pth'))
+            self.detector = joblib.load(os.path.join(self.path, 'Infograph_{}_model.joblib'.format(self.detector_name)))
         self.encoder_model.eval()
         self.device = torch.device('cuda:' + str(self.args.gpu) if torch.cuda.is_available() else 'cpu')
         ys = torch.cat([data.y for data in dataloader])
