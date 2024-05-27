@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from .mybase import DeepDetector
+
 from ..nn import Infograph
 def warn(*args, **kwargs):
     pass
@@ -27,19 +28,19 @@ from torch_geometric.data import DataLoader
 from torch_geometric.datasets import TUDataset
 from sklearn.svm import OneClassSVM
 import joblib
-class Infograph_OCSVM(DeepDetector):
+class InfoGraph_IF(DeepDetector):
     def __init__(self,
                  DS='BZR',
                  DS_pair=None,
                  exp_type=None,
                  model_name=None,
                  args=None,
-                 detector='OCSVM',
+                 detector='IF',
                  gamma='scale',
                  nu=0.1,
                  IF_n_trees=200, IF_sample_ratio=0.5,
                  **kwargs):
-        super(Infograph_OCSVM, self).__init__(in_dim=None)
+        super(InfoGraph_IF, self).__init__(in_dim=None)
         detectors = {
             'IF': IsolationForest(n_estimators=IF_n_trees, max_samples=IF_sample_ratio, contamination='auto'),
             'OCSVM': OneClassSVM(gamma=gamma, nu=nu)
@@ -84,8 +85,8 @@ class Infograph_OCSVM(DeepDetector):
         self.gconv = Infograph.GConv(input_dim=self.args.dataset_num_features,
                       hidden_dim=self.args.hidden_dim, activation=torch.nn.ReLU,
                     num_layers=self.args.num_layer).to(self.device)
-        self.fc1 = Infograph.FC(hidden_dim=self.args.hidden_dim * 2)
-        self.fc2 = Infograph.FC(hidden_dim=self.args.hidden_dim * 2)
+        self.fc1 = Infograph.FC(hidden_dim=self.args.hidden_dim * self.args.num_layer)
+        self.fc2 = Infograph.FC(hidden_dim=self.args.hidden_dim * self.args.num_layer)
         self.encoder_model = Infograph.Encoder(encoder=self.gconv, local_fc=self.fc1, global_fc=self.fc2).to(self.device)
         self.contrast_model = SingleBranchContrast(loss=L.JSD(), mode='G2L').to(self.device)
 
@@ -179,63 +180,7 @@ class Infograph_OCSVM(DeepDetector):
                 return_emb=False,
                 dataloader=None,
                 args=None):
-        """Prediction for testing data using the fitted detector.
-        Return predicted labels by default.
-
-        Parameters
-        ----------
-        data : torch_geometric.data.Data, optional
-            The testing graph. If ``None``, the training data is used.
-            Default: ``None``.
-        label : torch.Tensor, optional
-            The optional outlier ground truth labels used for testing.
-            Default: ``None``.
-        return_pred : bool, optional
-            Whether to return the predicted binary labels. The labels
-            are determined by the outlier contamination on the raw
-            outlier scores. Default: ``True``.
-        return_score : bool, optional
-            Whether to return the raw outlier scores.
-            Default: ``False``.
-        return_prob : bool, optional
-            Whether to return the outlier probabilities.
-            Default: ``False``.
-        prob_method : str, optional
-            The method to convert the outlier scores to probabilities.
-            Two approaches are possible:
-
-            1. ``'linear'``: simply use min-max conversion to linearly
-            transform the outlier scores into the range of
-            [0,1]. The model must be fitted first.
-
-            2. ``'unify'``: use unifying scores,
-            see :cite:`kriegel2011interpreting`.
-
-            Default: ``'linear'``.
-        return_conf : boolean, optional
-            Whether to return the model's confidence in making the same
-            prediction under slightly different training sets.
-            See :cite:`perini2020quantifying`. Default: ``False``.
-        return_emb : bool, optional
-            Whether to return the learned node representations.
-            Default: ``False``.
-
-        Returns
-        -------
-        pred : torch.Tensor
-            The predicted binary outlier labels of shape :math:`N`.
-            0 stands for inliers and 1 for outliers.
-            Only available when ``return_label=True``.
-        score : torch.Tensor
-            The raw outlier scores of shape :math:`N`.
-            Only available when ``return_score=True``.
-        prob : torch.Tensor
-            The outlier probabilities of shape :math:`N`.
-            Only available when ``return_prob=True``.
-        conf : torch.Tensor
-            The prediction confidence of shape :math:`N`.
-            Only available when ``return_conf=True``.
-        """
+    
 
 
         output = ()
