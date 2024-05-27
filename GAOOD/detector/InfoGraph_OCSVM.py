@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from .mybase import DeepDetector
-
 from ..nn import Infograph
 def warn(*args, **kwargs):
     pass
@@ -28,19 +27,19 @@ from torch_geometric.data import DataLoader
 from torch_geometric.datasets import TUDataset
 from sklearn.svm import OneClassSVM
 import joblib
-class InfoGraph_IF(DeepDetector):
+class InfoGraph_OCSVM(DeepDetector):
     def __init__(self,
                  DS='BZR',
                  DS_pair=None,
                  exp_type=None,
                  model_name=None,
                  args=None,
-                 detector='IF',
+                 detector='OCSVM',
                  gamma='scale',
                  nu=0.1,
                  IF_n_trees=200, IF_sample_ratio=0.5,
                  **kwargs):
-        super(InfoGraph_IF, self).__init__(in_dim=None)
+        super(InfoGraph_OCSVM, self).__init__(in_dim=None)
         detectors = {
             'IF': IsolationForest(n_estimators=IF_n_trees, max_samples=IF_sample_ratio, contamination='auto'),
             'OCSVM': OneClassSVM(gamma=gamma, nu=nu)
@@ -85,8 +84,8 @@ class InfoGraph_IF(DeepDetector):
         self.gconv = Infograph.GConv(input_dim=self.args.dataset_num_features,
                       hidden_dim=self.args.hidden_dim, activation=torch.nn.ReLU,
                     num_layers=self.args.num_layer).to(self.device)
-        self.fc1 = Infograph.FC(hidden_dim=self.args.hidden_dim * self.args.num_layer)
-        self.fc2 = Infograph.FC(hidden_dim=self.args.hidden_dim * self.args.num_layer)
+        self.fc1 = Infograph.FC(hidden_dim=self.args.hidden_dim * 2)
+        self.fc2 = Infograph.FC(hidden_dim=self.args.hidden_dim * 2)
         self.encoder_model = Infograph.Encoder(encoder=self.gconv, local_fc=self.fc1, global_fc=self.fc2).to(self.device)
         self.contrast_model = SingleBranchContrast(loss=L.JSD(), mode='G2L').to(self.device)
 
@@ -180,8 +179,7 @@ class InfoGraph_IF(DeepDetector):
                 return_emb=False,
                 dataloader=None,
                 args=None):
-    
-
+        
 
         output = ()
         if dataset is None:
