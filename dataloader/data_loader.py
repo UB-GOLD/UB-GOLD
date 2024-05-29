@@ -352,7 +352,87 @@ def get_ood_dataset_spilt(args, train_per=0.9, need_str_enc=True):
     return dataset_train, dataset_val, dataset_test, dataloader_train, dataloader_val, dataloader_test, meta
 
 
+### GLADC and SIGNET for four dataset
+#ogbg-moltox21+ogbg-molsider
+#ogbg-molfreesolv+ogbg-moltoxcast
+#ogbg-molclintox+ogbg-mollipo
+#ogbg-molesol+ogbg-molmuv
+# def get_ood_dataset(args, train_per=0.9, need_str_enc=True):
+#     if args.DS_pair is not None:
+#         DSS = args.DS_pair.split("+")
+#         DS, DS_ood = DSS[0], DSS[1]
+#     else:
+#         DS, DS_ood = args.DS, args.DS_ood
 
+#     TU = not DS.startswith('ogbg-mol')
+#     path_now =  os.path.abspath(os.path.join(os.getcwd(), "."))
+#     path = osp.join(path_now, '.', 'data', DS)
+#     path_ood = osp.join(path_now, '.', 'data', DS_ood)
+    
+#     if TU:
+#         dataset = TUDataset(path, name=DS, transform=(Constant(1, cat=False)))
+#         dataset_ood = TUDataset(path_ood, name=DS_ood, transform=(Constant(1, cat=False)))
+#     else:
+#         dataset = PygGraphPropPredDataset(name=DS, root=path)
+#         dataset.data.x = dataset.data.x.type(torch.float32)
+#         dataset_ood = (PygGraphPropPredDataset(name=DS_ood, root=path_ood))
+#         dataset_ood.data.x = dataset_ood.data.x.type(torch.float32)
+       
+#     max_nodes_num_train = max([_.num_nodes for _ in dataset])
+#     max_nodes_num_test = max([_.num_nodes for _ in dataset_ood])
+#     max_nodes_num = max_nodes_num_train if max_nodes_num_train > max_nodes_num_test else max_nodes_num_test
+
+#     dataset_num_features = dataset.num_node_features
+#     dataset_num_features_ood = dataset_ood.num_node_features
+#     assert dataset_num_features == dataset_num_features_ood
+
+#     num_sample = len(dataset)
+#     num_train = int(num_sample * train_per)
+#     indices = torch.randperm(num_sample)
+#     idx_train = torch.sort(indices[:num_train])[0]
+#     idx_test = torch.sort(indices[num_train:])[0]
+
+#     dataset_train = dataset[idx_train]
+#     dataset_test = dataset[idx_test]
+#     dataset_ood = dataset_ood[: len(dataset_test)]
+
+#     data_list_train = []
+#     # data_list_val = []
+#     idx = 0
+#     for data in dataset_train:
+#         if data.edge_index.shape[1] != 0:
+#             data.y = 0
+#             data['idx'] = idx
+#             idx += 1
+#             data_list_train.append(data)
+
+#     if need_str_enc:
+#         data_list_train = init_structural_encoding(data_list_train, rw_dim=args.rw_dim, dg_dim=args.dg_dim)
+#     dataloader_train = DataLoader(data_list_train, batch_size=args.batch_size, shuffle=True)
+
+#     data_list_test = []
+#     for data in dataset_test:
+#         if data.edge_index.shape[1] != 0:
+#             data.y = 0
+#             data.edge_attr = None
+#             data_list_test.append(data)
+
+#     for data in dataset_ood:
+#         if data.edge_index.shape[1] != 0:
+#             data.y = 1
+#             data.edge_attr = None
+#             data_list_test.append(data)
+
+#     if need_str_enc:
+#         data_list_test = init_structural_encoding(data_list_test, rw_dim=args.rw_dim, dg_dim=args.dg_dim)
+#     dataloader_test = DataLoader(data_list_test, batch_size=args.batch_size_test, shuffle=True)
+#     dataset_test = ConcatDataset([dataset_test, dataset_ood])
+#     dataset_val = dataset_test
+#     dataloader_val = dataloader_test
+#     meta = {'num_feat':dataset_num_features, 'num_train':len(dataset_train),
+#             'num_test':len(dataset_test), 'num_ood':len(dataset_ood),'max_nodes_num':max_nodes_num,'num_edge_feat':0}
+#     #训练集（ID）， 测试集（ID+OOD）， 训练集dataloader,测试集dataloader,数据信息
+#     return dataset_train, dataset_val, dataset_test, dataloader_train, dataloader_val, dataloader_test, meta
 
 def get_ad_split_TU(args, fold=5):
     path_now =  os.path.abspath(os.path.join(os.getcwd(), "."))
