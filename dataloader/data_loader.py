@@ -16,6 +16,8 @@ import random
 from .drugood_dataset import DrugOOD
 from .drugood_dataset import DrugOODDataset
 from torch.utils.data import ConcatDataset
+from GOOD import register
+
 def read_graph_file(DS, path):
     if "training" in DS:
         path = path+"_training/"
@@ -263,6 +265,10 @@ def get_ood_dataset_spilt(args, train_per=0.9, need_str_enc=True):
         #dataset = DrugOOD(path, mode='iid')
         print(DS_drug)
         dataset_all = DrugOODDataset(name = DS_drug, root = args.data_root)
+        
+        random.shuffle(dataset_all.train_index)
+        random.shuffle(dataset_all.test_index)
+        
         dataset = dataset_all[dataset_all.train_index]
         dataset_ood = dataset_all[dataset_all.test_index]
         max_nodes_num = max([_.num_nodes for _ in dataset_all])
@@ -270,10 +276,8 @@ def get_ood_dataset_spilt(args, train_per=0.9, need_str_enc=True):
 
         # print(len(dataset_ood))
         dataset_ood.data.x = dataset_ood.data.x.type(torch.float32)    
-
+       
     else:
-        from GOOD import register
-      
         dataset_name,domain,shift = DS.split("+")
         # print(os.getcwd())
         root = os.getcwd()+"/"+args.data_root
@@ -285,12 +289,16 @@ def get_ood_dataset_spilt(args, train_per=0.9, need_str_enc=True):
                                                                               generate = False,
                                                                               )
        
-
-        dataset = datasets["train"][:1000]
+            
+        dataset = datasets["train"]
+        perm_idx = torch.randperm(len(dataset), generator=torch.Generator().manual_seed(0))
+        dataset = dataset[perm_idx]
         dataset.data.x = dataset.data.x.type(torch.float32)
-        dataset_ood = datasets["test"][:n_out_test_data]
+        dataset_ood = datasets["test"]
+        perm_idx = torch.randperm(len(dataset_ood), generator=torch.Generator().manual_seed(0))
+        dataset_ood  =dataset_ood[perm_idx]
         max_nodes_num = max([_.num_nodes for _ in dataset])
-        
+
         dataset_ood.data.x = dataset_ood.data.x.type(torch.float32)
 
     max_nodes_num_train = max([_.num_nodes for _ in dataset])
@@ -345,11 +353,13 @@ def get_ood_dataset_spilt(args, train_per=0.9, need_str_enc=True):
     dataset_test = ConcatDataset([dataset_test, dataset_ood])
     dataset_val = dataset_test
     dataloader_val = dataloader_test
+    
     meta = {'num_feat':dataset_num_features, 'num_train':len(dataset_train),
             'num_test':len(dataset_test), 'num_ood':len(dataset_ood),'max_nodes_num':max_nodes_num,'num_edge_feat':0}
-    
+    print(meta)
     #训练集（ID）， 测试集（ID+OOD）， 训练集dataloader,测试集dataloader,数据信息
     return dataset_train, dataset_val, dataset_test, dataloader_train, dataloader_val, dataloader_test, meta
+
 
 
 ### GLADC and SIGNET for four dataset
