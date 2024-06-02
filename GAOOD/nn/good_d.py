@@ -66,22 +66,7 @@ class GOOD_D(nn.Module):
         b = self.proj_head_b(torch.cat((g_f, g_s), 1))
         return b
     def forward(self, data):
-        """
-        Forward computation.
-
-        Parameters
-        ----------
-        x : torch.Tensor
-            Input attribute embeddings.
-        edge_index : torch.Tensor
-            Edge index.
-
-        Returns
-        -------
-        emb : torch.Tensor
-            Output embeddings.
-        """
-
+       
         x_f, x_s, edge_index, batch, num_graphs = data.x, data.x_s, data.edge_index, data.batch, data.num_graphs
         g_f, n_f = self.encoder_feat(x_f, edge_index, batch)
         g_s, n_s = self.encoder_str(x_s, edge_index, batch)
@@ -98,21 +83,7 @@ class GOOD_D(nn.Module):
 
 
     def loss_func(self, b,emb_list,data,cluster_result):
-        """
-        Loss function for OCGNN
-
-        Parameters
-        ----------
-        emb : torch.Tensor
-            Embeddings.
-
-        Returns
-        -------
-        loss : torch.Tensor
-            Loss value.
-        score : torch.Tensor
-            Outlier scores of shape :math:`N` with gradients.
-        """
+      
         g_f, g_s, n_f, n_s = emb_list
         loss_g = self.calc_loss_g(g_f, g_s)
         loss_b = self.calc_loss_b(b, data.idx, cluster_result)
