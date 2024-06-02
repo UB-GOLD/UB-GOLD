@@ -122,8 +122,8 @@ class GLocalKD(DeepDetector):
         scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=50, gamma=0.5)
         self.max_AUC = 0
         
-        stop_counter = 0  # 初始化停止计数器
-        N = 5  # 设定阈值，比如连续5次AUC没有提升就停止
+        stop_counter = 0  
+        N = 5  
         for epoch in range(1, args.num_epoch + 1):
             total_time = 0
             total_loss = 0.0
@@ -174,21 +174,19 @@ class GLocalKD(DeepDetector):
                 val_auc = ood_auc(y, label_test)
                 if val_auc > self.max_AUC:
                     self.max_AUC = val_auc
-                    stop_counter = 0  # 重置计数器
+                    stop_counter = 0  
                     torch.save(self.model_teacher, os.path.join(self.path, 'model_teacher.pth'))
                     torch.save(self.model_student, os.path.join(self.path, 'model_student.pth'))
                 else:
-                    stop_counter += 1  # 增加计数器
+                    stop_counter += 1  
                 print('[TRAIN] Epoch:{:03d} | val_auc:{:.4f}'.format(epoch, self.max_AUC))
                 if stop_counter >= N:
                     print(f'Early stopping triggered after {epoch} epochs due to no improvement in AUC for {N} consecutive evaluations.')
-                    break  # 达到早停条件，跳出循环
+                    break  
                     
         return True
     def is_directory_empty(self,directory):
-        # 列出目录下的所有文件和文件夹
         files_and_dirs = os.listdir(directory)
-        # 如果列表为空，则目录为空
         return len(files_and_dirs) == 0
 
     def decision_function(self, dataset, label=None, dataloader=None, args=None):
