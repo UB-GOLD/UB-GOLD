@@ -357,8 +357,7 @@ class LSM(torch.nn.Module):
         return nll_p_g_x
 class GNA(torch.nn.Module):
     """
-    Graph Node Attention Network (GNA). See :cite:`yuan2021higher` for
-    more details.
+    Graph Node Attention Network (GNA). 
     """
     def __init__(self,
                  in_channels,
@@ -379,21 +378,7 @@ class GNA(torch.nn.Module):
         self.act = act
 
     def forward(self, s, edge_index):
-        """
-        Forward computation.
-
-        Parameters
-        ----------
-        s : torch.Tensor
-            Input node embeddings.
-        edge_index : torch.Tensor
-            Edge index.
-
-        Returns
-        -------
-        s : torch.Tensor
-            Updated node embeddings.
-        """
+        
         for layer in self.layers:
             s = layer(s, edge_index)
             s = F.dropout(s, self.dropout, training=self.training)
