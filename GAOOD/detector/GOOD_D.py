@@ -184,8 +184,8 @@ class GOOD_D(DeepDetector):
         self.train_dataloader = dataloader
         self.max_AUC = 0
         
-        stop_counter = 0  # 初始化停止计数器
-        N = 10  # 设定阈值，比如连续5次AUC没有提升就停止
+        stop_counter = 0  # early stop counter
+        N = 10  # early stop threshold
 
         for epoch in range(1, args.num_epoch + 1):
             if args.is_adaptive:
@@ -251,23 +251,23 @@ class GOOD_D(DeepDetector):
 
                 if val_auc > self.max_AUC:
                     self.max_AUC = val_auc
-                    stop_counter = 0  # 重置计数器
+                    stop_counter = 0  # restart counter
                     torch.save(self.model, os.path.join(self.path, 'model_GOOD_D.pth'))
                 else:
-                    stop_counter += 1  # 增加计数器
+                    stop_counter += 1  
                 
                 if stop_counter >= N:
                     print(f'Early stopping triggered after {epoch} epochs due to no improvement in AUC for {N} consecutive evaluations.')
-                    break  # 达到早停条件，跳出循环
+                    break  # early stop, jump out
                         # self.decision_score_[node_idx[:batch_size]] = y_score
 
         # self._process_decision_score()
         return self
     
     def is_directory_empty(self,directory):
-        # 列出目录下的所有文件和文件夹
+        # list folder
         files_and_dirs = os.listdir(directory)
-        # 如果列表为空，则目录为空
+        # If the list is empty, the directory is empty
         return len(files_and_dirs) == 0
     
     def decision_function(self, dataset, label=None, dataloader=None, args=None):
