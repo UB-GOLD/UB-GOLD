@@ -274,21 +274,7 @@ class GraphDE(nn.Module):
         graph_rep = self.get_graph_rep(x, edge_index, edge_attr, batch)
         return self.get_pred(graph_rep)
     def loss_func(self, data):
-        """
-        Loss function for OCGNN
-
-        Parameters
-        ----------
-        emb : torch.Tensor
-            Embeddings.
-
-        Returns
-        -------
-        loss : torch.Tensor
-            Loss value.
-        score : torch.Tensor
-            Outlier scores of shape :math:`N` with gradients.
-        """
+       
         loss = 0
         if self.graphde_a:
             loss =self.get_graphde_a_loss(x=data.x, edge_index=data.edge_index,
