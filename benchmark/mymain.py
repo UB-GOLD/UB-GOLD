@@ -121,7 +121,7 @@ def main(args):
         args.n_edge_feat = meta['num_edge_feat']
 
         model = init_model(args)
-        ###如果要自定义dataloader,就把dataset传进去，dataloader=None,否则按下面的来即可
+        ###If you want to define your own dataloader, just pass in the dataset, dataloader=None, otherwise press the following
         
         if args.model == 'GOOD-D':
             print(args.model)
