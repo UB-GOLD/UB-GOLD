@@ -79,7 +79,7 @@ class InfoGraph_OCSVM(DeepDetector):
     def init_model(self, **kwargs):
         '''
         :param kwargs:
-        :return: CVTGAD
+        :return: InfoGraph_OCSVM
         '''
         self.gconv = Infograph.GConv(input_dim=self.args.dataset_num_features,
                       hidden_dim=self.args.hidden_dim, activation=torch.nn.ReLU,
@@ -130,7 +130,6 @@ class InfoGraph_OCSVM(DeepDetector):
                     y_score_all = y_score_all + list(anomaly_scores)
                 val_auc = ood_auc(ys, y_score_all)
                 if val_auc > max_AUC:
-                    print("保存模型： ", val_auc)
                     max_AUC = val_auc
                     torch.save(self.encoder_model, os.path.join(self.path, 'Infograph_encoder_model.pth'))
                     joblib.dump(self.detector, os.path.join(self.path, 'Infograph_{}_model.joblib'.format(self.detector_name)))
@@ -138,16 +137,13 @@ class InfoGraph_OCSVM(DeepDetector):
 
         return True
     def is_directory_empty(self,directory):
-        # 列出目录下的所有文件和文件夹
         files_and_dirs = os.listdir(directory)
-        # 如果列表为空，则目录为空
         return len(files_and_dirs) == 0
 
     def decision_function(self, dataset, label=None, dataloader=None, args=None):
         if self.is_directory_empty(self.path):
             pass
         else:
-            print("加载模型： ")
             self.encoder_model = torch.load(os.path.join(self.path, 'Infograph_encoder_model.pth'))
             self.detector = joblib.load(os.path.join(self.path, 'Infograph_{}_model.joblib'.format(self.detector_name)))
         self.encoder_model.eval()
