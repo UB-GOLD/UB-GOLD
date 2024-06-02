@@ -1,7 +1,4 @@
-"""
-The GOOD-PCBA dataset adapted from `MoleculeNet
-<https://pubs.rsc.org/en/content/articlehtml/2018/sc/c7sc02664a>`_.
-"""
+
 import itertools
 import os
 import os.path as osp
@@ -59,18 +56,7 @@ import register
 r = register.Register()
 @r.dataset_register
 class GOODPCBA(InMemoryDataset):
-    r"""
-    The GOOD-PCBA dataset. Adapted from `MoleculeNet
-    <https://pubs.rsc.org/en/content/articlehtml/2018/sc/c7sc02664a>`_.
-
-    Args:
-        root (str): The dataset saving root.
-        domain (str): The domain selection. Allowed: 'scaffold' and 'size'.
-        shift (str): The distributional shift we pick. Allowed: 'no_shift', 'covariate', and 'concept'.
-        subset (str): The split set. Allowed: 'train', 'id_val', 'id_test', 'val', and 'test'. When shift='no_shift',
-            'id_val' and 'id_test' are not applicable.
-        generate (bool): The flag for regenerating dataset. True: regenerate. False: download.
-    """
+ 
 
     def __init__(self, root: str, domain: str, shift: str = 'no_shift', subset: str = 'train', transform=None,
                  pre_transform=None, generate: bool = False):
@@ -353,21 +339,7 @@ class GOODPCBA(InMemoryDataset):
 
     @staticmethod
     def load(dataset_root: str, domain: str, shift: str = 'no_shift', generate: bool = False):
-        r"""
-        A staticmethod for dataset loading. This method instantiates dataset class, constructing train, id_val, id_test,
-        ood_val (val), and ood_test (test) splits. Besides, it collects several dataset meta information for further
-        utilization.
-
-        Args:
-            dataset_root (str): The dataset saving root.
-            domain (str): The domain selection. Allowed: 'degree' and 'time'.
-            shift (str): The distributional shift we pick. Allowed: 'no_shift', 'covariate', and 'concept'.
-            generate (bool): The flag for regenerating dataset. True: regenerate. False: download.
-
-        Returns:
-            dataset or dataset splits.
-            dataset meta info.
-        """
+      
         meta_info = Munch()
         meta_info.dataset_type = 'mol'
         meta_info.model_level = 'graph'
