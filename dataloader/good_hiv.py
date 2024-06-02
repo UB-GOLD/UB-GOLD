@@ -1,7 +1,4 @@
-"""
-The GOOD-HIV dataset adapted from `MoleculeNet
-<https://pubs.rsc.org/en/content/articlehtml/2018/sc/c7sc02664a>`_.
-"""
+
 import itertools
 import os
 import os.path as osp
@@ -20,9 +17,7 @@ from tqdm import tqdm
 
 
 class DomainGetter():
-    r"""
-    A class containing methods for data domain extraction.
-    """
+
 
     def __init__(self):
         pass
@@ -63,18 +58,7 @@ import dataloader.register as register
 r = register.Register()
 @r.dataset_register
 class GOODHIV(InMemoryDataset):
-    r"""
-    The GOOD-HIV dataset. Adapted from `MoleculeNet
-    <https://pubs.rsc.org/en/content/articlehtml/2018/sc/c7sc02664a>`_.
 
-    Args:
-        root (str): The dataset saving root.
-        domain (str): The domain selection. Allowed: 'scaffold' and 'size'.
-        shift (str): The distributional shift we pick. Allowed: 'no_shift', 'covariate', and 'concept'.
-        subset (str): The split set. Allowed: 'train', 'id_val', 'id_test', 'val', and 'test'. When shift='no_shift',
-            'id_val' and 'id_test' are not applicable.
-        generate (bool): The flag for regenerating dataset. True: regenerate. False: download.
-    """
 
     def __init__(self, root: str, domain: str, shift: str = 'no_shift', subset: str = 'train', transform=None,
                  pre_transform=None, generate: bool = True):
@@ -145,7 +129,7 @@ class GOODHIV(InMemoryDataset):
 
         if self.domain == 'size':
             sorted_data_list = sorted_data_list[::-1]
-        # #############debug
+
         # sorted_data_list = sorted_data_list[::-1]
         num_data = sorted_data_list.__len__()
         train_ratio = 0.8
@@ -363,21 +347,7 @@ class GOODHIV(InMemoryDataset):
 
     @staticmethod
     def load(dataset_root: str, domain: str, shift: str = 'no_shift', generate: bool = False):
-        r"""
-        A staticmethod for dataset loading. This method instantiates dataset class, constructing train, id_val, id_test,
-        ood_val (val), and ood_test (test) splits. Besides, it collects several dataset meta information for further
-        utilization.
-
-        Args:
-            dataset_root (str): The dataset saving root.
-            domain (str): The domain selection. Allowed: 'degree' and 'time'.
-            shift (str): The distributional shift we pick. Allowed: 'no_shift', 'covariate', and 'concept'.
-            generate (bool): The flag for regenerating dataset. True: regenerate. False: download.
-
-        Returns:
-            dataset or dataset splits.
-            dataset meta info.
-        """
+   
         meta_info = Munch()
         meta_info.dataset_type = 'mol'
         meta_info.model_level = 'graph'
@@ -400,7 +370,7 @@ class GOODHIV(InMemoryDataset):
 
         meta_info.num_envs = torch.unique(train_dataset.data.env_id).shape[0]
 
-        # Define networks' output shape.
+       
         if train_dataset.task == 'Binary classification':
             meta_info.num_classes = train_dataset.data.y.shape[1]
         elif train_dataset.task == 'Regression':
@@ -408,7 +378,7 @@ class GOODHIV(InMemoryDataset):
         elif train_dataset.task == 'Multi-label classification':
             meta_info.num_classes = torch.unique(train_dataset.data.y).shape[0]
 
-        # --- clear buffer dataset._data_list ---
+      
         train_dataset._data_list = None
         if id_val_dataset:
             id_val_dataset._data_list = None
