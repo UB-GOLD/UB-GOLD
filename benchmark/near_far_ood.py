@@ -11,7 +11,7 @@ from dataloader.data_loader import *
 import pandas as pd
 import statistics
 '''
-python benchmark/mymain.py -exp_type oodd -DS_pair BZR+COX2 -num_epoch 400 -num_cluster 2 -alpha 0
+python benchmark/near_far_ood.py -exp_type oodd -DS_pair BZR+COX2 -num_epoch 400 -num_cluster 2 -alpha 0
 oodd:inter datasets OOD,ood:intra dataset OOD,ad :anomaly detection（tox/TU）
 model：name of model
 DS_pair: parameter of oodd, such as :BZR+COX2  
