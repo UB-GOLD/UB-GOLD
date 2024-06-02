@@ -154,8 +154,8 @@ class GLADC(DeepDetector):
         optimizerG = torch.optim.Adam(self.NetGe.parameters(), lr=self.lr)
         self.max_AUC = 0
 
-        stop_counter = 0  # 初始化停止计数器
-        N = 10  # 设定阈值，比如连续5次AUC没有提升就停止
+        stop_counter = 0  
+        N = 10  
         
         for epoch in range(1, self.num_epochs + 1):
             total_lossG = 0.0
@@ -197,21 +197,19 @@ class GLADC(DeepDetector):
 
                 if val_auc > self.max_AUC:
                     self.max_AUC = val_auc
-                    stop_counter = 0  # 重置计数器
+                    stop_counter = 0  
                     torch.save(self.NetGe, os.path.join(self.path, 'model_NetGe.pth'))
                     torch.save(self.noise_NetG, os.path.join(self.path, 'model_noise_NetG.pth'))
                 else:
-                    stop_counter += 1  # 增加计数器
+                    stop_counter += 1  
                 print('[TRAIN] Epoch:{:03d} | val_auc:{:.4f}'.format(epoch, self.max_AUC))
                 if stop_counter >= N:
                     print(f'Early stopping triggered after {epoch} epochs due to no improvement in AUC for {N} consecutive evaluations.')
-                    break  # 达到早停条件，跳出循环
+                    break  
         return True
 
     def is_directory_empty(self,directory):
-        # 列出目录下的所有文件和文件夹
         files_and_dirs = os.listdir(directory)
-        # 如果列表为空，则目录为空
         return len(files_and_dirs) == 0
     def decision_function(self, dataset, label=None, dataloader=None, args=None):
         # path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
