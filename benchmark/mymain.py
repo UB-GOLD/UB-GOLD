@@ -20,15 +20,7 @@ Ds : dataset parameter for ood and ad
 
 
 '''
-'''
-python benchmark/mymain.py -exp_type oodd -DS_pair BZR+COX2 -num_epoch 400 -num_cluster 2 -alpha 0
-oodd:inter datasets OOD,ood:intra dataset OOD,ad :anomaly detection（tox/TU）
-model：name of model
-DS_pair: parameter of oodd, such as :BZR+COX2  
-Ds : dataset parameter for ood and ad
 
-
-'''
 def save_results_csv(model_result, model_name):
     # folder and name
     results_dir = 'results'
