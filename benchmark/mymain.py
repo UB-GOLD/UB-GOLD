@@ -20,19 +20,28 @@ Ds : dataset parameter for ood and ad
 
 
 '''
+'''
+python benchmark/mymain.py -exp_type oodd -DS_pair BZR+COX2 -num_epoch 400 -num_cluster 2 -alpha 0
+oodd:inter datasets OOD,ood:intra dataset OOD,ad :anomaly detection（tox/TU）
+model：name of model
+DS_pair: parameter of oodd, such as :BZR+COX2  
+Ds : dataset parameter for ood and ad
+
+
+'''
 def save_results_csv(model_result, model_name):
-    # 指定结果文件夹和文件名
+    # folder and name
     results_dir = 'results'
     filename = f'{results_dir}/{model_name}.csv'
     
-    # 确保结果文件夹存在
+    
     if not os.path.exists(results_dir):
         os.mkdir(results_dir)
     
-    # 将字典转换为DataFrame
+    # dictionary to DataFrame
     df = pd.DataFrame([model_result])
     
-    # 检查文件是否存在来决定是否写入表头
+    
     if os.path.exists(filename):
         df.to_csv(filename, mode='a', header=False, index=False)
     else:
@@ -49,15 +58,15 @@ def process_model_results(auc, ap, rec, args):
     rec_variance = statistics.variance(rec)
 
     model_result = {}
-    file_id = args.model  # 使用模型名称作为文件标识
+    file_id = args.model  
     
-    # 根据不同的实验类型添加数据
+    
     if args.exp_type == 'oodd':
         key_prefix = args.DS_pair
     else:
         key_prefix = args.DS
     
-    # 格式化数据并添加到结果字典中
+    
     model_result['Dataset'] = key_prefix
     model_result['AUROC'] = f"{auc_final * 100:.2f}%"
     model_result['AUROC_Var'] = f"{auc_variance * 100:.2f}%"
