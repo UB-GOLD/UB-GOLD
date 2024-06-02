@@ -16,7 +16,7 @@ from .smile2graph import smile2graph4drugood
 
 
 class SmileToGraph(object):
-    # Adapt from https://github.com/tencent-ailab/DrugOOD/blob/main/drugood/datasets/pipelines/formating.py
+
     """Transform smile input to graph format"""
 
     def __init__(self, keys):
@@ -314,16 +314,7 @@ class DrugOODDataset(InMemoryDataset):
         return '{}({})'.format(self.name, len(self))
 
 
-# if __name__ == '__main__':
-#     dataset = DrugOODDataset(name='ic50_assay', root='../data', drugood_root='../drugood-data')
-#     # data = json.load(open('../drugood-data/lbap_core_ec50_size.json', 'r', encoding='utf-8'))
-#     train_set = dataset[dataset.train_index]
-#     test_set = dataset[dataset.test_index]
-#     loader = DataLoader(train_set, batch_size=4, shuffle=True)
-#     for data in loader:
-#         import pdb;
-#
-#         pdb.set_trace()
+
 
 
 
