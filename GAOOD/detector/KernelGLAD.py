@@ -142,9 +142,7 @@ class KernelGLAD(DeepDetector):
             self.anomaly_scores = -self.detector.negative_outlier_factor_
         # return True
     def is_directory_empty(self,directory):
-        # 列出目录下的所有文件和文件夹
         files_and_dirs = os.listdir(directory)
-        # 如果列表为空，则目录为空
         return len(files_and_dirs) == 0
 
     def decision_function(self, dataset, label=None, dataloader=None, args=None):
@@ -166,64 +164,6 @@ class KernelGLAD(DeepDetector):
                 return_emb=False,
                 dataloader=None,
                 args=None):
-        """Prediction for testing data using the fitted detector.
-        Return predicted labels by default.
-
-        Parameters
-        ----------
-        data : torch_geometric.data.Data, optional
-            The testing graph. If ``None``, the training data is used.
-            Default: ``None``.
-        label : torch.Tensor, optional
-            The optional outlier ground truth labels used for testing.
-            Default: ``None``.
-        return_pred : bool, optional
-            Whether to return the predicted binary labels. The labels
-            are determined by the outlier contamination on the raw
-            outlier scores. Default: ``True``.
-        return_score : bool, optional
-            Whether to return the raw outlier scores.
-            Default: ``False``.
-        return_prob : bool, optional
-            Whether to return the outlier probabilities.
-            Default: ``False``.
-        prob_method : str, optional
-            The method to convert the outlier scores to probabilities.
-            Two approaches are possible:
-
-            1. ``'linear'``: simply use min-max conversion to linearly
-            transform the outlier scores into the range of
-            [0,1]. The model must be fitted first.
-
-            2. ``'unify'``: use unifying scores,
-            see :cite:`kriegel2011interpreting`.
-
-            Default: ``'linear'``.
-        return_conf : boolean, optional
-            Whether to return the model's confidence in making the same
-            prediction under slightly different training sets.
-            See :cite:`perini2020quantifying`. Default: ``False``.
-        return_emb : bool, optional
-            Whether to return the learned node representations.
-            Default: ``False``.
-
-        Returns
-        -------
-        pred : torch.Tensor
-            The predicted binary outlier labels of shape :math:`N`.
-            0 stands for inliers and 1 for outliers.
-            Only available when ``return_label=True``.
-        score : torch.Tensor
-            The raw outlier scores of shape :math:`N`.
-            Only available when ``return_score=True``.
-        prob : torch.Tensor
-            The outlier probabilities of shape :math:`N`.
-            Only available when ``return_prob=True``.
-        conf : torch.Tensor
-            The prediction confidence of shape :math:`N`.
-            Only available when ``return_conf=True``.
-        """
-
 
         output = ()
         if dataset is None:
