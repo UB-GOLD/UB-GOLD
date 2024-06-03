@@ -1,5 +1,4 @@
-# (GOD2Bench) Unifying Graph-Level Anomaly and OOD Detection: A Benchmark
-
+# (GOD2Bench) Unifying Graph-Level Out-of-Distribution Detection and Anomaly Detection: A Benchmark
 
 This is the official implementation of the following paper:
 
