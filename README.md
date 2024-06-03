@@ -3,7 +3,7 @@
 
 This is the official implementation of the following paper:
 
-> [ Unifying Graph-Level Anomaly and OOD Detection: A Benchmark](https://arxiv.org/abs/2306.122)
+> [ Unifying Graph-Level Out-of-Distribution Detection and Anomaly Detection: A Benchmark](https://arxiv.org/abs/2306.122)
 > 
 > Submited to NeurIPS 2024 Datasets and Benchmarks Track
 
