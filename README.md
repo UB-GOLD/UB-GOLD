@@ -48,51 +48,46 @@ python benchmark/mymain.py
 
 ### Table 2: Class-based Anomaly (TYPE II)
 
-| Full Name      | Graph Type      | OOD Type      | # ID Train | # ID Test | # OOD Test |
-|----------------|-----------------|---------------|------------|-----------|------------|
-| COLLAB         | Social Networks | Unseen Classes | 1920       | 480       | 520        |
-| IMDB-BINARY    | Social Networks | Unseen Classes | 400        | 100       | 100        |
-| REDDIT-BINARY  | Social Networks | Unseen Classes | 800        | 200       | 200        |
-| ENZYMES        | Proteins        | Unseen Classes | 400        | 100       | 20         |
-| PROTEINS       | Proteins        | Unseen Classes | 360        | 90        | 133        |
-| DD             | Proteins        | Unseen Classes | 390        | 97        | 139        |
-| BZR            | Molecules       | Unseen Classes | 69         | 17        | 64         |
-| AIDS           | Molecules       | Unseen Classes | 1280       | 320       | 80         |
-| COX2           | Molecules       | Unseen Classes | 81         | 21        | 73         |
-| NCI1           | Molecules       | Unseen Classes | 1646       | 411       | 411        |
-| DHFR           | Molecules       | Unseen Classes | 368        | 93        | 59         |
+| Full Name      | Graph Type      | OOD Type | # ID Train | # ID Test | # OOD Test |
+|----------------|-----------------|----------|------------|-----------|------------|
+| COLLAB         | Social Networks | UC       | 1920       | 480       | 520        |
+| IMDB-BINARY    | Social Networks | UC       | 400        | 100       | 100        |
+| REDDIT-BINARY  | Social Networks | UC       | 800        | 200       | 200        |
+| ENZYMES        | Proteins        | UC       | 400        | 100       | 20         |
+| PROTEINS       | Proteins        | UC       | 360        | 90        | 133        |
+| DD             | Proteins        | UC       | 390        | 97        | 139        |
+| BZR            | Molecules       | UC       | 69         | 17        | 64         |
+| AIDS           | Molecules       | UC       | 1280       | 320       | 80         |
+| COX2           | Molecules       | UC       | 81         | 21        | 73         |
+| NCI1           | Molecules       | UC       | 1646       | 411       | 411        |
+| DHFR           | Molecules       | UC       | 368        | 93        | 59         |
 
 ### Table 3: Inter-Dataset Shift (TYPE III)
 
-| Full Name                  | Graph Type      | OOD Type        | # ID Train | # ID Test | # OOD Test |
-|----------------------------|-----------------|-----------------|------------|-----------|------------|
-| IMDB-MULTI&rarr;IMDB-BINARY | Social Networks | Unseen Datasets | 1350       | 150       | 150        |
-| ENZYMES&rarr;PROTEINS       | Proteins        | Unseen Datasets | 540        | 60        | 60         |
-| AIDS&rarr;DHFR              | Molecules       | Unseen Datasets | 1800       | 200       | 200        |
-| BZR&rarr;COX2               | Molecules       | Unseen Datasets | 364        | 41        | 41         |
-| ESOL&rarr;MUV               | Molecules       | Unseen Datasets | 1015       | 113       | 113        |
-| TOX21&rarr;SIDER            | Molecules       | Unseen Datasets | 7047       | 784       | 784        |
-| BBBP&rarr;BACE              | Molecules       | Unseen Datasets | 1835       | 204       | 204        |
-| PTC\_MR&rarr;MUTAG          | Molecules       | Unseen Datasets | 309        | 35        | 35         |
-| FREESOLV&rarr;TOXCAST       | Molecules       | Unseen Datasets | 577        | 65        | 65         |
-| CLINTOX&rarr;LIPO           | Molecules       | Unseen Datasets | 1329       | 148       | 148        |
+| Full Name                  | Graph Type      | OOD Type | # ID Train | # ID Test | # OOD Test |
+|----------------------------|-----------------|----------|------------|-----------|------------|
+| IMDB-MULTI&rarr;IMDB-BINARY | Social Networks | UD       | 1350       | 150       | 150        |
+| ENZYMES&rarr;PROTEINS       | Proteins        | UD       | 540        | 60        | 60         |
+| AIDS&rarr;DHFR              | Molecules       | UD       | 1800       | 200       | 200        |
+| BZR&rarr;COX2               | Molecules       | UD       | 364        | 41        | 41         |
+| ESOL&rarr;MUV               | Molecules       | UD       | 1015       | 113       | 113        |
+| TOX21&rarr;SIDER            | Molecules       | UD       | 7047       | 784       | 784        |
+| BBBP&rarr;BACE              | Molecules       | UD       | 1835       | 204       | 204        |
+| PTC\_MR&rarr;MUTAG          | Molecules       | UD       | 309        | 35        | 35         |
+| FREESOLV&rarr;TOXCAST       | Molecules       | UD       | 577        | 65        | 65         |
+| CLINTOX&rarr;LIPO           | Molecules       | UD       | 1329       | 148       | 148        |
 
 ### Table 4: Intra-Dataset Shift (TYPE IV)
 
-| Full Name           | Graph Type  | OOD Type        | # ID Train | # ID Test | # OOD Test |
-|---------------------|-------------|-----------------|------------|-----------|------------|
-| GOOD-HIV-Size       | Molecules   | Size            | 1000       | 500       | 500        |
-| GOOD-ZINC-Size      | Molecules   | Size            | 1000       | 500       | 500        |
-| GOOD-HIV-Scaffold   | Molecules   | Scaffold        | 1000       | 500       | 500        |
-| GOOD-ZINC-Scaffold  | Molecules   | Scaffold        | 1000       | 500       | 500        |
-| DrugOOD-IC50-Size   | Molecules   | Size            | 1000       | 500       | 500        |
-| DrugOOD-EC50-Size   | Molecules   | Size            | 1000       | 500       | 500        |
-| DrugOOD-IC50-Scaffold | Molecules | Scaffold        | 1000       | 500       | 500        |
-| DrugOOD-EC50-Scaffold | Molecules | Scaffold        | 1000       | 500       | 500        |
-| DrugOOD-IC50-Assay  | Molecules   | Protein Target  | 1000       | 500       | 500        |
-| DrugOOD-EC50-Assay  | Molecules   | Protein Target  | 1000       | 500       | 500        |
-
-|                       | DrugOOD-IC50-Assay  | IC50-Assay   | Molecules   | Protein Target  | 1000       | 500       | 500        |
-|                       | DrugOOD-EC50-Assay  | EC50-Assay   | Molecules   | Protein Target  | 1000       | 500       | 500        |
-
-
+| Full Name           | Graph Type  | OOD Type       | # ID Train | # ID Test | # OOD Test |
+|---------------------|-------------|----------------|------------|-----------|------------|
+| GOOD-HIV-Size       | Molecules   | Size           | 1000       | 500       | 500        |
+| GOOD-ZINC-Size      | Molecules   | Size           | 1000       | 500       | 500        |
+| GOOD-HIV-Scaffold   | Molecules   | Scaffold       | 1000       | 500       | 500        |
+| GOOD-ZINC-Scaffold  | Molecules   | Scaffold       | 1000       | 500       | 500        |
+| DrugOOD-IC50-Size   | Molecules   | Size           | 1000       | 500       | 500        |
+| DrugOOD-EC50-Size   | Molecules   | Size           | 1000       | 500       | 500        |
+| DrugOOD-IC50-Scaffold | Molecules | Scaffold       | 1000       | 500       | 500        |
+| DrugOOD-EC50-Scaffold | Molecules | Scaffold       | 1000       | 500       | 500        |
+| DrugOOD-IC50-Assay  | Molecules   | Protein Target | 1000       | 500       | 500        |
+| DrugOOD-EC50-Assay  | Molecules   | Protein Target | 1000       | 500       | 500        |
