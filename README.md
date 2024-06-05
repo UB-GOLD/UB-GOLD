@@ -65,15 +65,15 @@ This part lists all the methods we include in this codebase. We totally support 
 
 | Category | Models and References |
 |----------|------------------------|
-| [GK-D](https://arxiv.org/pdf/2012.12931.pdf)| PK-SVM , PK-IF , WL-SVM, WL-IF  |
-|  [SSL-D](https://arxiv.org/pdf/2211.04208.pdf)| IG-SVM, IG-IF, GCL-SVM, GCL-IF  |
+|Graph kernel with detector | PK-SVM , PK-IF , WL-SVM, WL-IF  |
+|Self-supervised learning with detector  | IG-SVM, IG-IF, GCL-SVM, GCL-IF  |
 
 ### Table 2: End-to-End Methods
 
 | Category | Models and References |
 |----------|------------------------|
-| GLAD |  [OCGIN](https://arxiv.org/abs/2303.11608), [GLADC](https://arxiv.org/abs/2205.13625),[GLocalKD ](https://arxiv.org/abs/2204.08458), OCGTL ([Anonymous, 2022](https://arxiv.org/abs/2207.01792)), SIGNET ([Liu et al., 2023](https://arxiv.org/abs/2301.11325)), CVTGAD ([Li et al., 2023](https://arxiv.org/abs/2304.06700)) |
-| Graph neural network-based GLOD ([GLOD](https://arxiv.org/abs/2301.11325)) | GOOD-D [([Liu et al., 2023](https://arxiv.org/abs/2301.11325))](https://arxiv.org/pdf/2211.04208.pdf), GraphDE ([Li et al., 2022](https://arxiv.org/abs/2206.07206)) |
+| Graph neural network-based GLAD |OCGIN, GLADC, GLocalKD, OCGTL, SIGNET, CVTGAD    |
+| Graph neural network-based GLOD  | GOOD-D , GraphDE  |
 
 
 
