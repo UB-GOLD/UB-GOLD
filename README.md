@@ -34,7 +34,7 @@ pip install -r requirements.txt
 
 Dataset Preparation
 -----------------
-The data used in UB-GOLD can be downloaded from the following sources:
+The data used in UB-GOLD should be downloaded in './data', and they can be downloaded from the following sources:
 1. [TUDataset](https://chrsmrrs.github.io/datasets/docs/datasets/)
     - COLLAB
     - IMDB-BINARY
@@ -85,7 +85,6 @@ OR
 
 cp ./benchmark/Source/GOOD-D.sh .
 
-
 bash GOOD-D.sh
 ```
 The far-near OOD detection experiments:
@@ -96,7 +95,6 @@ python benchmark/near_far_ood.py
 OR
 
 cp ./benchmark/Source/near_far_ood.sh .
-
 
 bash near_far_ood.sh
 ```
@@ -110,7 +108,6 @@ OR
 
 cp ./benchmark/Source/per_ood.sh .
 
-
 bash per_ood.sh
 ```
 
@@ -122,6 +119,7 @@ OR
 
 cp ./benchmark/Source/search.sh .
 
+bash search.sh
 ```
 
 Codebase Folder
@@ -151,15 +149,15 @@ This part lists all the methods we include in this codebase. We support 16 popul
 
 | Category | Models and References |
 |----------|------------------------|
-|Graph kernel with detector | PK-SVM, PK-IF, WL-SVM, WL-IF  |
-|Self-supervised learning with detector  | IG-SVM, IG-IF, GCL-SVM, GCL-IF  |
+|Graph kernel with detector | [PK-SVM]{https://arxiv.org/pdf/2012.12931.pdf}, [PK-IF]{https://arxiv.org/pdf/2012.12931.pdf}, [WL-SVM]{https://arxiv.org/pdf/2012.12931.pdf}, [WL-IF]{https://arxiv.org/pdf/2012.12931.pdf}  |
+|Self-supervised learning with detector  | [IG-SVM]{https://arxiv.org/pdf/2211.04208.pdf}, [IG-IF]{https://arxiv.org/pdf/2211.04208.pdf}, [GCL-SVM]{https://arxiv.org/pdf/2211.04208.pdf}, [GCL-IF]{https://arxiv.org/pdf/2211.04208.pdf}  |
 
 ### Table 2: End-to-End Methods
 
 | Category | Models and References |
 |----------|------------------------|
-| Graph neural network-based GLAD |OCGIN, GLADC, GLocalKD, OCGTL, SIGNET, CVTGAD    |
-| Graph neural network-based GLOD  | GOOD-D , GraphDE  |
+| Graph neural network-based GLAD |[OCGIN]{https://arxiv.org/pdf/2012.12931.pdf}, [GLADC]{https://www.nature.com/articles/s41598-022-22086-3}, [GLocalKD]{https://arxiv.org/pdf/2112.10063.pdf}, [OCGTL]{https://arxiv.org/pdf/2205.13845.pdf}, [SIGNET]{https://proceedings.neurips.cc/paper_files/paper/2023/file/1c6f06863df46de009a7a41b41c95cad-Paper-Conference.pdf}, [CVTGAD]{https://link.springer.com/chapter/10.1007/978-3-031-43412-9_11}    |
+| Graph neural network-based GLOD  | [GOOD-D]{https://arxiv.org/pdf/2211.04208.pdf} , [GraphDE]{https://proceedings.neurips.cc/paper_files/paper/2022/file/c34262c35aa5f8c1a091822cbb2020c2-Paper-Conference.pdf}  |
 
 
 
