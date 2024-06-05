@@ -58,8 +58,28 @@ Codebase Folder
 ├──...
 ```
 
-4 TYPE Datasets
+Supported Methods  (16 Methods)
 -----------------
+This part lists all the methods we include in this codebase. We totally support 16 popular methods for Anomaily detection and OOD detection.
+### Table 1: 2-Step Methods
+
+| Category | Models and References |
+|----------|------------------------|
+| Graph kernel with detector ([GK-D](https://arxiv.org/abs/2303.11608)) | PK-SVM ([Amer et al., 2013](https://arxiv.org/abs/1308.4719)), PK-IF ([Neumann et al., 2016](https://arxiv.org/abs/1602.02830), [Liu et al., 2008](https://cs.nju.edu.cn/zhouzh/zhouzh.files/publication/icdm08b.pdf)), WL-SVM, WL-IF ([Vishwanathan et al., 2010](https://arxiv.org/abs/1011.3492)) |
+| Self-supervised learning with detector ([SSL-D](https://arxiv.org/abs/2301.11325)) | IG-SVM, IG-IF ([Sun et al., 2019](https://arxiv.org/abs/1905.12265)), GCL-SVM, GCL-IF ([You et al., 2020](https://arxiv.org/abs/2002.08104)) |
+
+### Table 2: End-to-End Methods
+
+| Category | Models and References |
+|----------|------------------------|
+| Graph neural network-based GLAD ([GLAD](https://arxiv.org/abs/2303.11608)) | OCGIN ([Zhao et al., 2023](https://arxiv.org/abs/2303.11608)), GLADC ([Luo et al., 2022](https://arxiv.org/abs/2205.13625)), GLocalKD ([Ma et al., 2022](https://arxiv.org/abs/2204.08458)), OCGTL ([Anonymous, 2022](https://arxiv.org/abs/2207.01792)), SIGNET ([Liu et al., 2023](https://arxiv.org/abs/2301.11325)), CVTGAD ([Li et al., 2023](https://arxiv.org/abs/2304.06700)) |
+| Graph neural network-based GLOD ([GLOD](https://arxiv.org/abs/2301.11325)) | GOOD-D ([Liu et al., 2023](https://arxiv.org/abs/2301.11325)), GraphDE ([Li et al., 2022](https://arxiv.org/abs/2206.07206)) |
+
+
+
+Supported 4 TYPE Datasets (35 Datasets)
+-----------------
+This part lists all the datasets we include in our Benchmark.
 
 ### Table 1: Organic Anomaly (TYPE I)
 
