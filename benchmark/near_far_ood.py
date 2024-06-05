@@ -92,7 +92,7 @@ def main(args):
         set_seed(seed+i)
         
         dataset_train, dataset_val, dataset_test, dataloader, dataloader_near_ood, dataloader_far_ood, meta = get_ood_dataset_near_and_far(args)
-        # dataset_train, dataset_val, dataset_test, dataloader, dataloader_near_ood, dataloader_far_ood  = get_ood_dataset_near_and_far(args)
+        # dataset_train, dataset_val, dataset_test, dataloader, dataloader_near_ood, dataloader_far_ood, meta = get_ood_dataset_near_and_far_size(args)
         args.max_nodes_num = meta['max_nodes_num']
         args.dataset_num_features = meta['num_feat']
         args.n_train =  meta['num_train']
