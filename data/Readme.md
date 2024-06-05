@@ -1,1 +1,1 @@
-*** UB-GOLD
+UB-GOLD
