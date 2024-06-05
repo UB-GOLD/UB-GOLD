@@ -149,15 +149,15 @@ This part lists all the methods we include in this codebase. We support 16 popul
 
 | Category | Models and References |
 |----------|------------------------|
-|Graph kernel with detector | [PK-SVM](https://arxiv.org/pdf/2012.12931.pdf), [PK-IF](https://arxiv.org/pdf/2012.12931.pdf), [WL-SVM]{https://arxiv.org/pdf/2012.12931.pdf}, [WL-IF]{https://arxiv.org/pdf/2012.12931.pdf}  |
-|Self-supervised learning with detector  | [IG-SVM]{https://arxiv.org/pdf/2211.04208.pdf}, [IG-IF]{https://arxiv.org/pdf/2211.04208.pdf}, [GCL-SVM]{https://arxiv.org/pdf/2211.04208.pdf}, [GCL-IF]{https://arxiv.org/pdf/2211.04208.pdf}  |
+|Graph kernel with detector | [PK-SVM](https://arxiv.org/pdf/2012.12931.pdf), [PK-IF](https://arxiv.org/pdf/2012.12931.pdf), [WL-SVM](https://arxiv.org/pdf/2012.12931.pdf), [WL-IF](https://arxiv.org/pdf/2012.12931.pdf)  |
+|Self-supervised learning with detector  | [IG-SVM](https://arxiv.org/pdf/2211.04208.pdf), [IG-IF](https://arxiv.org/pdf/2211.04208.pdf), [GCL-SVM](https://arxiv.org/pdf/2211.04208.pdf), [GCL-IF](https://arxiv.org/pdf/2211.04208.pdf)  |
 
 ### Table 2: End-to-End Methods
 
 | Category | Models and References |
 |----------|------------------------|
-| Graph neural network-based GLAD |[OCGIN]{https://arxiv.org/pdf/2012.12931.pdf}, [GLADC]{https://www.nature.com/articles/s41598-022-22086-3}, [GLocalKD]{https://arxiv.org/pdf/2112.10063.pdf}, [OCGTL]{https://arxiv.org/pdf/2205.13845.pdf}, [SIGNET]{https://proceedings.neurips.cc/paper_files/paper/2023/file/1c6f06863df46de009a7a41b41c95cad-Paper-Conference.pdf}, [CVTGAD]{https://link.springer.com/chapter/10.1007/978-3-031-43412-9_11}    |
-| Graph neural network-based GLOD  | [GOOD-D]{https://arxiv.org/pdf/2211.04208.pdf} , [GraphDE]{https://proceedings.neurips.cc/paper_files/paper/2022/file/c34262c35aa5f8c1a091822cbb2020c2-Paper-Conference.pdf}  |
+| Graph neural network-based GLAD |[OCGIN](https://arxiv.org/pdf/2012.12931.pdf), [GLADC](https://www.nature.com/articles/s41598-022-22086-3), [GLocalKD](https://arxiv.org/pdf/2112.10063.pdf), [OCGTL](https://arxiv.org/pdf/2205.13845.pdf), [SIGNET](https://proceedings.neurips.cc/paper_files/paper/2023/file/1c6f06863df46de009a7a41b41c95cad-Paper-Conference.pdf), [CVTGAD](https://link.springer.com/chapter/10.1007/978-3-031-43412-9_11)    |
+| Graph neural network-based GLOD  | [GOOD-D](https://arxiv.org/pdf/2211.04208.pdf) , [GraphDE](https://proceedings.neurips.cc/paper_files/paper/2022/file/c34262c35aa5f8c1a091822cbb2020c2-Paper-Conference.pdf)  |
 
 
 
