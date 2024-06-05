@@ -32,6 +32,26 @@ conda activate UBGOLD
 pip install -r requirements.txt
 ```
 
+Codebase Folder
+-----------------
+```
+├── ...
+├── benchmark (Benchmark execution)
+│   ├── Source (Default hyperparameters)
+│   ├── my_random_search.py
+│   ├── mymain.py
+│   ├── ...
+├── results (Save the results)
+├── data (Raw datasets)
+├── GAOOD (Methods)
+│   ├── nn
+│   ├── detector
+│   ├── ...
+├── dataloader (Data preprocessing pipeline)
+│   ├── ...
+├── ...
+```
+
 Dataset Preparation
 -----------------
 The data used in UB-GOLD should be downloaded in './data', and they can be downloaded from the following sources:
@@ -122,25 +142,7 @@ cp ./benchmark/Source/search.sh .
 bash search.sh
 ```
 
-Codebase Folder
------------------
-```
-├──...
-├── benchmark
-│   ├── Source
-│   ├── my_random_search.py
-│   ├── mymain.py
-│   ├── ...
-├── results
-├── data
-├── GAOOD
-│   ├── nn
-│   ├── detector
-│   ├── ...
-├── dataloader
-│   ├── ...
-├──...
-```
+
 
 Supported Methods  (16 Methods)
 -----------------
