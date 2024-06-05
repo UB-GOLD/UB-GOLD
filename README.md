@@ -117,7 +117,12 @@ bash per_ood.sh
 
 **With Optimal Hyperparameters through Random Search**
 ```
-python benchmark/random_search.py 
+python benchmark/my_random_search.py
+
+OR
+
+cp ./benchmark/Source/search.sh .
+
 ```
 
 Codebase Folder
