@@ -1,4 +1,3 @@
-![image](https://github.com/UB-GOLD/UB-GOLD/assets/71303036/595a955d-15e4-4a4d-b432-a6674ff82514)
 # (UB-GOLD) Unifying Graph-Level Out-of-Distribution Detection and Anomaly Detection: A Benchmark
 
 This is the official implementation of the following paper:
