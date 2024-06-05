@@ -38,26 +38,28 @@ cd ./UBGOLD
 python benchmark/mymain.py
 ```
 
+Codebase Folder
+-----------------
 ```
+├──...
 ├── benchmark
 │   ├── Source
-│   ├── near_far_ood.py
 │   ├── my_random_search.py
 │   ├── mymain.py
-│   ├── README.md
-│   ├── utils.py
-│   ├── grid_search.py
-│   ├── search_utils.py
+│   ├── ...
 ├── results
 ├── data
 ├── GAOOD
 │   ├── nn
-│   ├── model_save
-│   ├── utils
 │   ├── detector
-│   ├── metric
+│   ├── ...
 ├── dataloader
+│   ├── ...
+├──...
 ```
+
+4 TYPE Datasets
+-----------------
 
 ### Table 1: Organic Anomaly (TYPE I)
 
