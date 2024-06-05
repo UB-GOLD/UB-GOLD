@@ -1,2 +1,2 @@
-# GOD2Bench Benchmark
+# UB-GOLD Benchmark
 
