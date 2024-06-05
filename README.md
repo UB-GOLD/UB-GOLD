@@ -37,6 +37,28 @@ cd ./UBGOLD
 
 python benchmark/mymain.py
 ```
+
+```
+├── benchmark
+│   ├── Source
+│   ├── near_far_ood.py
+│   ├── my_random_search.py
+│   ├── mymain.py
+│   ├── README.md
+│   ├── utils.py
+│   ├── grid_search.py
+│   ├── search_utils.py
+├── results
+├── data
+├── GAOOD
+│   ├── nn
+│   ├── model_save
+│   ├── utils
+│   ├── detector
+│   ├── metric
+├── dataloader
+```
+
 ### Table 1: Organic Anomaly (TYPE I)
 
 | Full Name         | Graph Type | OOD Type | # ID Train | # ID Test | # OOD Test |
