@@ -690,4 +690,156 @@ def get_ood_dataset_near_and_far(args, train_per=0.9, need_str_enc=True):
     return  0,0,0, dataloader_train, dataloader_near_ood, dataloader_far_ood, meta
 
 
+def get_ood_dataset_near_and_far_size(args, train_per=0.9, need_str_enc=True):
+    if args.DS_pair is not None:
+        DSS = args.DS_pair.split("+")
+        DS, DS_ood = DSS[0], DSS[1]
+    else:
+        DS, DS_ood = args.DS, args.DS_ood
+
+    DrugooD = DS.startswith('DrugOOD')
+    path_now =  os.path.abspath(os.path.join(os.getcwd(), "."))
+    path = osp.join(path_now, '.', 'data', DS)
+    n_train_data, n_in_test_data, n_out_test_data = 1000, 500, 500
+    if DrugooD:
+        is_drug,DS_drug = DS.split("+")
+        #dataset = DrugOOD(path, mode='iid')
+        print(DS_drug)
+        dataset_all = DrugOODDataset(name = DS_drug, root = args.data_root)
+        
+        random.shuffle(dataset_all.train_index)
+        random.shuffle(dataset_all.test_index)
+        
+        dataset = dataset_all[dataset_all.train_index]
+        dataset_ood = dataset_all[dataset_all.test_index]
+        max_nodes_num = max([_.num_nodes for _ in dataset_all])
+        dataset.data.x = dataset.data.x.type(torch.float32)
+
+        # print(len(dataset_ood))
+        dataset_ood.data.x = dataset_ood.data.x.type(torch.float32)    
+       
+    else:
+        dataset_name,domain,shift = DS.split("+")
+        # print(os.getcwd())
+        root = os.getcwd()+"/"+args.data_root
+      
+        datasets, meta_info = register.datasets[dataset_name].load(dataset_root=args.data_root,
+                                                                              domain=domain,
+                                                                              shift=shift,
+                                                                              generate = False,
+                                                                              )
+       
+            
+        dataset = datasets["train"]
+        perm_idx = torch.randperm(len(dataset), generator=torch.Generator().manual_seed(0))
+        dataset = dataset[perm_idx]
+        
+        dataset.data.x = dataset.data.x.type(torch.float32)
+        dataset_ood = datasets["test"]
+        
+
+        size_id = []
+        size_ood_near = []
+        size_ood_far = []
+        data_ood_far=[]
+        data_ood_near=[]
+        print()
+        for _ in dataset[:1000]:
+            size_id.append(_.num_nodes)
+        print("avgid{}".format(sum(size_id)/len(size_id)))
+        avb_id = int(sum(size_id)/len(size_id))
+        data_ood_near = []
+        data_ood_near_size = []
+        for d in dataset_ood:
+            if d.num_nodes in range(avb_id-5,avb_id+5):
+                data_ood_near.append(d)
+                data_ood_near_size.append(d.num_nodes)
+            if len(data_ood_near) == 500:
+                break
+                
+        print("avg__ood_near{}".format(sum(data_ood_near_size)/len(data_ood_near_size)))
+        
+        
+        
+        dataset_ood.data.x = dataset_ood.data.x.type(torch.float32)
+        for d in dataset_ood[:500]:
+            data_ood_far.append(d)
     
+    
+    dataset_num_features = dataset.num_node_features
+    dataset_num_features_ood = dataset_ood.num_node_features
+    assert dataset_num_features == dataset_num_features_ood
+
+    # dataset_id = dataset[:n_train_data]
+    # dataset_train = dataset_id[:int(n_train_data*train_per)]
+    # dataset_val = dataset_id[int(n_train_data*train_per):]
+    # dataset_test = dataset[n_train_data:n_train_data + n_in_test_data]
+    # dataset_ood = dataset_ood[: len(dataset_test)]
+    
+    dataset_train = dataset[:n_train_data]
+    dataset_test = dataset[n_train_data:n_train_data+n_in_test_data]
+
+    dataset_ood = dataset_ood[: len(dataset_test)]
+    max_nodes_num_train = max([_.num_nodes for _ in dataset])
+    max_nodes_num_test = max([_.num_nodes for _ in dataset_ood])
+    max_nodes_num = max_nodes_num_train if max_nodes_num_train > max_nodes_num_test else max_nodes_num_test
+    print(max_nodes_num_train)
+    data_list_train = []
+    # data_list_val = []
+    idx = 0
+    for data in dataset_train:
+        data.y = 0
+        data['idx'] = idx
+        idx += 1
+        data_list_train.append(data)
+
+    if need_str_enc:
+        data_list_train = init_structural_encoding(data_list_train, rw_dim=args.rw_dim, dg_dim=args.dg_dim)
+    dataloader_train = DataLoader(data_list_train, batch_size=args.batch_size, shuffle=True)
+
+    
+    
+    data_list_test = []
+    for data in dataset_test:
+        data.y = 0
+        data.edge_attr = None
+        if not DrugooD:
+            data.env_id = data.domain_id
+        data_list_test.append(data)
+    data_id=data_list_test
+    
+    
+
+
+    data_oodnear = []
+    for data in data_ood_near:
+        data.y = 1
+        data.edge_attr = None
+        if not DrugooD:
+              data.env_id = data.domain_id
+        data_oodnear.append(data)
+  
+    data_oodfar = []
+    for data in data_ood_far:
+        data.y = 1
+        data.edge_attr = None
+        if not DrugooD:
+              data.env_id = data.domain_id
+        data_oodfar.append(data)
+
+    data_near_ood=data_oodnear+data_id
+    data_far_ood=data_oodfar+data_id
+    
+    if need_str_enc:
+        data_near_ood = init_structural_encoding(data_near_ood, rw_dim=args.rw_dim, dg_dim=args.dg_dim)
+        data_far_ood = init_structural_encoding(data_far_ood, rw_dim=args.rw_dim, dg_dim=args.dg_dim)
+    dataloader_test = DataLoader(data_list_test, batch_size=args.batch_size_test, shuffle=False)
+    dataset_test = ConcatDataset([dataset_test, dataset_ood])
+    dataset_val = dataset_test
+    dataloader_val = dataloader_test
+    dataloader_near_ood =  DataLoader(data_near_ood, batch_size=args.batch_size_test, shuffle=True)
+    dataloader_far_ood =  DataLoader(data_far_ood, batch_size=args.batch_size_test, shuffle=True)
+    meta = {'num_feat':dataset_num_features, 'num_train':len(dataset_train),
+            'num_test':len(dataset_test), 'num_ood':len(dataset_ood),'max_nodes_num':max_nodes_num,'num_edge_feat':0}
+    print(meta)
+    return  0,0,0, dataloader_train, dataloader_near_ood, dataloader_far_ood, meta
