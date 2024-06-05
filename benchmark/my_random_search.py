@@ -43,7 +43,8 @@ def main(args):
     new_row = {}
 
     models = model_detector_dict.keys()
-
+    if args.exp_type == 'ad':
+         datasets=['AIDS','BZR','COLLAD','COX2','DD','DHFR','ENZYMES','Tox21_HSE','IMDB-BINARY','Tox21_MMP','NCI1','Tox21_p53','REDDIT-BINARY', 'Tox21_PPAR-gamma', 'PROTEINS_full' ]
     if args.exp_type == 'oodd':
         datasets = ['AIDS+DHFR', 'ogbg-molbbbp+ogbg-molbace', 'BZR+COX2', 'ogbg-molclintox+ogbg-mollipo',
                     'ENZYMES+PROTEINS', 'ogbg-molfreesolv+ogbg-moltoxcast', 'IMDB-MULTI+IMDB-BINARY', 'PTC_MR+MUTAG',
@@ -68,6 +69,8 @@ def main(args):
             if args.exp_type == 'oodd':
                 args.DS_pair = dataset_name
             elif args.exp_type == 'ood':
+                args.DS = dataset_name
+            elif args.exp_type == 'ad':
                 args.DS = dataset_name
             best_val_score = 0
             for t in tqdm.tqdm(range(args.num_trial)):
@@ -170,7 +173,6 @@ def main(args):
                     args.encoder_layers = model_config['encoder_layers']
                     args.lr = model_config['lr']
                     args.n_edge_feat = meta['num_edge_feat']
-
                     args.dropout = model_config['drop_rate']
                     args.dataset_num_features = meta['num_feat']
                     args.n_train =  meta['num_train']
@@ -221,7 +223,6 @@ def main(args):
                     args.dropout = model_config['drop_rate']
                     args.dataset_num_features = meta['num_feat']
                     args.n_train =  meta['num_train']
-              
                     model = init_model(args)
                     model.fit(dataset=None, args=args, label=None, dataloader=dataloader, dataloader_val=dataloader_test)
                     if model.max_AUC > best_val_score:
