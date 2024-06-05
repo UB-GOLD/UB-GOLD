@@ -16,9 +16,7 @@ Before you begin, ensure that you have Anaconda or Miniconda installed on your s
 * torch>=2.0.1
 * torch_geometric>=2.4.0
 * python>=3.8
-* numpy>=1.20.3
 * scikit-learn>=1.0.2
-* scipy>=1.8.0
 * networkx>=2.6.3
 * rdkit>=2023.3.1
 * dgl>=2.1.0
@@ -32,11 +30,57 @@ conda activate UBGOLD
 # If your use a different CUDA version, please refer to the PyTorch and Pyg websites for the appropriate versions.
 
 pip install -r requirements.txt
+```
+
+Dataset Preparation
+-----------------
+
+
+Benchmarking
+-----------------
+
+**With Default Hyperparameters**
 
 cd ./UBGOLD
 
-python benchmark/mymain.py
+The main experiments:
 ```
+python benchmark/mymain.py 
+
+OR
+
+cp ./benchmark/Source/GOOD-D.sh .
+
+
+bash GOOD-D.sh
+```
+The far-near OOD detection experiments:
+
+```
+python benchmark/near_far_ood.py 
+
+OR
+
+cp ./benchmark/Source/near_far_ood.sh .
+
+
+bash near_far_ood.sh
+```
+
+The perturbation OOD detection experiments:
+
+```
+python benchmark/per_ood.py 
+
+OR
+
+cp ./benchmark/Source/per_ood.sh .
+
+
+bash per_ood.sh
+```
+
+**With Optimal Hyperparameters through Random Search**
 
 Codebase Folder
 -----------------
