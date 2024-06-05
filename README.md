@@ -1,10 +1,10 @@
-# (GOD2Bench) Unifying Graph-Level Out-of-Distribution Detection and Anomaly Detection: A Benchmark
+# (UB-GOLD) Unifying Graph-Level Out-of-Distribution Detection and Anomaly Detection: A Benchmark
 
 This is the official implementation of the following paper:
 
 > [ Unifying Graph-Level Out-of-Distribution Detection and Anomaly Detection: A Benchmark](https://arxiv.org/abs/2306.122)
 > 
-> Submited to NeurIPS 2024 Datasets and Benchmarks Track
+> Submitted to NeurIPS 2024 Datasets and Benchmarks Track
 
 Environment Setup
 -----------------
@@ -25,15 +25,15 @@ Before you begin, ensure that you have Anaconda or Miniconda installed on your s
 * pygcl>=0.1.2
 ```shell
 # Create and activate a new Conda environment named 'GOD2Bench'
-conda create -n GOD2Bench
-conda activate GOD2Bench
+conda create -n UBGOLD
+conda activate UBGOLD
 
 # Install Pytorch and Pyg with CUDA 11.8 support
 # If your use a different CUDA version, please refer to the PyTorch and Pyg websites for the appropriate versions.
 
 pip install -r requirements.txt
 
-cd ./GOD2Bench
+cd ./UBGOLD
 
 python benchmark/mymain.py
 ```
