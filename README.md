@@ -40,9 +40,9 @@ Benchmarking
 -----------------
 
 **With Default Hyperparameters**
-
+```
 cd ./UBGOLD
-
+```
 The main experiments:
 ```
 python benchmark/mymain.py 
@@ -104,12 +104,12 @@ Codebase Folder
 
 Supported Methods  (16 Methods)
 -----------------
-This part lists all the methods we include in this codebase. We totally support 16 popular methods for Anomaily detection and OOD detection.
+This part lists all the methods we include in this codebase. We support 16 popular methods for anomaly detection and OOD detection.
 ### Table 1: 2-Step Methods
 
 | Category | Models and References |
 |----------|------------------------|
-|Graph kernel with detector | PK-SVM , PK-IF , WL-SVM, WL-IF  |
+|Graph kernel with detector | PK-SVM, PK-IF, WL-SVM, WL-IF  |
 |Self-supervised learning with detector  | IG-SVM, IG-IF, GCL-SVM, GCL-IF  |
 
 ### Table 2: End-to-End Methods
