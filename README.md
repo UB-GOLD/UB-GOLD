@@ -149,7 +149,7 @@ This part lists all the methods we include in this codebase. We support 16 popul
 
 | Category | Models and References |
 |----------|------------------------|
-|Graph kernel with detector | [PK-SVM]{https://arxiv.org/pdf/2012.12931.pdf}, [PK-IF]{https://arxiv.org/pdf/2012.12931.pdf}, [WL-SVM]{https://arxiv.org/pdf/2012.12931.pdf}, [WL-IF]{https://arxiv.org/pdf/2012.12931.pdf}  |
+|Graph kernel with detector | [PK-SVM](https://arxiv.org/pdf/2012.12931.pdf), [PK-IF](https://arxiv.org/pdf/2012.12931.pdf), [WL-SVM]{https://arxiv.org/pdf/2012.12931.pdf}, [WL-IF]{https://arxiv.org/pdf/2012.12931.pdf}  |
 |Self-supervised learning with detector  | [IG-SVM]{https://arxiv.org/pdf/2211.04208.pdf}, [IG-IF]{https://arxiv.org/pdf/2211.04208.pdf}, [GCL-SVM]{https://arxiv.org/pdf/2211.04208.pdf}, [GCL-IF]{https://arxiv.org/pdf/2211.04208.pdf}  |
 
 ### Table 2: End-to-End Methods
