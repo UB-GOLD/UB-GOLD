@@ -65,14 +65,14 @@ This part lists all the methods we include in this codebase. We totally support 
 
 | Category | Models and References |
 |----------|------------------------|
-| Graph kernel with detector ([GK-D](https://arxiv.org/abs/2303.11608)) | PK-SVM ([Amer et al., 2013](https://arxiv.org/abs/1308.4719)), PK-IF ([Neumann et al., 2016](https://arxiv.org/abs/1602.02830), [Liu et al., 2008](https://cs.nju.edu.cn/zhouzh/zhouzh.files/publication/icdm08b.pdf)), WL-SVM, WL-IF ([Vishwanathan et al., 2010](https://arxiv.org/abs/1011.3492)) |
-| Self-supervised learning with detector ([SSL-D](https://arxiv.org/abs/2301.11325)) | IG-SVM, IG-IF ([Sun et al., 2019](https://arxiv.org/abs/1905.12265)), GCL-SVM, GCL-IF ([You et al., 2020](https://arxiv.org/abs/2002.08104)) |
+| ([GK-D](https://arxiv.org/pdf/2012.12931.pdf))| PK-SVM , PK-IF , WL-SVM, WL-IF  |
+|  ([SSL-D](https://arxiv.org/pdf/2211.04208.pdf))| IG-SVM, IG-IF, GCL-SVM, GCL-IF  |
 
 ### Table 2: End-to-End Methods
 
 | Category | Models and References |
 |----------|------------------------|
-| Graph neural network-based GLAD ([GLAD](https://arxiv.org/abs/2303.11608)) | OCGIN ([Zhao et al., 2023](https://arxiv.org/abs/2303.11608)), GLADC ([Luo et al., 2022](https://arxiv.org/abs/2205.13625)), GLocalKD ([Ma et al., 2022](https://arxiv.org/abs/2204.08458)), OCGTL ([Anonymous, 2022](https://arxiv.org/abs/2207.01792)), SIGNET ([Liu et al., 2023](https://arxiv.org/abs/2301.11325)), CVTGAD ([Li et al., 2023](https://arxiv.org/abs/2304.06700)) |
+| [GLAD] |  [([OCGIN](https://arxiv.org/abs/2303.11608))](https://arxiv.org/pdf/2211.04208.pdf), [([GLADC](https://arxiv.org/abs/2205.13625))],[([GLocalKD ](https://arxiv.org/abs/2204.08458))](https://arxiv.org/pdf/2112.10063.pdf), OCGTL ([Anonymous, 2022](https://arxiv.org/abs/2207.01792)), SIGNET ([Liu et al., 2023](https://arxiv.org/abs/2301.11325)), CVTGAD ([Li et al., 2023](https://arxiv.org/abs/2304.06700)) |
 | Graph neural network-based GLOD ([GLOD](https://arxiv.org/abs/2301.11325)) | GOOD-D ([Liu et al., 2023](https://arxiv.org/abs/2301.11325)), GraphDE ([Li et al., 2022](https://arxiv.org/abs/2206.07206)) |
 
 
