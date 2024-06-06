@@ -56,33 +56,13 @@ Dataset Preparation
 -----------------
 The data used in UB-GOLD should be downloaded in './data', and they can be downloaded from the following sources:
 1. [TUDataset](https://chrsmrrs.github.io/datasets/docs/datasets/)
-    - COLLAB
-    - IMDB-BINARY
-    - REDDIT-BINARY
-    - ENZYMES
-    - PROTEINS
-    - DD
-    - BZR
-    - AIDS
-    - COX2
-    - NCI1
-    - DHFR
+    - COLLAB, IMDB-BINARY, REDDIT-BINARY, ENZYMES, PROTEINS
+    - DD, BZR, AIDS, COX2, NCI1, DHFR
 2. [OGB](https://github.com/snap-stanford/ogb) (It can be downloaded automatically)
-   - BBBP
-   - BACE
-   - CLINTOX
-   - LIPO
-   - FREESOLV
-   - TOXCAST
-   - SOL
-   - MUV
-   - TOX21
-   - SIDER
+   - BBBP, BACE, CLINTOX, LIPO, FREESOLV
+   - TOXCAST, SOL, MUV, TOX21,SIDER
 3. [TOX21](https://tripod.nih.gov/tox21/challenge/data.jsp#)
-   - Tox21\_p53
-   - Tox21\_HSE
-   - Tox21\_MMP
-   - Tox21\_PPAR-gamma
+   - Tox21\_p53, Tox21\_HSE, Tox21\_MMP,Tox21\_PPAR-gamma
 4. [DrugOOD](https://drive.google.com/drive/folders/19EAVkhJg0AgMx7X-bXGOhD4ENLfxJMWC)
    - IC50 (SIZE,SCAFFOLD,ASSAY)
    - EC50 (SIZE,SCAFFOLD,ASSAY)
