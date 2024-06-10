@@ -1,4 +1,9 @@
-# (UB-GOLD) Unifying Unsupervised Graph-Level Out-of-Distribution Detection and Anomaly Detection: A Benchmark
+<div align="center">
+<img src="https://github.com/UB-GOLD/UB-GOLD/blob/main/Image/Show.pdf" border="0" width=600px/>
+</div>
+
+
+# UB-GOLD: Unified Benchmark for unsupervised Graph-level OOD and anomaLy Detection
 
 This is the official implementation of the following paper:
 
