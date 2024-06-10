@@ -2,9 +2,6 @@
   <img src="https://github.com/UB-GOLD/UB-GOLD/blob/main/Image/Show.jpg" alt="UB-GOLD" style="margin-bottom: -200px;" width="800px"/>
 </div>
 
-<p align="center">
-  UB-GOLD: Unified Benchmark for unsupervised Graph-level OOD and anomaly Detection
-</p>
 # UB-GOLD: Unified Benchmark for unsupervised Graph-level OOD and anomaLy Detection
 
 This is the official implementation of the following paper:
