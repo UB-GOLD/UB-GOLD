@@ -4,7 +4,17 @@
 
 ------
 
-# UB-GOLD
+<p align="center">
+  <a href="#UB-GOLD">Overview</a> •
+  <a href="#Environment Setup">Environment Setup</a> •
+  <a href="#citation">Citation</a> 
+</p>
+
+
+
+
+
+## UB-GOLD
 
 This is the official implementation of the following paper:
 
@@ -12,7 +22,7 @@ This is the official implementation of the following paper:
 > 
 > Submitted to NeurIPS 2024 Datasets and Benchmarks Track
 
-Environment Setup
+## Environment Setup
 -----------------
 
 Before you begin, ensure that you have Anaconda or Miniconda installed on your system. This guide assumes that you have a CUDA-enabled GPU.
@@ -203,6 +213,9 @@ This part lists all the datasets we include in our Benchmark.
 | GOOD-ZINC-Scaffold  | Molecules   | Scaffold       | 1000       | 500       | 500        |
 | DrugOOD-IC50-Size   | Molecules   | Size           | 1000       | 500       | 500        |
 | DrugOOD-EC50-Size   | Molecules   | Size           | 1000       | 500       | 500        |
+
+
+## Citation
 | DrugOOD-IC50-Scaffold | Molecules | Scaffold       | 1000       | 500       | 500        |
 | DrugOOD-EC50-Scaffold | Molecules | Scaffold       | 1000       | 500       | 500        |
 | DrugOOD-IC50-Assay  | Molecules   | Protein Target | 1000       | 500       | 500        |
