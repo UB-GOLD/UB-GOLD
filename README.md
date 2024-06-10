@@ -41,14 +41,14 @@ Before you begin, ensure that you have Anaconda or Miniconda installed on your s
 * dgl>=2.1.0
 * pygcl>=0.1.2
 ```shell
-# Create and activate a new Conda environment named 'UBGOLD'
+# Create and activate a new Conda environment named **'UBGOLD'**
 conda create -n UBGOLD
 conda activate UBGOLD
 
-# Install Pytorch and Pyg with CUDA 11.8 support
-# If your use a different CUDA version, please refer to the PyTorch and Pyg websites for the appropriate versions.
+pip install *
 
-pip install -r requirements.txt
+# Install Pytorch and Pyg with CUDA 11.8 support, For the versions of other dependencies, see **requirements.txt**.
+# If you use a different CUDA version, please refer to the PyTorch and Pyg websites for the appropriate versions.
 ```
 
 Codebase Folder
