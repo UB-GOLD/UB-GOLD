@@ -27,7 +27,7 @@ UB-GOLD provides a fair and comprehensive platform to evaluate existing unsuperv
 </div>
 
 ## Environment Setup
------------------
+
 
 Before you begin, ensure that you have Anaconda or Miniconda installed on your system. This guide assumes that you have a CUDA-enabled GPU.
 
@@ -54,8 +54,8 @@ pip install *
 # for the appropriate versions.
 ```
 
-Codebase Folder
------------------
+## Codebase Folder
+
 ```
 ├── ...
 ├── benchmark (Benchmark execution)
@@ -75,7 +75,7 @@ Codebase Folder
 ```
 
 ## Dataset Preparation
------------------
+
 The data used in UB-GOLD should be downloaded in './data', and they can be downloaded from the following sources:
 1. [TUDataset](https://chrsmrrs.github.io/datasets/docs/datasets/)
     - COLLAB, IMDB-BINARY, REDDIT-BINARY, ENZYMES, PROTEINS
@@ -92,8 +92,7 @@ The data used in UB-GOLD should be downloaded in './data', and they can be downl
    - [GOODHIV](https://drive.google.com/file/d/1CoOqYCuLObnG5M0D8a2P2NyL61WjbCzo/view)
    - [GOODZINC](https://drive.google.com/file/d/1CHR0I1JcNoBqrqFicAZVKU3213hbsEPZ/view)
      
-Benchmarking
------------------
+## Benchmarking
 
 **With Default Hyperparameters**
 ```
@@ -146,8 +145,8 @@ bash search.sh
 
 
 
-Supported Methods  (16 Methods)
------------------
+## Supported Methods  (16 Methods)
+
 This part lists all the methods we include in this codebase. We support 16 popular methods for anomaly detection and OOD detection.
 ### Table 1: 2-Step Methods
 
@@ -165,8 +164,8 @@ This part lists all the methods we include in this codebase. We support 16 popul
 
 
 
-Supported 4 TYPE Datasets (35 Datasets)
------------------
+## Supported 4 TYPE Datasets (35 Datasets)
+
 This part lists all the datasets we include in our Benchmark.
 
 ### Table 1: Organic Anomaly (TYPE I)
