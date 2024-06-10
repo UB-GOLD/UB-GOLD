@@ -91,7 +91,7 @@ The data used in UB-GOLD should be downloaded in './data', and they can be downl
    - [GOODHIV](https://drive.google.com/file/d/1CoOqYCuLObnG5M0D8a2P2NyL61WjbCzo/view)
    - [GOODZINC](https://drive.google.com/file/d/1CHR0I1JcNoBqrqFicAZVKU3213hbsEPZ/view)
   
-<div align="center">
+<div align="left">
   <img src="https://github.com/UB-GOLD/UB-GOLD/blob/main/Image/Dataset.jpg" width="600px"/>
 </div>
      
