@@ -4,7 +4,7 @@
 
 ------
 
-# UB-GOLD: Unified Benchmark for unsupervised Graph-level OOD and anomaLy Detection
+# UB-GOLD
 
 This is the official implementation of the following paper:
 
