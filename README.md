@@ -13,8 +13,6 @@
 
 
 
-https://github.com/UB-GOLD/UB-GOLD?tab=MIT-1-ov-file#readme
-
 ## UB-GOLD
 
 This is the official implementation of the following paper:
@@ -24,7 +22,7 @@ This is the official implementation of the following paper:
 > Submitted to NeurIPS 2024 Datasets and Benchmarks Track
 
 <div align="center">
-  <img src="https://github.com/UB-GOLD/UB-GOLD/blob/main/Image/intro.jpg" alt="UB-GOLD" style="margin-bottom: -200px;" width="600px"/>
+  <img src="https://github.com/UB-GOLD/UB-GOLD/blob/main/Image/intro.jpg" alt="UB-GOLD" style="margin-bottom: -200px;" width="900px"/>
 </div>
 
 ## Environment
