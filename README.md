@@ -74,6 +74,9 @@ pip install *
 ```
 
 ## Dataset Preparation
+<div align="center">
+  <img src="https://github.com/UB-GOLD/UB-GOLD/blob/main/Image/Dataset.jpg" width="600px"/>
+</div>
 
 The data used in UB-GOLD should be downloaded in './data', and they can be downloaded from the following sources:
 1. [TUDataset](https://chrsmrrs.github.io/datasets/docs/datasets/)
@@ -160,67 +163,6 @@ This part lists all the methods we include in this codebase. We support 16 popul
 |----------|------------------------|
 | Graph neural network-based GLAD |[OCGIN](https://arxiv.org/pdf/2012.12931.pdf), [GLADC](https://www.nature.com/articles/s41598-022-22086-3), [GLocalKD](https://arxiv.org/pdf/2112.10063.pdf), [OCGTL](https://arxiv.org/pdf/2205.13845.pdf), [SIGNET](https://proceedings.neurips.cc/paper_files/paper/2023/file/1c6f06863df46de009a7a41b41c95cad-Paper-Conference.pdf), [CVTGAD](https://link.springer.com/chapter/10.1007/978-3-031-43412-9_11)    |
 | Graph neural network-based GLOD  | [GOOD-D](https://arxiv.org/pdf/2211.04208.pdf) , [GraphDE](https://proceedings.neurips.cc/paper_files/paper/2022/file/c34262c35aa5f8c1a091822cbb2020c2-Paper-Conference.pdf)  |
-
-
-
-## Supported 4 TYPE Datasets (35 Datasets)
-
-This part lists all the datasets we include in our Benchmark.
-
-### Table 1: Organic Anomaly (TYPE I)
-
-| Full Name         | Graph Type | OOD Type | # ID Train | # ID Test | # OOD Test |
-|-------------------|------------|----------|------------|-----------|------------|
-| Tox21\_p53        | Molecules  | Inherent | 8088       | 241       | 28         |
-| Tox21\_HSE        | Molecules  | Inherent | 423        | 257       | 10         |
-| Tox21\_MMP        | Molecules  | Inherent | 6170       | 200       | 38         |
-| Tox21\_PPAR-gamma | Molecules  | Inherent | 219        | 252       | 15         |
-
-### Table 2: Class-based Anomaly (TYPE II)
-
-| Full Name      | Graph Type      | OOD Type | # ID Train | # ID Test | # OOD Test |
-|----------------|-----------------|----------|------------|-----------|------------|
-| COLLAB         | Social Networks | UC       | 1920       | 480       | 520        |
-| IMDB-BINARY    | Social Networks | UC       | 400        | 100       | 100        |
-| REDDIT-BINARY  | Social Networks | UC       | 800        | 200       | 200        |
-| ENZYMES        | Proteins        | UC       | 400        | 100       | 20         |
-| PROTEINS       | Proteins        | UC       | 360        | 90        | 133        |
-| DD             | Proteins        | UC       | 390        | 97        | 139        |
-| BZR            | Molecules       | UC       | 69         | 17        | 64         |
-| AIDS           | Molecules       | UC       | 1280       | 320       | 80         |
-| COX2           | Molecules       | UC       | 81         | 21        | 73         |
-| NCI1           | Molecules       | UC       | 1646       | 411       | 411        |
-| DHFR           | Molecules       | UC       | 368        | 93        | 59         |
-
-### Table 3: Inter-Dataset Shift (TYPE III)
-
-| Full Name                  | Graph Type      | OOD Type | # ID Train | # ID Test | # OOD Test |
-|----------------------------|-----------------|----------|------------|-----------|------------|
-| IMDB-MULTI&rarr;IMDB-BINARY | Social Networks | UD       | 1350       | 150       | 150        |
-| ENZYMES&rarr;PROTEINS       | Proteins        | UD       | 540        | 60        | 60         |
-| AIDS&rarr;DHFR              | Molecules       | UD       | 1800       | 200       | 200        |
-| BZR&rarr;COX2               | Molecules       | UD       | 364        | 41        | 41         |
-| ESOL&rarr;MUV               | Molecules       | UD       | 1015       | 113       | 113        |
-| TOX21&rarr;SIDER            | Molecules       | UD       | 7047       | 784       | 784        |
-| BBBP&rarr;BACE              | Molecules       | UD       | 1835       | 204       | 204        |
-| PTC\_MR&rarr;MUTAG          | Molecules       | UD       | 309        | 35        | 35         |
-| FREESOLV&rarr;TOXCAST       | Molecules       | UD       | 577        | 65        | 65         |
-| CLINTOX&rarr;LIPO           | Molecules       | UD       | 1329       | 148       | 148        |
-
-### Table 4: Intra-Dataset Shift (TYPE IV)
-
-| Full Name           | Graph Type  | OOD Type       | # ID Train | # ID Test | # OOD Test |
-|---------------------|-------------|----------------|------------|-----------|------------|
-| GOOD-HIV-Size       | Molecules   | Size           | 1000       | 500       | 500        |
-| GOOD-ZINC-Size      | Molecules   | Size           | 1000       | 500       | 500        |
-| GOOD-HIV-Scaffold   | Molecules   | Scaffold       | 1000       | 500       | 500        |
-| GOOD-ZINC-Scaffold  | Molecules   | Scaffold       | 1000       | 500       | 500        |
-| DrugOOD-IC50-Size   | Molecules   | Size           | 1000       | 500       | 500        |
-| DrugOOD-EC50-Size   | Molecules   | Size           | 1000       | 500       | 500        |
-| DrugOOD-IC50-Scaffold | Molecules | Scaffold       | 1000       | 500       | 500        |
-| DrugOOD-EC50-Scaffold | Molecules | Scaffold       | 1000       | 500       | 500        |
-| DrugOOD-IC50-Assay  | Molecules   | Protein Target | 1000       | 500       | 500        |
-| DrugOOD-EC50-Assay  | Molecules   | Protein Target | 1000       | 500       | 500        |
 
 
 ## Citation
