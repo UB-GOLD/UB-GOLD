@@ -11,8 +11,6 @@
   <a href="#citation">Citation</a> 
 </p>
 
-
-
 ## UB-GOLD
 
 This is the official implementation of the following paper:
@@ -21,7 +19,7 @@ This is the official implementation of the following paper:
 > 
 > Submitted to NeurIPS 2024 Datasets and Benchmarks Track
 
-UB-GODL provides a fair and comprehensive platform to evaluate existing GLAD and GLOD works on 4 types of datasets and facilitates future GLAD/GLOD research.
+UB-GOLD provides a fair and comprehensive platform to evaluate existing unsupervised GLAD and GLOD works on 4 types of datasets and facilitates future GLAD/GLOD research.
 <div align="center">
   <img src="https://github.com/UB-GOLD/UB-GOLD/blob/main/Image/intro.jpg" width="900px"/>
 </div>
