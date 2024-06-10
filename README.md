@@ -6,7 +6,8 @@
 
 <p align="center">
   <a href="#UB-GOLD">Overview</a> •
-  <a href="#Environment">Environment Setup</a> •
+  <a href="#Environment-setup">Environment Setup</a> •
+  <a href="#dataset-preparation">Dataset Preparation</a> •
   <a href="https://github.com/UB-GOLD/UB-GOLD?tab=MIT-1-ov-file#readme">License</a> •
   <a href="#Dataset">Dataset</a> •
   <a href="#citation">Citation</a> 
@@ -25,7 +26,7 @@ UB-GOLD provides a fair and comprehensive platform to evaluate existing unsuperv
   <img src="https://github.com/UB-GOLD/UB-GOLD/blob/main/Image/intro.jpg" width="900px"/>
 </div>
 
-## Environment
+## Environment Setup
 -----------------
 
 Before you begin, ensure that you have Anaconda or Miniconda installed on your system. This guide assumes that you have a CUDA-enabled GPU.
@@ -73,7 +74,7 @@ Codebase Folder
 ├── ...
 ```
 
-Dataset Preparation
+## Dataset Preparation
 -----------------
 The data used in UB-GOLD should be downloaded in './data', and they can be downloaded from the following sources:
 1. [TUDataset](https://chrsmrrs.github.io/datasets/docs/datasets/)
