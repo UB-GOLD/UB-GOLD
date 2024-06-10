@@ -7,12 +7,13 @@
 <p align="center">
   <a href="#UB-GOLD">Overview</a> •
   <a href="#Environment">Environment Setup</a> •
+  <a href="https://github.com/UB-GOLD/UB-GOLD?tab=MIT-1-ov-file#readme">License</a> •
   <a href="#citation">Citation</a> 
 </p>
 
 
 
-
+https://github.com/UB-GOLD/UB-GOLD?tab=MIT-1-ov-file#readme
 
 ## UB-GOLD
 
@@ -22,7 +23,11 @@ This is the official implementation of the following paper:
 > 
 > Submitted to NeurIPS 2024 Datasets and Benchmarks Track
 
-## Environment Setup
+<div align="center">
+  <img src="https://github.com/UB-GOLD/UB-GOLD/blob/main/Image/intro.jpg" alt="UB-GOLD" style="margin-bottom: -200px;" width="600px"/>
+</div>
+
+## Environment
 -----------------
 
 Before you begin, ensure that you have Anaconda or Miniconda installed on your system. This guide assumes that you have a CUDA-enabled GPU.
