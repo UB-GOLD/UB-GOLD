@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://github.com/UB-GOLD/UB-GOLD/blob/main/Image/Show.jpg" border="0" width=650px/>
+<img src="https://github.com/UB-GOLD/UB-GOLD/blob/main/Image/Show.jpg" border="0" width=750px/>
 </div>
 
 
