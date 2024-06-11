@@ -6,8 +6,9 @@
 
 <p align="center">
   <a href="#UB-GOLD">Overview</a> •
-  <a href="#Environment-setup">Environment Setup</a> •
+  <a href="#Environment-setup">Environment</a> •
   <a href="#dataset-preparation">Dataset</a> •
+  <a href="#Quick-start">Start</a> •
   <a href="https://github.com/UB-GOLD/UB-GOLD?tab=MIT-1-ov-file#readme">License</a> •
   <a href="#citation">Citation</a> 
 </p>
@@ -95,7 +96,7 @@ The data used in UB-GOLD should be downloaded in './data', and they can be downl
   <img src="https://github.com/UB-GOLD/UB-GOLD/blob/main/Image/Dataset.jpg" width="600px"/>
 </div>
      
-## Benchmarking
+## Quick Start
 
 **With Default Hyperparameters**
 ```
