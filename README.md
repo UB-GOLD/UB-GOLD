@@ -98,10 +98,12 @@ The data used in UB-GOLD should be downloaded in './data', and they can be downl
      
 ## Quick Start
 
-**With Default Hyperparameters**
 ```
+git clone https://github.com/UB-GOLD/UB-GOLD.git
 cd ./UBGOLD
 ```
+**With Default Hyperparameters**
+
 The main experiments:
 ```
 python benchmark/mymain.py 
@@ -112,7 +114,7 @@ cp ./benchmark/Source/GOOD-D.sh .
 
 bash GOOD-D.sh
 ```
-The far-near OOD detection experiments:
+The near-far OOD detection experiments:
 
 ```
 python benchmark/near_far_ood.py 
@@ -168,3 +170,20 @@ This part lists all the methods we include in this codebase. We support 16 popul
 
 
 ## Citation
+
+| **ID** | **Paper** | **Category** | **Conference** |
+|--------|---------|:----------:|:--------------:|
+| 1      | [On using classification datasets to evaluate graph outlier detection: Peculiar observations and new insights](https://arxiv.org/pdf/2012.12931.pdf)    |   GLAD   |  Big Data 2023   |
+| 2      | [Deep graph-level anomaly detection by glocal knowledge distillation ](https://arxiv.org/pdf/2112.10063.pdf)|    GLAD    |   WSDM 2022    |
+| 3      |[Raising the bar in graph-level anomaly detection](https://arxiv.org/pdf/2205.13845.pdf) |  GLAD  |    IJCAI 2022    |
+| 4      | [Towards self-interpretable graph-level anomaly detection](https://proceedings.neurips.cc/paper_files/paper/2023/file/1c6f06863df46de009a7a41b41c95cad-Paper-Conference.pdf)  |   GLAD   |  NeurIPS 2023  |
+| 5      | [Deep graph level anomaly detection with contrastive learning](https://www.nature.com/articles/s41598-022-22086-3) |   GLAD   | Nature scientific reports 2022 |
+| 6      | [CVTGAD: Simplified Transformer with Cross-View Attention for Unsupervised Graph-Level Anomaly Detection](https://link.springer.com/chapter/10.1007/978-3-031-43412-9_11) |  GLAD  |  ECML-PKDD 2023    |
+
+--------
+| 7      | [Good-d: On unsupervised graph out-of-distribution detection ](https://arxiv.org/pdf/2211.04208.pdf)|  GLOD   |   WSDM 2023    |
+| 8      |[ Graphde: A generative framework for debiased learning and out-of-distribution detection on graphs](https://proceedings.neurips.cc/paper_files/paper/2022/file/c34262c35aa5f8c1a091822cbb2020c2-Paper-Conference.pdf) |  GLOD    |    NeurIPS 2022    |
+
+
+
+
