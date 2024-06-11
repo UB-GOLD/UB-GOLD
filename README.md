@@ -170,6 +170,7 @@ This part lists all the methods we include in this codebase. We support 16 popul
 
 
 ## Citation
+UB-GOLD has completed the approaches related to unsupervised Graph detection for Tables 1 and 2. As for some special scenarios in Tables 3-5, we will gradually adapt them to this benchmark.
 
 ### Table 1: Unsupervised GLAD 
 
@@ -187,6 +188,8 @@ This part lists all the methods we include in this codebase. We support 16 popul
 |--------|---------|:----------:|:--------------:|
 | 7      | [Good-d: On unsupervised graph out-of-distribution detection ](https://arxiv.org/pdf/2211.04208.pdf)|  GLOD   |   WSDM 2023    |
 | 8     |[ Graphde: A generative framework for debiased learning and out-of-distribution detection on graphs](https://proceedings.neurips.cc/paper_files/paper/2022/file/c34262c35aa5f8c1a091822cbb2020c2-Paper-Conference.pdf) |  GLOD    |    NeurIPS 2022    |
+
+------
 
 ### Table 3: Other Approaches (Supervised Setting)
 
