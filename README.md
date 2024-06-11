@@ -179,8 +179,7 @@ This part lists all the methods we include in this codebase. We support 16 popul
 | 4      | [Towards self-interpretable graph-level anomaly detection](https://proceedings.neurips.cc/paper_files/paper/2023/file/1c6f06863df46de009a7a41b41c95cad-Paper-Conference.pdf)  |   GLAD   |  NeurIPS 2023  |
 | 5      | [Deep graph level anomaly detection with contrastive learning](https://www.nature.com/articles/s41598-022-22086-3) |   GLAD   | Nature scientific reports 2022 |
 | 6      | [CVTGAD: Simplified Transformer with Cross-View Attention for Unsupervised Graph-Level Anomaly Detection](https://link.springer.com/chapter/10.1007/978-3-031-43412-9_11) |  GLAD  |  ECML-PKDD 2023    |
-
---------
+|----------|----------|----------|
 | 7      | [Good-d: On unsupervised graph out-of-distribution detection ](https://arxiv.org/pdf/2211.04208.pdf)|  GLOD   |   WSDM 2023    |
 | 8      |[ Graphde: A generative framework for debiased learning and out-of-distribution detection on graphs](https://proceedings.neurips.cc/paper_files/paper/2022/file/c34262c35aa5f8c1a091822cbb2020c2-Paper-Conference.pdf) |  GLOD    |    NeurIPS 2022    |
 
