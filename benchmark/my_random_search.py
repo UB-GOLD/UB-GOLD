@@ -351,6 +351,13 @@ def main(args):
             model_result[dataset_name + '-AUROC'] = best_troc
             model_result[dataset_name + '-AUPRC'] = best_tprc
             model_result[dataset_name + '-FPR95'] = best95
+            argsDict = args.__dict__
+            save_name = args.model+"_"+dataset_name+".txt"
+            with open(save_name, 'w') as f:
+                f.writelines('------------------ start ------------------' + '\n')
+                for eachArg, value in argsDict.items():
+                    f.writelines(eachArg + ' : ' + str(value) + '\n')
+                f.writelines('------------------- end -------------------')
         model_result = pandas.DataFrame(model_result, index=[0])
         results = pandas.concat([results, model_result])
         file_id = save_results(results, file_id)
