@@ -30,8 +30,8 @@ model_detector_dict = {
     "OCGIN":OCGIN,
     "GraphCL_IF":GraphCL_IF,
     "GraphCL_OCSVM":GraphCL_OCSVM,
-    "InforGraph_IF":InforGraph_IF,
-    "InforGraph_OCSVM":InforGraph_OCSVM,
+    "InfoGraph_IF":InfoGraph_IF,
+    "InfoGraph_OCSVM":InfoGraph_OCSVM,
     "KernelGLAD":KernelGLAD,
     
 }
