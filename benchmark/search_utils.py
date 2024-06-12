@@ -66,7 +66,7 @@ param_space['GOOD-D'] = {
     'h_feats': [16, 32, 64],
     'num_layers': [1, 2, 3, 4],
     'drop_rate': [0, 0.1, 0.2, 0.3],
-    'lr': 10 ** np.linspace(-3, -1, 1000),
+    ’lr':  [0.01, 0.001, 0.0001, 0.00001],
     'activation': ['ReLU', 'LeakyReLU', 'Tanh']
 }
 
@@ -74,14 +74,14 @@ param_space['GraphDE'] = {
     'h_feats': [16, 32, 64],
     'num_layers': [1, 2, 3],
     'drop_rate': [0, 0.1, 0.2, 0.3],
-    'lr': 10 ** np.linspace(-3, -1, 1000),
+    ’lr':  [0.01, 0.001, 0.0001, 0.00001],
     'activation': ['ReLU', 'LeakyReLU', 'Tanh']
 }
 
 param_space['CVTGAD'] = {
     'h_feats': [16, 32, 64,128],
     'num_layers': [1, 2, 3,4],
-    'lr': 10 ** np.linspace(-3, -1, 1000),
+    ’lr':  [0.01, 0.001, 0.0001, 0.00001],
     'activation': ['ReLU', 'LeakyReLU', 'Tanh'],
     'GNN_Encoder': ['GIN','GAT','GCN'],
     'graph_level_pool':['global_mean_pool','global_max_pool']
@@ -90,7 +90,7 @@ param_space['CVTGAD'] = {
 param_space['GLADC'] = {
     'h_feats': [16, 32, 64,128],
     'num_layers': [1, 2, 3,4],
-    'lr': 10 ** np.linspace(-3, -1, 1000),
+    ’lr':  [0.01, 0.001, 0.0001, 0.00001],
     'activation': ['ReLU', 'LeakyReLU', 'Tanh'],
     'nobn': [True,False],
     'nobias':[True,False]
@@ -99,7 +99,7 @@ param_space['GLADC'] = {
 param_space['SIGNET'] = {
     'h_feats': [16, 32, 64,128],
     'encoder_layers': [1, 2, 3,4,5],
-    'lr': 10 ** np.linspace(-3, -1, 1000),
+    ’lr':  [0.01, 0.001, 0.0001, 0.00001],
     'activation': ['ReLU', 'LeakyReLU', 'Tanh'],
     'pooling': ['max','add'],
     'graph_level_pool':['global_mean_pool','global_max_pool'],
@@ -113,7 +113,7 @@ param_space['SIGNET'] = {
 param_space['GLocalKD'] = {
     'h_feats': [16, 32, 64,128],
     'num_layers': [1, 2, 3,4,5],
-    'lr': 10 ** np.linspace(-3, -1, 1000),
+    ’lr':  [0.01, 0.001, 0.0001, 0.00001],
     'activation': ['ReLU', 'LeakyReLU', 'Tanh'],
     'clip': [0.1,0.15,0.20],
     'nobn': [True,False],
@@ -124,14 +124,14 @@ param_space['GLocalKD'] = {
 param_space['OCGTL'] = {
     'h_feats': [16, 32, 64,128],
     'num_layers': [1, 2, 3,4,5],
-    'lr': 10 ** np.linspace(-3, -1, 1000),
+    ’lr':  [0.01, 0.001, 0.0001, 0.00001],
     'activation': ['ReLU', 'LeakyReLU', 'Tanh'],
 }
 
 param_space['OCGIN'] = {
     'h_feats': [16, 32, 64,128],
     'num_layers': [1, 2, 3,4,5],
-    'lr': 10 ** np.linspace(-3, -1, 1000),
+    ’lr':  [0.01, 0.001, 0.0001, 0.00001],
     'activation': ['ReLU', 'LeakyReLU', 'Tanh'],
 }
 param_space['GraphCL_IF'] = {
