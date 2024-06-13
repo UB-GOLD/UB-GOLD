@@ -70,7 +70,7 @@ class SIGNET(DeepDetector):
         self.model = self.init_model(**self.kwargs)
         optimizer = torch.optim.Adam(self.model.parameters(), lr=args.lr)
         stop_counter = 0 
-        N = 10  
+        N = 30  
         for epoch in range(1, args.num_epoch + 1):
             self.model.train()
             loss_all = 0
