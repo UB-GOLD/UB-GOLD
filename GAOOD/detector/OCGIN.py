@@ -102,7 +102,7 @@ class OCGIN(DeepDetector):
         self.max_AUC = 0
 
         stop_counter = 0 
-        N = 10  
+        N = 30  
 
         for epoch in range(1, args.num_epoch + 1):
             all_loss, n_bw = 0, 0
