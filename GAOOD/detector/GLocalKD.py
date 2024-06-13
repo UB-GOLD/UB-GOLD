@@ -123,7 +123,7 @@ class GLocalKD(DeepDetector):
         self.max_AUC = 0
         
         stop_counter = 0  
-        N = 5  
+        N = 30  
         for epoch in range(1, args.num_epoch + 1):
             total_time = 0
             total_loss = 0.0
