@@ -66,7 +66,7 @@ class CVTGAD(DeepDetector):
         optimizer = torch.optim.Adam(self.model.parameters(), lr=args.lr)
         self.max_AUC = 0
         stop_counter = 0 
-        N = 5  
+        N = 30 
 
         for epoch in range(1, args.num_epoch + 1):
             if args.is_adaptive:
