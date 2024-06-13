@@ -147,7 +147,7 @@ class GraphDE(DeepDetector):
         self.max_AUC = 0
 
         stop_counter = 0  # early stop counter
-        N = 5  # early stop threshold
+        N = 30  # early stop threshold
         for epoch in range(1, self.epoch + 1):
             all_loss, n_bw = 0, 0
             for data in dataloader:
