@@ -155,7 +155,7 @@ class GLADC(DeepDetector):
         self.max_AUC = 0
 
         stop_counter = 0  
-        N = 10  
+        N = 30  
         
         for epoch in range(1, self.num_epochs + 1):
             total_lossG = 0.0
