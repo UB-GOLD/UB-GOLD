@@ -185,7 +185,7 @@ class GOOD_D(DeepDetector):
         self.max_AUC = 0
         
         stop_counter = 0  # early stop counter
-        N = 10  # early stop threshold
+        N = 30  # early stop threshold
 
         for epoch in range(1, args.num_epoch + 1):
             if args.is_adaptive:
