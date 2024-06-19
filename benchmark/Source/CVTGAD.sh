@@ -34,25 +34,25 @@ python3 benchmark/mymain.py -exp_type ad -DS Tox21_HSE        -rw_dim 4 -dg_dim 
 
 # double dataset
 
-python3 benchmark/mymain.py -exp_type oodd -DS_pair AIDS+DHFR -rw_dim 16 -dg_dim 16 -hidden_dim 16 -num_epoch 300 -num_cluster 2 -alpha 0.0 -num_layer 3   -model CVTGAD CVTGAD -GNN_Encoder GIN -graph_level_pool global_mean_pool
+python3 benchmark/mymain.py -exp_type oodd -DS_pair AIDS+DHFR -rw_dim 16 -dg_dim 16 -hidden_dim 16 -num_epoch 300 -num_cluster 2 -alpha 0.2 -num_layer 3   -model CVTGAD CVTGAD -GNN_Encoder GIN -graph_level_pool global_mean_pool
 
-python3 benchmark/mymain.py -exp_type oodd -DS_pair BZR+COX2 -rw_dim 16 -dg_dim 16 -hidden_dim 16 -num_epoch 300 -num_cluster 2 -alpha 0.0 -num_layer 3   -model CVTGAD CVTGAD -GNN_Encoder GIN -graph_level_pool global_mean_pool
+python3 benchmark/mymain.py -exp_type oodd -DS_pair BZR+COX2 -rw_dim 16 -dg_dim 16 -hidden_dim 16 -num_epoch 300 -num_cluster 2 -alpha 0.32 -num_layer 3   -model CVTGAD CVTGAD -GNN_Encoder GIN -graph_level_pool global_mean_pool
 
-python3 benchmark/mymain.py -exp_type oodd -DS_pair ENZYMES+PROTEINS -rw_dim 16 -dg_dim 16 -hidden_dim 16 -num_epoch 300 -num_cluster 2 -alpha 0.0 -num_layer 3   -model CVTGAD CVTGAD -GNN_Encoder GIN -graph_level_pool global_mean_pool
+python3 benchmark/mymain.py -exp_type oodd -DS_pair ENZYMES+PROTEINS -rw_dim 16 -dg_dim 16 -hidden_dim 16 -num_epoch 300 -num_cluster 2 -alpha 0.2 -num_layer 3   -model CVTGAD CVTGAD -GNN_Encoder GIN -graph_level_pool global_mean_pool
 
-python3 benchmark/mymain.py -exp_type oodd -DS_pair IMDB-MULTI+IMDB-BINARY -rw_dim 16 -dg_dim 16 -hidden_dim 16 -num_epoch 300 -num_cluster 2 -alpha 0.0 -num_layer 3   -model CVTGAD CVTGAD -GNN_Encoder GIN -graph_level_pool global_mean_pool
+python3 benchmark/mymain.py -exp_type oodd -DS_pair IMDB-MULTI+IMDB-BINARY -rw_dim 16 -dg_dim 16 -hidden_dim 16 -num_epoch 300 -num_cluster 2 -alpha 0.2 -num_layer 3   -model CVTGAD CVTGAD -GNN_Encoder GIN -graph_level_pool global_mean_pool
 
 python3 benchmark/mymain.py -exp_type oodd -DS_pair PTC_MR+MUTAG -rw_dim 16 -dg_dim 16 -hidden_dim 16 -num_epoch 300 -num_cluster 2 -alpha 0.0 -num_layer 3   -model CVTGAD CVTGAD -GNN_Encoder GIN -graph_level_pool global_mean_pool
 
-python3 benchmark/mymain.py -exp_type oodd -DS_pair ogbg-molbbbp+ogbg-molbace -rw_dim 16 -dg_dim 16 -hidden_dim 16 -num_epoch 300 -num_cluster 2 -alpha 0.0 -num_layer 3   -model CVTGAD CVTGAD -GNN_Encoder GIN -graph_level_pool global_mean_pool
+python3 benchmark/mymain.py -exp_type oodd -DS_pair ogbg-molbbbp+ogbg-molbace -rw_dim 16 -dg_dim 16 -hidden_dim 16 -num_epoch 300 -num_cluster 2 -alpha 0.32 -num_layer 3   -model CVTGAD CVTGAD -GNN_Encoder GIN -graph_level_pool global_mean_pool
 
-python3 benchmark/mymain.py -exp_type oodd -DS_pair ogbg-molfreesolv+ogbg-moltoxcast -rw_dim 16 -dg_dim 16 -hidden_dim 16 -num_epoch 300 -num_cluster 2 -alpha 0.0 -num_layer 3   -model CVTGAD CVTGAD -GNN_Encoder GIN -graph_level_pool global_mean_pool
+python3 benchmark/mymain.py -exp_type oodd -DS_pair ogbg-molfreesolv+ogbg-moltoxcast -rw_dim 16 -dg_dim 16 -hidden_dim 16 -num_epoch 300 -num_cluster 2 -alpha 0.2 -num_layer 3   -model CVTGAD CVTGAD -GNN_Encoder GIN -graph_level_pool global_mean_pool
 
-python3 benchmark/mymain.py -exp_type oodd -DS_pair ogbg-molclintox+ogbg-mollipo -rw_dim 16 -dg_dim 16 -hidden_dim 16 -num_epoch 300 -num_cluster 2 -alpha 0.0 -num_layer 3   -model CVTGAD CVTGAD -GNN_Encoder GIN -graph_level_pool global_mean_pool
+python3 benchmark/mymain.py -exp_type oodd -DS_pair ogbg-molclintox+ogbg-mollipo -rw_dim 16 -dg_dim 16 -hidden_dim 16 -num_epoch 300 -num_cluster 2 -alpha 0.2 -num_layer 3   -model CVTGAD CVTGAD -GNN_Encoder GIN -graph_level_pool global_mean_pool
 
-python3 benchmark/mymain.py -exp_type oodd -DS_pair ogbg-molesol+ogbg-molmuv -rw_dim 16 -dg_dim 16 -hidden_dim 16 -num_epoch 300 -num_cluster 2 -alpha 0.0 -num_layer 3  -model CVTGAD CVTGAD -GNN_Encoder GIN -graph_level_pool global_mean_pool
+python3 benchmark/mymain.py -exp_type oodd -DS_pair ogbg-molesol+ogbg-molmuv -rw_dim 16 -dg_dim 16 -hidden_dim 16 -num_epoch 300 -num_cluster 2 -alpha 0.2 -num_layer 3  -model CVTGAD CVTGAD -GNN_Encoder GIN -graph_level_pool global_mean_pool
 
-python3 benchmark/mymain.py -exp_type oodd -DS_pair ogbg-moltox21+ogbg-molsider -rw_dim 16 -dg_dim 16 -hidden_dim 16 -num_epoch 300 -num_cluster 2 -alpha 0.0 -num_layer 3  -model CVTGAD CVTGAD -GNN_Encoder GIN -graph_level_pool global_mean_pool
+python3 benchmark/mymain.py -exp_type oodd -DS_pair ogbg-moltox21+ogbg-molsider -rw_dim 16 -dg_dim 16 -hidden_dim 16 -num_epoch 300 -num_cluster 2 -alpha 0.2 -num_layer 3  -model CVTGAD CVTGAD -GNN_Encoder GIN -graph_level_pool global_mean_pool
 
 
 
