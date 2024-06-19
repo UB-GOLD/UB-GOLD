@@ -6,7 +6,7 @@ python3 benchmark/mymain.py -exp_type ad -DS BZR            -rw_dim 8 -dg_dim 8 
 
 python3 benchmark/mymain.py -exp_type ad -DS COLLAB         -batch_size 64 -batch_size_test 64 -rw_dim 32 -dg_dim 32 -hidden_dim 16 -num_epoch 800 -num_cluster 2 -alpha 0.32 -num_layer 5  -lr 0.0001 -model CVTGAD CVTGAD -GNN_Encoder GIN -graph_level_pool global_mean_pool
 
-python3 benchmark/mymain.py -exp_type ad -DS COX2           -rw_dim 14 -dg_dim 14 -hidden_dim 16 -num_epoch 1000 -num_cluster 3 -alpha 0.6 -num_layer 5  -lr 0.001 -model CVTGAD CVTGAD -GNN_Encoder GCN -graph_level_pool global_mean_pool
+python3 benchmark/mymain.py -exp_type ad -DS COX2           -rw_dim 16 -dg_dim 16 -hidden_dim 16 -num_epoch 1000 -num_cluster 3 -alpha 0.6 -num_layer 5  -lr 0.001 -model CVTGAD CVTGAD -GNN_Encoder GCN -graph_level_pool global_mean_pool
 
 python3 benchmark/mymain.py -exp_type ad -DS DD             -rw_dim 16 -dg_dim 16 -hidden_dim 16 -batch_size 16 -batch_size_test 16 -num_epoch 100 -num_cluster 2 -alpha 1.0 -num_layer 5  -lr 0.0001 -model CVTGAD CVTGAD -GNN_Encoder GCN -graph_level_pool global_mean_pool
 
