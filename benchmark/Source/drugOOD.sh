@@ -1,5 +1,6 @@
 #DS= DrugOOD+[ec50_assay, ic50_assay, ec50_size, ec50_scaffold, ic50_size, ic50_scaffold]
 
+
 python benchmark/mymain.py -exp_type ood -DS DrugOOD+ec50_assay -rw_dim 16 -dg_dim 16 -hidden_dim 16 -num_epoch 300 -num_cluster 2 -alpha 0.0 -num_layer 3  -model CVTGAD CVTGAD -GNN_Encoder GIN -graph_level_pool global_mean_pool
 
 python benchmark/mymain.py -exp_type ood -DS DrugOOD+ec50_assay -num_epoch 100  -batch_size 300 -batch_size_test 1 -hidden_dim 256  -num_layer 2 -dropout 0.1  -lr 0.0001 -model GLADC GLADC
