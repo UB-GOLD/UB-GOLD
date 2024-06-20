@@ -54,8 +54,5 @@ python benchmark/mymain.py -exp_type oodd -DS_pair ogbg-molesol+ogbg-molmuv -bat
 
 python benchmark/mymain.py -exp_type oodd -DS_pair ogbg-moltox21+ogbg-molsider -batch_size_test 128 -num_epoch 400 -num_cluster 5 -alpha 0.2 -model GOOD-D
 
-# drugood
-
-python benchmark/mymain.py -exp_type ood -DS DrugOOD -num_epoch 4000 -num_cluster 10 -alpha 0.2 -model GOOD-D
 
 
