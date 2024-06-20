@@ -22,3 +22,4 @@ python benchmark/mymain.py -exp_type ood -DS GOODHIV+size+concept   -batch_size 
 python benchmark/mymain.py -exp_type ood -DS GOODHIV+size+concept   -batch_size  128 -batch_size_test 1  -num_epoch 30 -gpu 3 -model KernelGLAD KernelGLAD -detector OCSVM -kernel PK
 
 python benchmark/mymain.py -exp_type ood -DS GOODHIV+size+concept   -batch_size  128 -batch_size_test 1  -num_epoch 30 -gpu 3 -model KernelGLAD KernelGLAD -detector IF -kernel PK
+
