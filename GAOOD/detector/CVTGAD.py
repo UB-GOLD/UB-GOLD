@@ -53,6 +53,7 @@ class CVTGAD(DeepDetector):
         :param kwargs:
         :return: CVTGAD
         '''
+        self.args.dg_dim = self.args.rw_dim
         return cvtgad.CVTGAD(hidden_dim = self.args.hidden_dim,
                           num_gc_layers = self.args.num_layer,
                           feat_dim = self.args.dataset_num_features,
