@@ -29,7 +29,7 @@ python benchmark/mymain.py  -exp_type ad -DS Tox21_PPAR-gamma -num_epoch 4000 -n
 
 python benchmark/mymain.py  -exp_type ad -DS Tox21_p53 -num_epoch 400 -num_cluster 5 -alpha 0.2 -model GOOD-D
 
-python benchmark/mymain.py  -exp_type ad -DS Tox21_HSE -num_epoch 300 -num_cluster 2 -alpha 0.2 -model GOOD-D
+python benchmark/mymain.py  -exp_type ad -DS Tox21_HSE -num_epoch 400 -num_cluster 2 -alpha 0.2 -model GOOD-D
 
 
 # double dataset
@@ -48,7 +48,7 @@ python benchmark/mymain.py -exp_type oodd -DS_pair ogbg-molbbbp+ogbg-molbace -ba
 
 python benchmark/mymain.py -exp_type oodd -DS_pair ogbg-molfreesolv+ogbg-moltoxcast -batch_size_test 128 -num_epoch 400 -num_cluster 2 -alpha 0.6 -model GOOD-D
 
-python benchmark/mymain.py -exp_type oodd -DS_pair ogbg-molclintox+ogbg-mollipo -batch_size_test 128 -num_epoch 300 -num_cluster 30 -alpha 1.0 -model GOOD-D
+python benchmark/mymain.py -exp_type oodd -DS_pair ogbg-molclintox+ogbg-mollipo -batch_size_test 128 -num_epoch 400 -num_cluster 30 -alpha 1.0 -model GOOD-D
 
 python benchmark/mymain.py -exp_type oodd -DS_pair ogbg-molesol+ogbg-molmuv -batch_size_test 128 -num_epoch 400 -num_cluster 20 -alpha 0.4 -model GOOD-D
 
