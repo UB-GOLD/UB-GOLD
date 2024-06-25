@@ -17,7 +17,7 @@
 
 This is the official implementation of the following paper:
 
-> [Unifying Unsupervised Graph-Level Out-of-Distribution Detection and Anomaly Detection: A Benchmark](https://arxiv.org/pdf/2406.15523)
+> [Unifying Unsupervised Graph-Level Out-of-Distribution Detection and Anomaly Detection: A Benchmark](https://arxiv.org/abs/2406.15523)
 > 
 > Submitted to NeurIPS 2024 Datasets and Benchmarks Track
 
