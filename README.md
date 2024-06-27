@@ -170,8 +170,18 @@ This part lists all the methods we include in this codebase. We support 16 popul
 
 
 ## Citation
-
-
+If you find our repository useful for your research, please consider citing our paper:
+```
+@misc{wang2024unifyingunsupervisedgraphlevelanomaly,
+      title={Unifying Unsupervised Graph-Level Anomaly Detection and Out-of-Distribution Detection: A Benchmark}, 
+      author={Yili Wang and Yixin Liu and Xu Shen and Chenyu Li and Kaize Ding and Rui Miao and Ying Wang and Shirui Pan and Xin Wang},
+      year={2024},
+      eprint={2406.15523},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2406.15523}, 
+}
+```
 ## Reference
 UB-GOLD has completed the approaches related to unsupervised Graph detection for Tables 1 and 2. As for some special scenarios in Tables 3-5, we will gradually adapt them to this benchmark.
 
