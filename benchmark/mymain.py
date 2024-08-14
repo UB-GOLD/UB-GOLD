@@ -10,6 +10,7 @@ from utils import init_model
 from dataloader.data_loader import *
 import pandas as pd
 import statistics
+import seaborn as sns
 '''
 python benchmark/mymain.py -exp_type oodd -DS_pair BZR+COX2 -num_epoch 400 -num_cluster 2 -alpha 0
 oodd:inter datasets OOD,ood:intra dataset OOD,ad :anomaly detection（tox/TU）
@@ -20,6 +21,8 @@ Ds : dataset parameter for ood and ad
 
 
 '''
+
+
 
 def save_results_csv(model_result, model_name):
     # folder and name
@@ -70,7 +73,46 @@ def process_model_results(auc, ap, rec, args):
     save_results_csv(model_result, file_id)
 
 
+# def plot_distribution(vi_pos, vi_neg, filename, args):
+#     """plot vi score distribution figure"""
+#     sns.set(style='white')
+#     fig,ax = plt.subplots(1,1,figsize=(4.5,3))
 
+#     # plot vi score distribution without ground truth
+#     sns.distplot(vi_pos, hist=False, ax=ax, kde_kws={'fill': True}, color='#7F95D1', label='in-distribution')
+#     sns.distplot(vi_neg, hist=False, ax=ax, kde_kws={'fill': True}, color='#FF82A9', label='out-of-distribution')
+#     ax.spines['bottom'].set_linewidth(0.5)
+#     ax.spines['left'].set_linewidth(0.5)
+#     ax.spines['top'].set_linewidth(0.5)
+#     ax.spines['right'].set_linewidth(0.5)
+#     ax.set_xlabel('OOD judge score', size=15)
+#     ax.set_ylabel('Frequency', size=15)
+    
+#     title = f'{args.model} - {args.DS}'
+#     # title = f'{args.model} - AI→DH'
+#     ax.set_title(title, size=15)
+
+#     handles, labels = ax.get_legend_handles_labels()
+#     # fig.legend(handles, labels, loc='upper center', fontsize=10,ncol=2, bbox_to_anchor=(0.55, 1.08))
+#     fig.legend(handles, labels, loc='upper right', fontsize=8, ncol=1, bbox_to_anchor=(0.95, 0.85))
+   
+
+#     fig.tight_layout()
+#     fig.savefig(filename, bbox_inches='tight')
+    
+# def plot_score(score_iid, score_ood, exp_dir, args):
+    
+#     score_iid = np.array(score_iid)
+#     score_ood = np.array(score_ood)
+
+#     # 标准化处理
+#     from sklearn.preprocessing import StandardScaler
+#     scaler = StandardScaler()
+#     score_iid = scaler.fit_transform(score_iid.reshape(-1, 1)).flatten()
+#     score_ood = scaler.transform(score_ood.reshape(-1, 1)).flatten()
+   
+#     plot_distribution(score_iid, score_ood, os.path.join(exp_dir,f"{args.DS}-{args.model}.pdf"), args)
+#     return
 
 def set_seed(seed=3407):
     os.environ['PYTHONHASHSEED'] = str(seed)
@@ -166,6 +208,13 @@ def main(args):
             model.fit(dataset_train)
 
         score, y_all = model.predict(dataset=dataset_test, dataloader=dataloader_test, args=args, return_score=False)
+
+        # exp_dir = "results"
+        # score = np.array(score)
+        # y_all = np.array(y_all)
+        # score_iid = score[y_all == 0]
+        # score_ood = score[y_all != 0]
+        # plot_score(score_iid, score_ood, exp_dir, args)
         
         rec.append(fpr95(y_all, score))
         auc.append(ood_auc(y_all, score))
