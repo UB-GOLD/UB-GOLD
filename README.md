@@ -213,12 +213,13 @@ UB-GOLD has completed the approaches related to unsupervised Graph detection for
 ### Table 4: Other Approaches (Post-hoc Setting)
 | **ID** | **Paper** | **Category** | **Conference** |
 |--------|---------|:----------:|:--------------:|
-| 5     | [GOODAT: Towards Test-time Graph Out-of-Distribution Detection](https://arxiv.org/pdf/2401.06176v1.pdf) |  GLOD  |    AAAI 2024   |
+| 5   | [A Data-centric Framework to Endow Graph Neural Networks with Out-Of-Distribution Detection Ability](http://shichuan.org/doc/150.pdf) |  GLOD  |    KDD 2023   |
+| 6    | [GOODAT: Towards Test-time Graph Out-of-Distribution Detection](https://arxiv.org/pdf/2401.06176v1.pdf) |  GLOD  |    AAAI 2024   |
 
 ### Table 5: Other Approaches (Scenario Limitations (limited to molecular graphs))
 | **ID** | **Paper** | **Category** | **Conference** |
 |--------|---------|:----------:|:--------------:|
-| 6     |[Optimizing OOD Detection in Molecular Graphs: A Novel Approach with Diffusion Models](https://arxiv.org/pdf/2404.15625) |  GLOD   |    KDD 2024    |
+| 7    |[Optimizing OOD Detection in Molecular Graphs: A Novel Approach with Diffusion Models](https://arxiv.org/pdf/2404.15625) |  GLOD   |    KDD 2024    |
 
 
 
