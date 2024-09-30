@@ -24,13 +24,13 @@ UB-GOLD provides a fair and comprehensive platform to evaluate 18 existing unsup
 
 ------
 <div align="center">
-  <img src="https://github.com/UB-GOLD/UB-GOLD/blob/main/Image/intro.jpg" width="900px"/>
+  <img src="https://raw.githubusercontent.com/UB-GOLD/UB-GOLD/main/Image/intro.jpg" width="900px"/>
 </div>
 
 ------
 
 <div align="center">
-  <img src="https://github.com/UB-GOLD/UB-GOLD/blob/main/Image/UBGOLD.jpg" width="900px"/>
+  <img src="https://raw.githubusercontent.com/UB-GOLD/UB-GOLD/main/Image/UBGOLD.jpg" width="900px"/>
 </div>
 
 ## Environment Setup
