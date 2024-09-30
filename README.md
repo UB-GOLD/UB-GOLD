@@ -22,7 +22,7 @@ This is the official implementation of the following paper:
 
 UB-GOLD provides a fair and comprehensive platform to evaluate existing unsupervised GLAD and GLOD works on 4 types of datasets and facilitates future GLAD/GLOD research.
 <div align="center">
-  <img src="https://github.com/UB-GOLD/UB-GOLD/blob/main/Image/UBGOLD.pdf" width="900px"/>
+  <img src="https://github.com/UB-GOLD/UB-GOLD/blob/main/Image/UBGOLD.jpg" width="900px"/>
 </div>
 
 <div align="center">
