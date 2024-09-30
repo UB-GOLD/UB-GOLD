@@ -20,14 +20,14 @@ This is the official implementation of the following paper:
 > [Unifying Unsupervised Graph-Level Out-of-Distribution Detection and Anomaly Detection: A Benchmark](https://arxiv.org/abs/2406.15523)
 > 
 
-UB-GOLD provides a fair and comprehensive platform to evaluate 18 existing unsupervised GLAD and GLOD works on 4 types of datasets and facilitates future GLAD/GLOD research.
-<div align="center">
-  <img src="https://github.com/UB-GOLD/UB-GOLD/blob/main/Image/UBGOLD.jpg" width="900px"/>
-</div>
-
 ------
 <div align="center">
   <img src="https://github.com/UB-GOLD/UB-GOLD/blob/main/Image/intro.jpg" width="900px"/>
+</div>
+------
+UB-GOLD provides a fair and comprehensive platform to evaluate 18 existing unsupervised GLAD and GLOD works on 4 types of datasets and facilitates future GLAD/GLOD research.
+<div align="center">
+  <img src="https://github.com/UB-GOLD/UB-GOLD/blob/main/Image/UBGOLD.jpg" width="900px"/>
 </div>
 
 ## Environment Setup
