@@ -205,7 +205,6 @@ UB-GOLD has completed the approaches related to unsupervised Graph detection for
 |--------|---------|:----------:|:--------------:|
 | 7      | [Good-d: On unsupervised graph out-of-distribution detection ](https://arxiv.org/pdf/2211.04208.pdf)|  GLOD   |   WSDM 2023    |
 | 8     |[ Graphde: A generative framework for debiased learning and out-of-distribution detection on graphs](https://proceedings.neurips.cc/paper_files/paper/2022/file/c34262c35aa5f8c1a091822cbb2020c2-Paper-Conference.pdf) |  GLOD    |    NeurIPS 2022    |
-
 | 9   | [A Data-centric Framework to Endow Graph Neural Networks with Out-Of-Distribution Detection Ability](http://shichuan.org/doc/150.pdf) |  GLOD  |    KDD 2023   |
 | 10    | [GOODAT: Towards Test-time Graph Out-of-Distribution Detection](https://arxiv.org/pdf/2401.06176v1.pdf) |  GLOD  |    AAAI 2024   |
 
