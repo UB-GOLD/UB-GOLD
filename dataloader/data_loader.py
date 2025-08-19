@@ -16,7 +16,7 @@ import random
 from .drugood_dataset import DrugOOD
 from .drugood_dataset import DrugOODDataset
 from torch.utils.data import ConcatDataset
-from GOOD import register
+# from GOOD import register
 
 def read_graph_file(DS, path):
     if "training" in DS:
@@ -238,119 +238,119 @@ def get_ood_dataset(args, train_per=0.9, need_str_enc=True):
     #train (ID), test (ID+OOD), train dataloader, test dataloader, meta
     return dataset_train, dataset_val, dataset_test, dataloader_train, dataloader_val, dataloader_test, meta
 
-# DS for GOOD, DrugOOD
-def get_ood_dataset_spilt(args, train_per=0.9, need_str_enc=True):
-    if args.DS_pair is not None:
-        DSS = args.DS_pair.split("+")
-        DS, DS_ood = DSS[0], DSS[1]
-    else:
-        DS, DS_ood = args.DS, args.DS_ood
+# # DS for GOOD, DrugOOD
+# def get_ood_dataset_spilt(args, train_per=0.9, need_str_enc=True):
+#     if args.DS_pair is not None:
+#         DSS = args.DS_pair.split("+")
+#         DS, DS_ood = DSS[0], DSS[1]
+#     else:
+#         DS, DS_ood = args.DS, args.DS_ood
 
-    DrugooD = DS.startswith('DrugOOD')
+#     DrugooD = DS.startswith('DrugOOD')
  
-    path_now =  os.path.abspath(os.path.join(os.getcwd(), "."))
+#     path_now =  os.path.abspath(os.path.join(os.getcwd(), "."))
  
-    path = osp.join(path_now, '.', 'data', DS)
+#     path = osp.join(path_now, '.', 'data', DS)
 
-    n_train_data, n_in_test_data, n_out_test_data = 1000, 500, 500
-    if DrugooD:
-        is_drug,DS_drug = DS.split("+")
+#     n_train_data, n_in_test_data, n_out_test_data = 1000, 500, 500
+#     if DrugooD:
+#         is_drug,DS_drug = DS.split("+")
 
-        print(DS_drug)
-        dataset_all = DrugOODDataset(name = DS_drug, root = args.data_root)
+#         print(DS_drug)
+#         dataset_all = DrugOODDataset(name = DS_drug, root = args.data_root)
         
-        random.shuffle(dataset_all.train_index)
-        random.shuffle(dataset_all.test_index)
+#         random.shuffle(dataset_all.train_index)
+#         random.shuffle(dataset_all.test_index)
         
-        dataset = dataset_all[dataset_all.train_index]
-        dataset_ood = dataset_all[dataset_all.test_index]
-        max_nodes_num = max([_.num_nodes for _ in dataset_all])
-        dataset.data.x = dataset.data.x.type(torch.float32)
+#         dataset = dataset_all[dataset_all.train_index]
+#         dataset_ood = dataset_all[dataset_all.test_index]
+#         max_nodes_num = max([_.num_nodes for _ in dataset_all])
+#         dataset.data.x = dataset.data.x.type(torch.float32)
 
-        # print(len(dataset_ood))
-        dataset_ood.data.x = dataset_ood.data.x.type(torch.float32)    
+#         # print(len(dataset_ood))
+#         dataset_ood.data.x = dataset_ood.data.x.type(torch.float32)    
        
-    else:
-        dataset_name,domain,shift = DS.split("+")
+#     else:
+#         dataset_name,domain,shift = DS.split("+")
      
-        root = os.getcwd()+"/"+args.data_root
+#         root = os.getcwd()+"/"+args.data_root
 
-        datasets, meta_info = register.datasets[dataset_name].load(dataset_root=args.data_root,
-                                                                              domain=domain,
-                                                                              shift=shift,
-                                                                              generate = False,
-                                                                              )
+#         datasets, meta_info = register.datasets[dataset_name].load(dataset_root=args.data_root,
+#                                                                               domain=domain,
+#                                                                               shift=shift,
+#                                                                               generate = False,
+#                                                                               )
        
             
-        dataset = datasets["train"]
-        perm_idx = torch.randperm(len(dataset), generator=torch.Generator().manual_seed(0))
-        dataset = dataset[perm_idx]
-        dataset.data.x = dataset.data.x.type(torch.float32)
-        dataset_ood = datasets["test"]
-        perm_idx = torch.randperm(len(dataset_ood), generator=torch.Generator().manual_seed(0))
-        dataset_ood  =dataset_ood[perm_idx]
-        max_nodes_num = max([_.num_nodes for _ in dataset])
+#         dataset = datasets["train"]
+#         perm_idx = torch.randperm(len(dataset), generator=torch.Generator().manual_seed(0))
+#         dataset = dataset[perm_idx]
+#         dataset.data.x = dataset.data.x.type(torch.float32)
+#         dataset_ood = datasets["test"]
+#         perm_idx = torch.randperm(len(dataset_ood), generator=torch.Generator().manual_seed(0))
+#         dataset_ood  =dataset_ood[perm_idx]
+#         max_nodes_num = max([_.num_nodes for _ in dataset])
 
-        dataset_ood.data.x = dataset_ood.data.x.type(torch.float32)
+#         dataset_ood.data.x = dataset_ood.data.x.type(torch.float32)
 
-    max_nodes_num_train = max([_.num_nodes for _ in dataset])
-    max_nodes_num_test = max([_.num_nodes for _ in dataset_ood])
-    max_nodes_num = max_nodes_num_train if max_nodes_num_train > max_nodes_num_test else max_nodes_num_test
+#     max_nodes_num_train = max([_.num_nodes for _ in dataset])
+#     max_nodes_num_test = max([_.num_nodes for _ in dataset_ood])
+#     max_nodes_num = max_nodes_num_train if max_nodes_num_train > max_nodes_num_test else max_nodes_num_test
     
-    dataset_num_features = dataset.num_node_features
-    dataset_num_features_ood = dataset_ood.num_node_features
-    assert dataset_num_features == dataset_num_features_ood
+#     dataset_num_features = dataset.num_node_features
+#     dataset_num_features_ood = dataset_ood.num_node_features
+#     assert dataset_num_features == dataset_num_features_ood
 
-    # dataset_id = dataset[:n_train_data]
-    # dataset_train = dataset_id[:int(n_train_data*train_per)]
-    # dataset_val = dataset_id[int(n_train_data*train_per):]
-    # dataset_test = dataset[n_train_data:n_train_data + n_in_test_data]
-    # dataset_ood = dataset_ood[: len(dataset_test)]
+#     # dataset_id = dataset[:n_train_data]
+#     # dataset_train = dataset_id[:int(n_train_data*train_per)]
+#     # dataset_val = dataset_id[int(n_train_data*train_per):]
+#     # dataset_test = dataset[n_train_data:n_train_data + n_in_test_data]
+#     # dataset_ood = dataset_ood[: len(dataset_test)]
     
-    dataset_train = dataset[:n_train_data]
-    dataset_test = dataset[n_train_data:n_train_data+n_in_test_data]
-    dataset_ood = dataset_ood[: len(dataset_test)]
+#     dataset_train = dataset[:n_train_data]
+#     dataset_test = dataset[n_train_data:n_train_data+n_in_test_data]
+#     dataset_ood = dataset_ood[: len(dataset_test)]
     
-    data_list_train = []
-    # data_list_val = []
-    idx = 0
-    for data in dataset_train:
-        data.y = 0
-        data['idx'] = idx
-        idx += 1
-        data_list_train.append(data)
+#     data_list_train = []
+#     # data_list_val = []
+#     idx = 0
+#     for data in dataset_train:
+#         data.y = 0
+#         data['idx'] = idx
+#         idx += 1
+#         data_list_train.append(data)
 
-    if need_str_enc:
-        data_list_train = init_structural_encoding(data_list_train, rw_dim=args.rw_dim, dg_dim=args.dg_dim)
-    dataloader_train = DataLoader(data_list_train, batch_size=args.batch_size, shuffle=True)
+#     if need_str_enc:
+#         data_list_train = init_structural_encoding(data_list_train, rw_dim=args.rw_dim, dg_dim=args.dg_dim)
+#     dataloader_train = DataLoader(data_list_train, batch_size=args.batch_size, shuffle=True)
 
-    data_list_test = []
-    for data in dataset_test:
-        data.y = 0
-        data.edge_attr = None
-        if not DrugooD:
-          data.env_id = data.domain_id
-        data_list_test.append(data)
+#     data_list_test = []
+#     for data in dataset_test:
+#         data.y = 0
+#         data.edge_attr = None
+#         if not DrugooD:
+#           data.env_id = data.domain_id
+#         data_list_test.append(data)
 
-    for data in dataset_ood:
-        data.y = 1
-        data.edge_attr = None
-        if not DrugooD:
-          data.env_id = data.domain_id
-        data_list_test.append(data)
+#     for data in dataset_ood:
+#         data.y = 1
+#         data.edge_attr = None
+#         if not DrugooD:
+#           data.env_id = data.domain_id
+#         data_list_test.append(data)
 
-    if need_str_enc:
-        data_list_test = init_structural_encoding(data_list_test, rw_dim=args.rw_dim, dg_dim=args.dg_dim)
-    dataloader_test = DataLoader(data_list_test, batch_size=args.batch_size_test, shuffle=False)
-    dataset_test = ConcatDataset([dataset_test, dataset_ood])
-    dataset_val = dataset_test
-    dataloader_val = dataloader_test
+#     if need_str_enc:
+#         data_list_test = init_structural_encoding(data_list_test, rw_dim=args.rw_dim, dg_dim=args.dg_dim)
+#     dataloader_test = DataLoader(data_list_test, batch_size=args.batch_size_test, shuffle=False)
+#     dataset_test = ConcatDataset([dataset_test, dataset_ood])
+#     dataset_val = dataset_test
+#     dataloader_val = dataloader_test
     
-    meta = {'num_feat':dataset_num_features, 'num_train':len(dataset_train),
-            'num_test':len(dataset_test), 'num_ood':len(dataset_ood),'max_nodes_num':max_nodes_num,'num_edge_feat':0}
-    print(meta)
-    #train (ID), test (ID+OOD), train dataloader, test dataloader, meta
-    return dataset_train, dataset_val, dataset_test, dataloader_train, dataloader_val, dataloader_test, meta
+#     meta = {'num_feat':dataset_num_features, 'num_train':len(dataset_train),
+#             'num_test':len(dataset_test), 'num_ood':len(dataset_ood),'max_nodes_num':max_nodes_num,'num_edge_feat':0}
+#     print(meta)
+#     #train (ID), test (ID+OOD), train dataloader, test dataloader, meta
+#     return dataset_train, dataset_val, dataset_test, dataloader_train, dataloader_val, dataloader_test, meta
 
 
 
@@ -419,8 +419,6 @@ def get_ad_dataset_TU(args, split, need_str_enc=True):
         data.y = 0
         data['idx'] = idx
         idx += 1
-
- 1
 
     for data in data_test:
         data.y = 1 if data.y == 0 else 0

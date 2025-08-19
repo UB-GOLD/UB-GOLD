@@ -157,11 +157,21 @@ class GLADC(DeepDetector):
         stop_counter = 0  
         N = 30  
         
+        preprocessed = []
+        for batch_idx, data in enumerate(dataloader):
+            adj_matrixs, adj_labels, graph_appends, _ = self.process_graph(data)
+            preprocessed.append(tuple([adj_matrixs, adj_labels, graph_appends]))
+
+        preprocessed_val = []
+        for batch_idx, data in enumerate(dataloader_val):
+            adj_matrixs, _, graph_appends, graph_label = self.process_graph(data)
+            preprocessed_val.append(tuple([adj_matrixs, graph_appends, graph_label]))
+        
         for epoch in range(1, self.num_epochs + 1):
             total_lossG = 0.0
             self.NetGe.train()
-            for batch_idx, data in enumerate(dataloader):
-                adj_matrixs, adj_labels, graph_appends, _ = self.process_graph(data)
+            for adj_matrixs, adj_labels, graph_appends in preprocessed:
+                # adj_matrixs, adj_labels, graph_appends, _ = self.process_graph(data)
                 lossG = self.forward_model(adj_matrixs, adj_labels, graph_appends)
                 optimizerG.zero_grad()
                 lossG.backward()
@@ -172,9 +182,9 @@ class GLADC(DeepDetector):
                 loss = []
                 y = []
 
-                for batch_idx, data in enumerate(dataloader_val):
+                for adj_matrixs, graph_appends, graph_label in preprocessed_val:
 
-                    adj_matrixs, _, graph_appends, graph_label = self.process_graph(data)
+                    # adj_matrixs, _, graph_appends, graph_label = self.process_graph(data)
                     adj = Variable(adj_matrixs.float().float(), requires_grad=False).to(self.device)
                     h0 = Variable(graph_appends.float(), requires_grad=False).to(self.device)
 
@@ -224,8 +234,13 @@ class GLADC(DeepDetector):
         y = []
         self.device = torch.device('cuda:' + str(args.gpu) if torch.cuda.is_available() else 'cpu')
 
+        preprocessed = []
         for batch_idx, data in enumerate(dataloader):
-            adj_matrixs, _, graph_appends,graph_label = self.process_graph(data)
+            adj_matrixs, _, graph_appends, graph_label = self.process_graph(data)
+            preprocessed.append(tuple([adj_matrixs, graph_appends, graph_label]))
+
+        for adj_matrixs,  graph_appends,graph_label in preprocessed:
+            # adj_matrixs, _, graph_appends,graph_label = self.process_graph(data)
             adj = Variable(adj_matrixs.float().float(), requires_grad=False).to(self.device)
             h0 = Variable(graph_appends.float(), requires_grad=False).to(self.device)
             x1_r, Feat_0 = self.NetGe.shared_encoder(h0, adj)

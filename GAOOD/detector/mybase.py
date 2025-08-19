@@ -31,14 +31,15 @@ class Detector(ABC):
 
     @abstractmethod
     def process_graph(self, data):
-       
+       pass
 
     @abstractmethod
     def fit(self, data,label=None):
-      
+      pass
 
     @abstractmethod
     def decision_function(self, data, label=None):
+        pass
        
 
     def predict(self,
@@ -340,8 +341,9 @@ class DeepDetector(Detector, ABC):
 
     @abstractmethod
     def init_model(self, **kwargs):
-       
+       pass
 
     @abstractmethod
     def forward_model(self, data):
+        pass
        

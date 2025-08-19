@@ -124,6 +124,17 @@ class GLocalKD(DeepDetector):
         
         stop_counter = 0  
         N = 30  
+
+        preprocessed = []
+        for batch_idx, data in enumerate(dataloader):
+            adj, _, h0, _ = self.process_graph(data)
+            preprocessed.append(tuple([adj, h0]))
+
+        preprocessed_val = []
+        for batch_idx, data in enumerate(dataloader_val):
+            adj_matrixs, _, graph_appends, graph_label = self.process_graph(data)
+            preprocessed_val.append(tuple([adj_matrixs, graph_appends, graph_label]))
+
         for epoch in range(1, args.num_epoch + 1):
             total_time = 0
             total_loss = 0.0
@@ -131,7 +142,8 @@ class GLocalKD(DeepDetector):
             for batch_idx, data in enumerate(dataloader):
                 begin_time = time.time()
                 self.model_student.zero_grad()
-                adj, _, h0, _ = self.process_graph(data)
+                # adj, _, h0, _ = self.process_graph(data)
+                adj, h0 = preprocessed[batch_idx]
                 loss = self.forward_model(adj, h0)
                 loss.backward(loss.clone().detach())
                 nn.utils.clip_grad_norm_(self.model_student.parameters(), args.clip)
@@ -146,10 +158,11 @@ class GLocalKD(DeepDetector):
                 y = []
                 emb = []
 
-                for batch_idx, data in enumerate(dataloader_val):
-                    adj_matrixs, _, graph_appends, graph_label = self.process_graph(data)
-                    adj = Variable(adj_matrixs.float(), requires_grad=False).to(self.device)  # .cuda()
-                    h0 = Variable(graph_appends.float(), requires_grad=False).to(self.device)
+                for adj_matrixs, graph_appends, graph_label in preprocessed_val:
+                    # adj_matrixs, _, graph_appends, graph_label = self.process_graph(data)
+
+                    adj = Variable(adj_matrixs.float(), requires_grad=False).to('cuda')  # .cuda()
+                    h0 = Variable(graph_appends.float(), requires_grad=False).to('cuda')
                     # adj = Variable(data['adj'].float(), requires_grad=False).cuda()
                     # h0 = Variable(data['feats'].float(), requires_grad=False).cuda()
 
@@ -203,9 +216,14 @@ class GLocalKD(DeepDetector):
         self.device = torch.device('cuda:' + str(args.gpu) if torch.cuda.is_available() else 'cpu')
 
         for batch_idx, data in enumerate(dataloader):
-            adj_matrixs, _, graph_appends,graph_label = self.process_graph(data)
-            adj = Variable(adj_matrixs.float(), requires_grad=False).to(self.device)  # .cuda()
-            h0 = Variable(graph_appends.float(), requires_grad=False).to(self.device)
+            adj_matrixs, _, graph_appends, graph_label = self.process_graph(data)
+            preprocessed.append(tuple([adj_matrixs, graph_appends, graph_label]))
+
+        # for batch_idx, data in enumerate(dataloader):
+        for adj_matrixs,  graph_appends,graph_label in preprocessed:
+            # adj_matrixs, _, graph_appends,graph_label = self.process_graph(data)
+            adj = Variable(adj_matrixs.float(), requires_grad=False).to('cuda')  # .cuda()
+            h0 = Variable(graph_appends.float(), requires_grad=False).to('cuda')
             embed_node, embed = self.model_student(h0, adj)
             embed_teacher_node, embed_teacher = self.model_teacher(h0, adj)
             loss_node = torch.mean(F.mse_loss(embed_node, embed_teacher_node, reduction='none'), dim=2).mean(dim=1)
@@ -232,8 +250,8 @@ class GLocalKD(DeepDetector):
 
 
     def forward_model(self, adj, h0):
-        adj = Variable(adj.float(), requires_grad=False).to(self.device)
-        h0 = Variable(h0.float(), requires_grad=False).to(self.device)
+        adj = Variable(adj.float(), requires_grad=False).to('cuda')
+        h0 = Variable(h0.float(), requires_grad=False).to('cuda')
 
         embed_node, embed = self.model_student(h0, adj)
         embed_teacher_node, embed_teacher = self.model_teacher(h0, adj)

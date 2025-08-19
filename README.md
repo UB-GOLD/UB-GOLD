@@ -48,18 +48,23 @@ Before you begin, ensure that you have Anaconda or Miniconda installed on your s
 * rdkit>=2023.3.1
 * dgl>=2.1.0
 * pygcl>=0.1.2
-```shell
-# Create and activate a new Conda environment named 'UBGOLD'
-conda create -n UBGOLD
-conda activate UBGOLD
 
-pip install *
+You can easily create a virtual environment with all the required libraries for this project by running:  
+`conda env create -n UBGOLD -f environment.yml`  
 
-# Install Pytorch and Pyg with CUDA 11.8 support, For the versions of other dependencies,
-# see requirements.txt.
-# If you use a different CUDA version, please refer to the PyTorch and Pyg websites
-# for the appropriate versions.
-```
+If errors occur during the above step, you may also install the dependencies using pip. Before using pip, it is strongly recommended to manually select the appropriate PyTorch version (compatible with your Python and CUDA versions). In this example, the Python version is 3.8.10 and the CUDA version is 11.8. Thus, the manually downloaded PyTorch and its extension packages are as follows:  
+- `torch-2.1.0+cu118-cp38-cp38-linux_x86_64.whl`  
+- `torch_scatter-2.1.2+pt21cu118-cp38-cp38-linux_x86_64.whl`  
+- `torch_sparse-0.6.18+pt21cu118-cp38-cp38-linux_x86_64.whl`  
+- `torchvision-0.15.1+cu118-cp38-cp38-linux_x86_64.whl`  
+
+If you use a different CUDA version, please refer to the PyTorch and Pyg websites for the appropriate versions.
+
+For additional `torch_geometric` extensions, you can download them from [this link](https://data.pyg.org/whl/).  
+For PyTorch packages, users in China can download them from the [Nanjing University mirror site](https://mirrors.nju.edu.cn/pytorch/whl/).  
+
+After manually configuring the PyTorch-related packages, run the following command to install the remaining Python libraries:  
+`pip install -r requirements.txt`  
 
 ## Codebase Folder
 
