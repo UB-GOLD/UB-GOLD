@@ -184,11 +184,13 @@ This part lists all the methods we include in this codebase. We support 16 popul
 ## Citation
 If you find our repository useful for your research, please consider citing our paper:
 ```
-@article{wang2024unifying,
-  title={Unifying Unsupervised Graph-Level Anomaly Detection and Out-of-Distribution Detection: A Benchmark},
-  author={Wang, Yili and Liu, Yixin and Shen, Xu and Li, Chenyu and Ding, Kaize and Miao, Rui and Wang, Ying and Pan, Shirui and Wang, Xin},
-  journal={arXiv preprint arXiv:2406.15523},
-  year={2024}
+@inproceedings{wang2025unifying,
+  title={Unifying unsupervised graph-level anomaly detection and out-of-distribution detection: A benchmark},
+  author={Wang, Yili and Liu, Yixin and Shen, Xu and Li, Chenyu and Miao, Rui and Ding, Kaize and Wang, Ying and Pan, Shirui and Wang, Xin},
+  booktitle={International Conference on Learning Representations},
+  volume={2025},
+  pages={91903--91929},
+  year={2025}
 }
 ```
 ## Reference
